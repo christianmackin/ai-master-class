@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Master Class</title>
+<meta name="color-scheme" content="light" />
+<style>
+:root {
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --surface-warm: #fff8f0;
+  --ink: #1a2332;
+  --muted: #5a6577;
+  --border: #e2e6ee;
+  --accent: #0d7ea8;
+  --accent-2: #0f9b8e;
+  --accent-soft: #e6f6fb;
+  --teal-soft: #e8f7f5;
+  --warn-bg: #fff4e5;
+  --warn-border: #f0b429;
+  --info-bg: #eef6ff;
+  --info-border: #5b8def;
+  --ok-bg: #eaf7ef;
+  --shadow: 0 1px 2px rgba(26,35,50,.06), 0 8px 24px rgba(26,35,50,.06);
+  --radius: 14px;
+  --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--ink);
+  background: linear-gradient(180deg, #f7fafc 0%, var(--bg) 180px);
+  line-height: 1.55;
+  font-size: 16px;
+}
+a { color: var(--accent); }
+.progress-bar {
+  position: fixed; top: 0; left: 0; height: 4px; width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  z-index: 1000; transition: width .1s linear;
+}
+.topnav {
+  position: sticky; top: 0; z-index: 900;
+  background: rgba(255,255,255,.92); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+}
+.topnav-inner {
+  max-width: 920px; margin: 0 auto;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between;
+}
+.brand { font-weight: 700; color: var(--ink); font-size: .95rem; }
+.nav-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+button.ctrl {
+  appearance: none; border: 1px solid var(--border); background: var(--surface);
+  color: var(--ink); border-radius: 999px; padding: 6px 12px; font: inherit; font-size: .85rem;
+  cursor: pointer;
+}
+button.ctrl:hover { border-color: var(--accent); color: var(--accent); }
+button.ctrl.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+button.ctrl.primary:hover { background: #0a6a8f; }
+.wrap { max-width: 920px; margin: 0 auto; padding: 20px 16px 80px; }
+.hero {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 28px 24px; margin-bottom: 20px;
+}
+.hero h1 { margin: 0 0 8px; font-size: clamp(1.45rem, 4vw, 2rem); letter-spacing: -.02em; }
+.hero .meta { color: var(--muted); font-size: .92rem; margin: 0 0 12px; }
+.badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.badge {
+  display: inline-block; background: var(--accent-soft); color: #075a78;
+  border-radius: 999px; padding: 4px 10px; font-size: .78rem; font-weight: 600;
+}
+.badge.teal { background: var(--teal-soft); color: #0a6b61; }
+.callout {
+  border-left: 4px solid var(--accent); background: var(--info-bg); padding: 12px 14px;
+  border-radius: 0 10px 10px 0; margin: 12px 0;
+}
+.callout.warn { border-left-color: var(--warn-border); background: var(--warn-bg); }
+.callout.info { border-left-color: var(--info-border); background: var(--info-bg); }
+.section {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  margin: 14px 0; overflow: hidden; box-shadow: 0 1px 2px rgba(26,35,50,.04);
+}
+.section > summary,
+.section-head {
+  list-style: none; cursor: pointer; padding: 16px 18px;
+  display: flex; gap: 12px; align-items: flex-start; justify-content: space-between;
+  background: linear-gradient(180deg, #fff, #fbfcfe);
+  user-select: none;
+}
+.section > summary::-webkit-details-marker { display: none; }
+.section-title { font-weight: 700; font-size: 1.05rem; margin: 0; }
+.section-sub { color: var(--muted); font-size: .85rem; margin: 4px 0 0; }
+.chev {
+  flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent);
+  display: grid; place-items: center; font-weight: 700; transition: transform .2s;
+}
+details[open] > summary .chev { transform: rotate(90deg); }
+.section-body { padding: 4px 18px 20px; border-top: 1px solid var(--border); }
+h2,h3 { letter-spacing: -.01em; }
+h3 { margin-top: 1.2em; }
+.timeline {
+  display: grid; gap: 10px; margin: 16px 0;
+}
+.tl-item {
+  display: grid; grid-template-columns: 72px 1fr; gap: 12px; align-items: stretch;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 12px 14px; cursor: pointer; text-align: left; font: inherit; color: inherit;
+  transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+.tl-item:hover, .tl-item:focus-visible {
+  border-color: var(--accent); box-shadow: var(--shadow); outline: none; transform: translateY(-1px);
+}
+.tl-min {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff; border-radius: 10px; padding: 10px 8px; text-align: center;
+  font-weight: 700; font-size: .85rem; line-height: 1.2;
+}
+.tl-min small { display: block; font-weight: 500; opacity: .9; font-size: .72rem; }
+.tl-body strong { display: block; margin-bottom: 2px; }
+.tl-body span { color: var(--muted); font-size: .9rem; }
+.cards {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin: 14px 0;
+}
+.card {
+  border: 1px solid var(--border); border-radius: 12px; background: var(--surface-warm);
+  padding: 14px; cursor: pointer; text-align: left; font: inherit; color: inherit;
+  transition: border-color .15s, box-shadow .15s;
+}
+.card:hover, .card:focus-visible { border-color: var(--accent-2); box-shadow: var(--shadow); outline: none; }
+.card .when { font-size: .75rem; font-weight: 700; color: var(--accent-2); text-transform: uppercase; letter-spacing: .04em; }
+.card .name { font-weight: 700; margin-top: 4px; }
+table {
+  width: 100%; border-collapse: collapse; font-size: .92rem; margin: 12px 0;
+  background: #fff; overflow: hidden; border-radius: 10px; border: 1px solid var(--border);
+}
+th, td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { background: #f3f7fb; font-size: .8rem; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); }
+tr:last-child td { border-bottom: none; }
+blockquote {
+  margin: 12px 0; padding: 12px 14px; background: #f7fafc; border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0; color: var(--ink);
+}
+pre, .codebox {
+  background: #0f2430; color: #e8f4f8; padding: 14px; border-radius: 10px;
+  overflow-x: auto; font-family: var(--mono); font-size: .85rem; line-height: 1.45;
+}
+code { font-family: var(--mono); font-size: .9em; background: #eef3f7; padding: 1px 5px; border-radius: 4px; }
+pre code { background: transparent; padding: 0; color: inherit; }
+.olist, .ulist { padding-left: 1.2em; }
+.olist li, .ulist li { margin: 6px 0; }
+.checklist label { display: flex; gap: 8px; align-items: flex-start; margin: 8px 0; }
+.footer-note { color: var(--muted); font-size: .85rem; margin-top: 28px; }
+.toc-jump {
+  display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0;
+}
+.toc-jump a {
+  text-decoration: none; font-size: .78rem; padding: 4px 10px; border-radius: 999px;
+  background: #fff; border: 1px solid var(--border); color: var(--muted);
+}
+.toc-jump a:hover { color: var(--accent); border-color: var(--accent); }
+.viewed { outline: 2px solid rgba(13,126,168,.25); }
+.progress-label { font-size: .8rem; color: var(--muted); }
+@media (max-width: 520px) {
+  .tl-item { grid-template-columns: 56px 1fr; }
+  .hero { padding: 20px 16px; }
+  th, td { padding: 8px; font-size: .85rem; }
+}
+@media print {
+  .topnav, .progress-bar, .nav-actions, button.ctrl { display: none !important; }
+  details { open: true; }
+  details > summary { display: none; }
+  .section-body { display: block !important; border: none; }
+  details[open] > .section-body, details > .section-body { display: block !important; }
+  .section { break-inside: avoid; box-shadow: none; }
+  body { background: #fff; }
+}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Reading progress"></div>
+<header class="topnav">
+  <div class="topnav-inner">
+    <div class="brand">AI Master Class · 60 min</div>
+    <div class="nav-actions">
+      <span class="progress-label" id="progressLabel">0% read</span>
+      <button type="button" class="ctrl" id="expandAll">Expand all</button>
+      <button type="button" class="ctrl" id="collapseAll">Collapse all</button>
+      <button type="button" class="ctrl primary" data-jump="timeline">Timeline</button>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <section class="hero" id="top">
+    <h1>AI Master Class — 60-minute teaching plan</h1>
+    <p class="meta">Instructor: Christian · Orientation for engineers · Not a certification course</p>
+    <div class="badge-row">
+      <span class="badge">Exact 60-minute agenda</span>
+      <span class="badge teal">Light theme only</span>
+      <span class="badge">Interactive facilitator copy</span>
+    </div>
+    <p>A one-hour orientation for engineers: start with why, separate model from harness from backend, see where inference really runs, then take one synthetic engineering problem from concept to checked calculation to a reviewed pull request.</p>
+    <div class="callout">
+      <strong>Canonical Page (source of truth):</strong>
+      <a href="https://cursor.com/canvas/store-ab44450f-a68f-4545-95e8-ddd7eb27b78e/57a74526-c65c-43d3-8253-03b82a7fdf1b">Cursor Page — AI Master Class</a>.
+      This HTML is a public-artifact-ready portable copy; the Cursor Page remains canonical.
+    </div>
+    <nav class="toc-jump" aria-label="Section jumps">
+      <a href="#timeline">Timeline</a>
+      <a href="#topics">Topics</a>
+      <a href="#sec-opening">Opening</a>
+      <a href="#sec-notes">Notes</a>
+      <a href="#sec-stack">Stack</a>
+      <a href="#sec-routing">Inference</a>
+      <a href="#sec-tools">Tools</a>
+      <a href="#sec-context">Context</a>
+      <a href="#sec-adr">ADR</a>
+      <a href="#sec-storage">Storage</a>
+      <a href="#sec-demo">Demo</a>
+      <a href="#sec-crosswalk">Crosswalk</a>
+      <a href="#sec-github">GitHub</a>
+      <a href="#sec-conductor">Conductors</a>
+      <a href="#sec-split">80/20</a>
+      <a href="#sec-closing">Closing</a>
+      <a href="#sec-sources">Sources</a>
+    </nav>
+  </section>
+
+  <section class="section" id="timeline" style="padding:16px 18px;">
+    <h2 class="section-title" style="margin:0 0 4px;">Exact 60-minute timeline</h2>
+    <p class="section-sub">Click a block to jump to that part of the plan. Total = 60 minutes.</p>
+    <div class="timeline" id="timelineList"></div>
+    <p>One running example threads the hour: a synthetic remote weather-station power budget. It is planned (ADR), given context, stored (JSON/Markdown), crosswalked, calculated, and shipped as a PR. The detailed tool and routing tables are facilitator reference; in the timed lesson, highlight two or three rows.</p>
+  </section>
+
+  <section class="section" id="topics" style="padding:16px 18px;">
+    <h2 class="section-title" style="margin:0 0 4px;">Topic cards</h2>
+    <p class="section-sub">Click a card to open the matching expandable section.</p>
+    <div class="cards" id="topicCards"></div>
+  </section>
+
+  <!-- OPENING -->
+  <details class="section" id="sec-opening" open data-track>
+    <summary>
+      <div>
+        <p class="section-title">Opening read-aloud (0–4)</p>
+        <p class="section-sub">Framing · Sinek · Why/What vs How · 80/20 target</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <p><strong>Opening framing (read aloud first):</strong></p>
+      <blockquote>Today you’ll learn how to turn an engineering goal into a checked result with AI: define what matters, choose the tools and data boundaries, give it context, and delegate the work while keeping human review and accountability.</blockquote>
+      <p><strong>Verified Sinek excerpt</strong> (single source-linked quote; TED talk listed in Sources). Character count of quoted sentence: 53.</p>
+      <blockquote>
+        People don't buy what you do; they buy why you do it.<br />
+        <span style="color:var(--muted);font-size:.9rem;">— Simon Sinek, How great leaders inspire action, TEDxPuget Sound, 2009</span>
+      </blockquote>
+      <p><em>Speaker script, original paraphrase, not Sinek's wording:</em> Sinek's point is that most companies explain themselves from the outside in. Here is what we make, here is how it is better, please buy it. His Apple illustration reverses the order. Apple leads with a belief, challenging the status quo and thinking differently, then explains how it acts on that belief with well-designed, easy-to-use products, and only then mentions what it sells: computers. Same products, different order, and the belief is what people respond to.</p>
+      <p>The flip: for most of engineering history the how consumed us. Syntax, boilerplate, wiring, test scaffolding. With agentic AI, much of the how can be delegated. Our job moves inward: why are we building this, what exactly should exist, and how will we know it is right. The AI proposes the how. We keep the acceptance criteria and the accountability.</p>
+      <p>Christian's working target is roughly 80% AI effort and 20% human effort, with the human 20% spent on strategy, risk, outcome review and exceptions. It is a goal for our workflow, not a measured or universal number. This class was prepared that way: the instructor set the why and the topics; AI drafted; the instructor reviewed and decides what ships.</p>
+    </div>
+  </details>
+
+  <details class="section" id="sec-notes" data-track>
+    <summary>
+      <div>
+        <p class="section-title">Segment notes (facilitator)</p>
+        <p class="section-sub">4–32 talking points</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <h3>4–9 Models, inference, local vs cloud</h3>
+      <ol class="olist">
+        <li>Claude Code is agentic tooling: it reads files, runs commands, edits code and calls a model. It is not itself a model.</li>
+        <li>Models differ in capability, speed, cost and context window. Route routine work to faster models, hard reasoning to stronger ones. Name families correctly: Opus, Sonnet and Haiku are Anthropic's Claude models; GPT models are OpenAI's.</li>
+        <li>Inference is the model call. Prompt plus selected context goes to whichever backend is configured. A desktop app is an interface; unless you run open-weights models on your own hardware, inference happens in someone's cloud.</li>
+      </ol>
+      <h3>9–15 Backends, plan myths, Bedrock vs GovCloud</h3>
+      <ol class="olist">
+        <li>Teachable correction: paying $200 rather than $20 for ChatGPT does not make inference stay off the provider. Both are consumer plans; OpenAI still processes every prompt. The training toggle exists on Free, Plus and Pro alike.</li>
+        <li>Opting out of training is not the same as no provider processing, which is not data residency, which is not local or offline inference. Four different questions.</li>
+        <li>Bedrock backend (<code>CLAUDE_CODE_USE_BEDROCK=1</code>): inference goes to Amazon Bedrock in the region you set, using your AWS credentials and IAM.</li>
+        <li>Per Claude Code docs, Bedrock defaults turn off metrics, error reports and /feedback upload, but a session survey prompt and a WebFetch hostname check to Anthropic still run unless disabled (<code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code>, <code>skipWebFetchPreflight</code>).</li>
+        <li>GovCloud regions use the <code>us-gov.</code> inference-profile prefix; model availability can lag commercial. GovCloud alone is not CUI, ITAR or CMMC compliance: authorization, approved models, settings, telemetry, networking and procedures all matter.</li>
+      </ol>
+      <h3>15–23 Harness and interfaces</h3>
+      <ol class="olist">
+        <li>A harness is the loop around the model: tools, permissions, file access, memory files, hooks, stop conditions.</li>
+        <li>New ways to talk to it: plain-language goals, CLAUDE.md, slash commands, skills, plan mode, voice.</li>
+        <li>Same harness, different doors: terminal, VS Code extension, Claude Code Desktop. Use the comparison table; compare harness, context and permissions, not just model names.</li>
+        <li>On VS Code: the owner's sense that it is losing ground is a hypothesis. Stack Overflow's 2026 survey still shows 70.9% regular use, the top IDE. What is changing is where the agent lives, not the editor's reach.</li>
+      </ol>
+      <h3>23–32 Context, planning, storage</h3>
+      <ol class="olist">
+        <li>Walk the context menu below; ask the room which item they skip most.</li>
+        <li>Planning stages: why and constraints, options, decision (ADR), plan, build, verify.</li>
+        <li>Show the one-page ADR and the storage matrix for the running example.</li>
+      </ol>
+    </div>
+  </details>
+
+  <details class="section" id="sec-stack" data-track>
+    <summary>
+      <div>
+        <p class="section-title">Model, harness, interface, backend</p>
+        <p class="section-sub">Layer map</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <table>
+        <thead><tr><th>Layer</th><th>Example</th><th>What it decides</th></tr></thead>
+        <tbody>
+          <tr><td>Model</td><td>Claude Opus, Sonnet, Haiku; GPT</td><td>Reasoning quality, speed, cost</td></tr>
+          <tr><td>Harness</td><td>Claude Code, Codex, Copilot agent</td><td>Tools, permissions, loop, memory</td></tr>
+          <tr><td>Interface</td><td>Terminal, VS Code, Desktop, voice</td><td>How you see and steer it</td></tr>
+          <tr><td>Backend</td><td>Anthropic, OpenAI, Bedrock, local</td><td>Where inference and data go</td></tr>
+          <tr><td>Orchestrator</td><td>Grok Bot, OpenAI dots</td><td>Who delegates work and asks you</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="section" id="sec-routing" data-track>
+    <summary>
+      <div>
+        <p class="section-title">Where inference runs</p>
+        <p class="section-sub">Routing table · plan myths</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <table>
+        <thead><tr><th>Route</th><th>Model runs at</th><th>Key point</th></tr></thead>
+        <tbody>
+          <tr><td>ChatGPT Plus $20 / Pro $100–500</td><td>OpenAI cloud</td><td>Training opt-out available; still processed by OpenAI</td></tr>
+          <tr><td>ChatGPT Business / Enterprise</td><td>OpenAI cloud</td><td>Not used for training by default; admin controls</td></tr>
+          <tr><td>Claude Code, Anthropic API</td><td>Anthropic cloud</td><td>Commercial terms: not trained on; 30-day standard retention</td></tr>
+          <tr><td>Claude Code via Bedrock</td><td>AWS region you set</td><td>Cloud-hosted weights in AWS; some Anthropic checks remain</td></tr>
+          <tr><td>Bedrock in GovCloud</td><td>us-gov region</td><td>Partition matters; compliance is not automatic</td></tr>
+          <tr><td>Local open-weights model</td><td>Your hardware</td><td>Only fully offline route; usually less capable</td></tr>
+        </tbody>
+      </table>
+      <p>Prices as of 8 Nov 2026 from OpenAI's help center; recheck before class. Plan tier changes limits and features, never where the model executes.</p>
+      <div class="callout warn"><strong>Teaching warning:</strong> An app or subscription is not local inference. Unless you run open-weights models on your own hardware, inference happens in someone's cloud.</div>
+    </div>
+  </details>
+
+  <details class="section" id="sec-tools" data-track>
+    <summary>
+      <div>
+        <p class="section-title">Tool comparison (facilitator reference)</p>
+        <p class="section-sub">7 tools</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <table>
+        <thead><tr><th>Tool</th><th>What it is</th><th>Watch for</th></tr></thead>
+        <tbody>
+          <tr><td>Claude Code Desktop</td><td>Desktop door to the Claude Code harness</td><td>Backend set by config: Anthropic or Bedrock</td></tr>
+          <tr><td>Codex in ChatGPT desktop</td><td>OpenAI's coding harness: local, worktree or cloud tasks; built-in Git and PRs</td><td>The standalone Codex app's features now live in the ChatGPT desktop app</td></tr>
+          <tr><td>ChatGPT Desktop</td><td>Chat interface; hosts Codex and dots</td><td>A desktop app is not a local model</td></tr>
+          <tr><td>VS Code</td><td>Editor hosting Claude Code, Codex, Copilot extensions</td><td>70.9% regular use in 2026 survey</td></tr>
+          <tr><td>GitHub Copilot + GitHub</td><td>Copilot agent, PR review, cloud agent; can delegate to Claude or Codex agents (preview)</td><td>Model menu varies by surface and plan</td></tr>
+          <tr><td>Grok Bot + Claude Code</td><td>Voice-first conductor delegating to Claude Code</td><td>Requires a configured, approved route</td></tr>
+          <tr><td>OpenAI dots</td><td>Always-on ChatGPT agent with its own cloud computer</td><td>Pro and Business Premium; not all regions</td></tr>
+        </tbody>
+      </table>
+      <p>Copilot is not model-limited: GitHub's docs list Claude Opus and Sonnet and GPT models, and a cloud agent that opens pull requests. Fair differences sit in the harness: how much repo and shell context it gathers, its permission model, local versus hosted execution, and how the PR loop is driven. Assume each tool runs its strongest officially listed model; compare workflows, not leaderboards.</p>
+    </div>
+  </details>
+
+  <details class="section" id="sec-context" data-track>
+    <summary>
+      <div>
+        <p class="section-title">Context menu</p>
+        <p class="section-sub">What to give the agent</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <ul class="ulist">
+        <li><strong>The prompt</strong> — Goal, constraints, acceptance criteria</li>
+        <li><strong>Project memory</strong> — CLAUDE.md conventions, commands, do and don't</li>
+        <li><strong>Files and references</strong> — Point at specific files; the agent can read the repo</li>
+        <li><strong>Decision records</strong> — ADRs explain why, so the agent doesn't relitigate</li>
+        <li><strong>Structured data</strong> — JSON inputs and fixtures it can compute from</li>
+        <li><strong>Tools and skills</strong> — What it may run and reusable procedures</li>
+        <li><strong>Feedback</strong> — Test output, review comments, your corrections</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="section" id="sec-adr" data-track>
+    <summary>
+      <div>
+        <p class="section-title">Example one-page ADR</p>
+        <p class="section-sub">Synthetic station power budget</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <table>
+        <tbody>
+          <tr><th>ADR-001</th><td>Store station power-budget inputs as JSON, narrative as Markdown</td></tr>
+          <tr><th>Status</th><td>Accepted (synthetic example)</td></tr>
+          <tr><th>Context</th><td>AI and humans both edit inputs; calculations must be reproducible and diff-able in Git.</td></tr>
+          <tr><th>Decision</th><td><code>inputs.json</code> for numbers, <code>design-notes.md</code> for rationale. No database yet.</td></tr>
+          <tr><th>Alternatives</th><td>SQLite: rejected for now, single user and no queries needed. Markdown tables only: rejected, not machine-checkable.</td></tr>
+          <tr><th>Consequences</th><td>Easy review in PRs. Revisit SQLite if we log readings from many stations.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="section" id="sec-storage" data-track>
+    <summary>
+      <div>
+        <p class="section-title">Storage choice</p>
+        <p class="section-sub">Markdown · JSON · SQLite</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <table>
+        <thead><tr><th>Format</th><th>Best for</th><th>Watch out</th></tr></thead>
+        <tbody>
+          <tr><td>Markdown</td><td>Narrative, context, ADRs, runbooks</td><td>Not reliably parseable data</td></tr>
+          <tr><td>JSON</td><td>Config, structured exchange, fixtures</td><td>No queries, no transactions</td></tr>
+          <tr><td>SQLite</td><td>Queryable local app state, transactions</td><td>One writer at a time; not a server DB</td></tr>
+        </tbody>
+      </table>
+      <p>All three are files on disk. The question is not file versus database, it is what shape the data has and who reads or writes it.</p>
+    </div>
+  </details>
+
+  <details class="section" id="sec-demo" data-track>
+    <summary>
+      <div>
+        <p class="section-title">Engineering demo kit (32–40)</p>
+        <p class="section-sub">Prompts · calculations · human exception</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <p><strong>Instructor prompt 1, general form:</strong></p>
+      <blockquote>This is roughly what I'm trying to achieve: a small off-grid sensor station that runs year-round on solar and a battery. What public standards, engineering principles and rules of thumb should I consider? List the questions and assumptions you need from me before estimating.</blockquote>
+      <p>Expected observation: the AI asks about load profile, sun hours, days of autonomy, battery chemistry and depth of discharge, temperature, and system losses. Nothing about the real project is revealed.</p>
+      <p><strong>Instructor prompt 2, declared numbers:</strong></p>
+      <blockquote>Assume 5 W average load, 3 days of autonomy, 12 V battery usable to 50%, 3.5 peak sun hours, 70% overall system efficiency. Size the battery and panel, show units at every step, then do an independent order-of-magnitude check and tell me how many days a full recharge takes.</blockquote>
+      <p><strong>Prepared calculations:</strong></p>
+      <pre><code>Daily energy = 5 W × 24 h = 120 Wh/day
+
+Battery = (120 × 3 Wh) / 0.5 = 720 Wh = 60 Ah at 12 V
+
+Panel = 120 Wh / (3.5 h × 0.7) = 49 W → choose 60 W
+
+Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></pre>
+      <p>Sanity check: 60 W × 3.5 h × 0.7 = 147 Wh/day, above the 120 Wh load. 60 Ah × 12 V × 0.5 = 360 Wh, three days of load.</p>
+      <div class="callout info"><strong>Human exception decision:</strong> The panel covers an average day but needs about 13 days to refill after a 3-day outage. Is that acceptable? The AI computed it; an engineer decides, perhaps a larger panel. Limitations: synthetic averages, no temperature derating, no seasonal sun data. A real design needs qualified engineering validation and the applicable codes.</div>
+      <p>Fallback if tools are slow: show the prepared calculation above and the expected question list.</p>
+      <div class="callout warn"><strong>Warning:</strong> Synthetic-only example. Do not execute against real repos, AWS accounts, messages, or controlled data without a separate explicit ask.</div>
+    </div>
+  </details>
+
+  <details class="section" id="sec-crosswalk" data-track>
+    <summary>
+      <div>
+        <p class="section-title">Crosswalk boundaries (40–44)</p>
+        <p class="section-sub">Coded labels are not declassification</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <table>
+        <thead><tr><th>Coded label (illustrative)</th><th>Real item</th></tr></thead>
+        <tbody>
+          <tr><td><code>=S1-G1</code></td><td>Solar panel</td></tr>
+          <tr><td><code>=S1-G2</code></td><td>Battery</td></tr>
+          <tr><td><code>=S1-K1</code></td><td>Charge controller</td></tr>
+        </tbody>
+      </table>
+      <p>Labels are IEC 81346-inspired for illustration only. The pattern: discuss generalized, coded problems outside; keep the mapping key in the approved secure environment.</p>
+      <div class="callout warn"><strong>Coding is not declassification:</strong> Coded names do not make controlled data shareable. If the payload itself is controlled, it stays inside the approved boundary regardless of labels, and anonymization never authorizes moving it out.</div>
+    </div>
+  </details>
+
+  <details class="section" id="sec-github" data-track>
+    <summary>
+      <div>
+        <p class="section-title">GitHub close-the-loop (44–53)</p>
+        <p class="section-sub">Worktrees · AI PR · human gate</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <p><strong>Instructor prompt 3, run in a git worktree:</strong></p>
+      <blockquote>Create a branch, add inputs.json and a power-budget script with tests for the numbers we just checked, run the tests, open a pull request with a summary and the ADR link. Don't merge. When you think you're done, re-check: tests run, PR opened, description complete.</blockquote>
+      <ol class="olist">
+        <li><strong>Worktree per task</strong> — <code>git worktree add ../station-budget -b feat/power-budget</code> keeps parallel agents isolated</li>
+        <li><strong>AI implements</strong> — Code, tests, commit, PR description</li>
+        <li><strong>Remind to finish</strong> — Agents stop early; ask explicitly for tests, PR, and checks</li>
+        <li><strong>Human reviews</strong> — Strategy, outcome, exceptions; not every line</li>
+        <li><strong>Merge only when authorized</strong> — Required checks and branch protection pass; never bypass approvals</li>
+      </ol>
+      <p>Demo uses a throwaway sandbox repo. Fallback: a prepared PR screenshot.</p>
+    </div>
+  </details>
+
+  <details class="section" id="sec-conductor" data-track>
+    <summary>
+      <div>
+        <p class="section-title">Conductors: Grok Bot and OpenAI dots (53–57)</p>
+        <p class="section-sub">Orchestrators above a harness</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <table>
+        <thead><tr><th></th><th>Grok Bot (our setup)</th><th>OpenAI dots</th></tr></thead>
+        <tbody>
+          <tr><td>Talk to it</td><td>Voice and chat</td><td>ChatGPT chat or call; Slack, Teams</td></tr>
+          <tr><td>Does work via</td><td>Delegates to Claude Code over a configured route</td><td>Own cloud computer, browser, plugins; starts Codex tasks</td></tr>
+          <tr><td>Always on</td><td>Runs when asked or on routines</td><td>Proactive background research, read-only</td></tr>
+          <tr><td>Approvals</td><td>Human approval for sends, spend, merges, irreversible steps</td><td>Built-in and custom approval rules</td></tr>
+          <tr><td>Availability</td><td>Our configured deployment</td><td>Pro and Business Premium; Enterprise beta; not all regions</td></tr>
+        </tbody>
+      </table>
+      <p>Teaching point: both are orchestrators above a harness. Neither changes the model-backend rules, and neither replaces human gates. Grok Bot reaching Claude Code is a route we configured and approved, not a built-in connector every installation has. Grok Bot can co-teach through prompts and Q&amp;A in chat; no live meeting integration is assumed.</p>
+    </div>
+  </details>
+
+  <details class="section" id="sec-split" data-track>
+    <summary>
+      <div>
+        <p class="section-title">80/20 responsibility split · roles · preflight</p>
+        <p class="section-sub">Target, not measured fact</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <table>
+        <thead><tr><th>AI (target 80%)</th><th>Human (target 20%)</th></tr></thead>
+        <tbody>
+          <tr><td>Draft code, tests, docs</td><td>Why, what, acceptance criteria</td></tr>
+          <tr><td>Run calculations and checks</td><td>Risk and exception calls</td></tr>
+          <tr><td>Open PRs, summarize changes</td><td>Review outcomes, authorize merge</td></tr>
+          <tr><td>Propose options</td><td>Choose and own the decision</td></tr>
+        </tbody>
+      </table>
+      <p>Humans own why, what, acceptance criteria, and accountability. The 80% AI / 20% human split is a workflow target, not a universal measured fact.</p>
+      <h3>Co-teaching roles</h3>
+      <ul class="ulist">
+        <li><strong>Christian</strong> — Lead, read-aloud, demos, human decision points</li>
+        <li><strong>Grok Bot</strong> — Prepared prompts, Q&amp;A support in chat, fallback answers</li>
+        <li><strong>Volunteer engineer</strong> — Plays reviewer on the PR demo</li>
+      </ul>
+      <h3>Preflight checklist</h3>
+      <div class="checklist">
+        <label><input type="checkbox" disabled /> Sandbox repo with no real data, worktree tested</label>
+        <label><input type="checkbox" disabled /> Claude Code backend and model confirmed; /status shown</label>
+        <label><input type="checkbox" disabled /> Volatile facts rechecked (sources below)</label>
+        <label><input type="checkbox" disabled /> Fallback screenshots for demos 1–3 ready</label>
+        <label><input type="checkbox" disabled /> No infrastructure identifiers, accounts or CUI on screen</label>
+      </div>
+      <p>Status as of 8 Nov 2026: none done yet.</p>
+    </div>
+  </details>
+
+  <details class="section" id="sec-closing" data-track>
+    <summary>
+      <div>
+        <p class="section-title">Closing prompt (57–60)</p>
+        <p class="section-sub">Takeaway exercise</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <p><strong>Takeaway exercise:</strong></p>
+      <blockquote>Pick one task you did by hand this week. Write its why, its what, and three acceptance criteria. Hand the how to Claude Code, and review only the outcome and exceptions.</blockquote>
+    </div>
+  </details>
+
+  <details class="section" id="sec-sources" data-track>
+    <summary>
+      <div>
+        <p class="section-title">Sources and pre-class rechecks</p>
+        <p class="section-sub">11 links · volatile facts</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <ul class="ulist">
+        <li><a href="https://code.claude.com/docs/en/amazon-bedrock">Claude Code on Amazon Bedrock</a> — code.claude.com</li>
+        <li><a href="https://code.claude.com/docs/en/data-usage">Claude Code data usage and telemetry</a> — code.claude.com</li>
+        <li><a href="https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-bedrock.html">Amazon Bedrock in AWS GovCloud (US)</a> — docs.aws.amazon.com</li>
+        <li><a href="https://help.openai.com/en/articles/7730893-data-controls-in-chatgpt">Data controls in ChatGPT</a> — help.openai.com</li>
+        <li><a href="https://help.openai.com/en/articles/9793128-about-chatgpt-pro-tiers">About ChatGPT Pro tiers</a> — help.openai.com</li>
+        <li><a href="https://learn.chatgpt.com/docs/environments/modes">Codex environments</a> — learn.chatgpt.com</li>
+        <li><a href="https://learn.chatgpt.com/docs/whats-new/dots-october-9-2026">Create your dot</a> — learn.chatgpt.com</li>
+        <li><a href="https://docs.github.com/en/copilot/reference/ai-models/supported-models">Supported AI models in GitHub Copilot</a> — docs.github.com</li>
+        <li><a href="https://docs.github.com/en/copilot/concepts/agent-capabilities/about-agents/about-third-party-coding-agents">Third-party coding agents on GitHub</a> — docs.github.com</li>
+        <li><a href="https://survey.stackoverflow.co/2026/technology/data/dev-ide">Stack Overflow 2026 survey: Dev IDEs</a> — survey.stackoverflow.co</li>
+        <li><a href="https://www.ted.com/talks/simon_sinek_how_great_leaders_inspire_action">Simon Sinek: How great leaders inspire action</a> — ted.com</li>
+      </ul>
+      <p>Recheck before class: GovCloud Claude model availability, Claude Code defaults and telemetry, ChatGPT plan prices, Copilot model lists, and dots availability. These change often.</p>
+      <h3>Draft caveats (retained; no new price/feature claims)</h3>
+      <ul class="ulist">
+        <li><strong>Synthetic-only</strong> demo and ADR; nothing about a real project is revealed.</li>
+        <li><strong>Coded labels are not decontrol</strong> / not declassification.</li>
+        <li><strong>GovCloud alone is not compliance</strong> (not automatic CUI, ITAR, or CMMC).</li>
+        <li><strong>App / subscription is not local inference.</strong></li>
+        <li>Do <strong>not</strong> execute against real repos, AWS, messages, or controlled data without a separate explicit ask.</li>
+        <li>Prices and volatile product facts are as recorded in the draft (e.g. as of 8 Nov 2026); recheck before class from Sources above. This export did not re-verify them.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="section" id="sec-coverage" data-track>
+    <summary>
+      <div>
+        <p class="section-title">Topic coverage map</p>
+        <p class="section-sub">From Page alternate view</p>
+      </div>
+      <span class="chev" aria-hidden="true">›</span>
+    </summary>
+    <div class="section-body">
+      <table>
+        <thead><tr><th>Topic group</th><th>Where</th></tr></thead>
+        <tbody>
+          <tr><td>Start With Why + AI flip</td><td>0–4</td></tr>
+          <tr><td>80/20 human-in-the-loop target</td><td>0–4, 44–53</td></tr>
+          <tr><td>1 Claude Code as base solution</td><td>4–9, 15–23</td></tr>
+          <tr><td>2 Differences between models</td><td>4–9</td></tr>
+          <tr><td>3 Inference, local vs cloud, what reaches the provider</td><td>4–15</td></tr>
+          <tr><td>4 Bedrock in AWS</td><td>9–15</td></tr>
+          <tr><td>5 Bedrock commercial vs GovCloud</td><td>9–15</td></tr>
+          <tr><td>6 What a harness is</td><td>15–23</td></tr>
+          <tr><td>7 VS Code, Desktop apps, tool comparison</td><td>15–23</td></tr>
+          <tr><td>12 Context</td><td>23–27</td></tr>
+          <tr><td>13 Planning stages and ADRs</td><td>27–32</td></tr>
+          <tr><td>14 JSON vs Markdown vs SQLite</td><td>27–32</td></tr>
+          <tr><td>Engineering scenario demo</td><td>32–40</td></tr>
+          <tr><td>11 Frontier workflow and crosswalks</td><td>40–44</td></tr>
+          <tr><td>8 GitHub</td><td>44–53</td></tr>
+          <tr><td>9 Teamwork: worktrees, branches, AI PRs</td><td>44–53</td></tr>
+          <tr><td>10 Grok Bot as conductor, vs dots</td><td>53–57</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <p class="footer-note">View / reading progress is for navigation only — not a certification. Forced light theme; no dark-mode toggle. Static HTML/CSS/JS only; no network, login, or AI-powered features in this page.</p>
+</main>
+<script>
+(function () {
+  var agenda = [
+    { win: "0–4", min: 4, title: "Start With Why + AI flip", purpose: "80/20 target. Humans own why and what.", jump: "sec-opening" },
+    { win: "4–9", min: 5, title: "Models & inference", purpose: "Local vs cloud. Agent tool ≠ model.", jump: "sec-notes" },
+    { win: "9–15", min: 6, title: "Backends & GovCloud", purpose: "Backend choice sets where data goes.", jump: "sec-routing" },
+    { win: "15–23", min: 8, title: "Harness & tools", purpose: "Same agent, several doors.", jump: "sec-tools" },
+    { win: "23–27", min: 4, title: "Context", purpose: "Output follows context.", jump: "sec-context" },
+    { win: "27–32", min: 5, title: "Planning & ADR", purpose: "Decide before building.", jump: "sec-adr" },
+    { win: "32–40", min: 8, title: "Live engineering demo", purpose: "General question, then checked math.", jump: "sec-demo" },
+    { win: "40–44", min: 4, title: "Crosswalk boundaries", purpose: "Coded names ≠ declassification.", jump: "sec-crosswalk" },
+    { win: "44–53", min: 9, title: "GitHub to PR", purpose: "AI does the loop; humans gate.", jump: "sec-github" },
+    { win: "53–57", min: 4, title: "Conductors", purpose: "Grok Bot vs OpenAI dots.", jump: "sec-conductor" },
+    { win: "57–60", min: 3, title: "Recap & closing", purpose: "Closing prompt, Q&A.", jump: "sec-closing" }
+  ];
+  var topics = [
+    { name: "Opening / Why", when: "0–4", jump: "sec-opening" },
+    { name: "Segment notes", when: "4–32", jump: "sec-notes" },
+    { name: "Stack layers", when: "ref", jump: "sec-stack" },
+    { name: "Inference routes", when: "ref", jump: "sec-routing" },
+    { name: "Tool comparison (7)", when: "15–23", jump: "sec-tools" },
+    { name: "Context menu", when: "23–27", jump: "sec-context" },
+    { name: "ADR example", when: "27–32", jump: "sec-adr" },
+    { name: "Storage", when: "27–32", jump: "sec-storage" },
+    { name: "Demo kit", when: "32–40", jump: "sec-demo" },
+    { name: "Crosswalk", when: "40–44", jump: "sec-crosswalk" },
+    { name: "GitHub loop", when: "44–53", jump: "sec-github" },
+    { name: "Conductors", when: "53–57", jump: "sec-conductor" },
+    { name: "80/20 + preflight", when: "ref", jump: "sec-split" },
+    { name: "Closing", when: "57–60", jump: "sec-closing" },
+    { name: "Sources", when: "ref", jump: "sec-sources" },
+    { name: "Coverage map", when: "map", jump: "sec-coverage" }
+  ];
+
+  function openAndJump(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === "DETAILS") el.open = true;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    el.classList.add("viewed");
+    setTimeout(function () { el.classList.remove("viewed"); }, 1200);
+  }
+
+  var tl = document.getElementById("timelineList");
+  agenda.forEach(function (a) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "tl-item";
+    b.innerHTML = '<div class="tl-min">' + a.win + '<small>' + a.min + ' min</small></div>' +
+      '<div class="tl-body"><strong>' + a.title + '</strong><span>' + a.purpose + '</span></div>';
+    b.addEventListener("click", function () { openAndJump(a.jump); });
+    tl.appendChild(b);
+  });
+  var totalMin = agenda.reduce(function (s, a) { return s + a.min; }, 0);
+  var total = document.createElement("p");
+  total.innerHTML = "<strong>Total minutes: " + totalMin + "</strong> (must equal 60).";
+  tl.parentNode.appendChild(total);
+
+  var cards = document.getElementById("topicCards");
+  topics.forEach(function (t) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "card";
+    b.innerHTML = '<div class="when">' + t.when + '</div><div class="name">' + t.name + '</div>';
+    b.addEventListener("click", function () { openAndJump(t.jump); });
+    cards.appendChild(b);
+  });
+
+  document.getElementById("expandAll").addEventListener("click", function () {
+    document.querySelectorAll("details.section").forEach(function (d) { d.open = true; });
+  });
+  document.getElementById("collapseAll").addEventListener("click", function () {
+    document.querySelectorAll("details.section").forEach(function (d) { d.open = false; });
+  });
+  document.querySelectorAll("[data-jump]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      openAndJump(btn.getAttribute("data-jump"));
+    });
+  });
+
+  // Print: force open
+  window.addEventListener("beforeprint", function () {
+    document.querySelectorAll("details.section").forEach(function (d) { d.open = true; });
+  });
+
+  var bar = document.getElementById("progressBar");
+  var label = document.getElementById("progressLabel");
+  function updateProgress() {
+    var doc = document.documentElement;
+    var scrollTop = doc.scrollTop || document.body.scrollTop;
+    var height = doc.scrollHeight - doc.clientHeight;
+    var pct = height > 0 ? Math.min(100, Math.round((scrollTop / height) * 100)) : 0;
+    bar.style.width = pct + "%";
+    bar.setAttribute("aria-valuenow", String(pct));
+    label.textContent = pct + "% read";
+  }
+  window.addEventListener("scroll", updateProgress, { passive: true });
+  updateProgress();
+})();
+</script>
+</body>
+</html>
