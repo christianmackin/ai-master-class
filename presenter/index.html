@@ -1,0 +1,1983 @@
+<!DOCTYPE html>
+<html lang="en" class="presenter">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light" />
+<title>AI Master Class — presenter view (notes always on)</title>
+<!-- Self-contained: no external fonts, scripts, images, network or AI calls. Works from file://. Forced light theme. -->
+<style>
+:root{
+  color-scheme: light;
+  --bg:#FBF8F3; --surface:#FFFFFF; --ink:#141B26; --muted:#5A6577; --line:#E4DED3;
+  --teal:#0D7EA8; --green:#0F9B8E; --amber:#E8890C; --amber-ink:#9A5300; --amber-soft:#FFF1DC;
+  --teal-soft:#E6F4FA; --green-soft:#E8F7F5; --warn:#C2410C; --warn-soft:#FDEDE4; --cream:#F4EFE6;
+  --font:Inter,"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --serif:"Source Serif Pro","Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.2,.75,.2,1);
+  --topH:56px; --botH:64px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--font);}
+body{overflow:hidden;line-height:1.4}
+a{color:var(--teal)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--teal);outline-offset:3px;border-radius:6px}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+kbd{font-family:var(--mono);font-size:.78em;background:var(--surface);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px}
+
+/* ---------- chrome: top timeline ---------- */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topH);display:flex;align-items:center;gap:16px;padding:0 18px;background:rgba(255,255,255,.94);border-bottom:1px solid var(--line);z-index:30}
+.brand{font-weight:800;font-size:15px;letter-spacing:-.01em;white-space:nowrap}
+.brand span{color:var(--muted);font-weight:600}
+.tl{flex:1;display:flex;gap:3px;height:30px;align-items:stretch;margin:0;padding:0;list-style:none}
+.tl li{display:flex;min-width:0}
+.tl button{position:relative;flex:1;min-width:0;border:1px solid var(--line);background:var(--cream);border-radius:6px;cursor:pointer;padding:0 6px;font-size:11.5px;font-weight:700;color:var(--muted);text-align:left;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.tl button .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--teal-soft);transition:width .35s var(--ease);z-index:0}
+.tl button .lbl{position:relative;z-index:1}
+.tl button.done{background:var(--teal-soft);color:#075a78}
+.tl button[aria-current="step"]{border-color:var(--teal);color:var(--ink);box-shadow:0 0 0 1px var(--teal) inset}
+.tl button:hover{border-color:var(--teal)}
+.clock{font-family:var(--mono);font-size:13px;color:var(--muted);white-space:nowrap;text-align:right;min-width:150px}
+.clock b{color:var(--ink);font-size:15px}
+
+/* ---------- viewport + scaled 16:9 canvas ---------- */
+#viewport{position:fixed;top:var(--topH);bottom:var(--botH);left:0;right:0;overflow:hidden;transition:right .3s var(--ease)}
+body.notes-open #viewport{right:440px}
+#canvas{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform-origin:50% 50%;transform:translate(-50%,-50%);background:var(--bg);overflow:hidden;border-radius:18px;box-shadow:0 1px 2px rgba(20,27,38,.05),0 12px 40px rgba(20,27,38,.08)}
+.stage{position:absolute;inset:0;padding:56px 80px;transition:transform .42s var(--ease),opacity .42s var(--ease);background:var(--bg)}
+.stage[hidden]{display:none}
+.stage.pre-right{transform:translateX(7%);opacity:0}
+.stage.pre-left{transform:translateX(-7%);opacity:0}
+.stage-h{margin:0;font-weight:800;letter-spacing:-.035em;line-height:1.02;outline:none}
+.kicker{display:flex;align-items:center;gap:14px;font-size:17px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
+.kicker .num{display:inline-grid;place-items:center;min-width:44px;height:30px;padding:0 8px;border-radius:8px;background:var(--ink);color:#fff;letter-spacing:.02em}
+.kicker .pg{font-family:var(--mono);font-size:15px;letter-spacing:.02em;text-transform:none;background:var(--teal-soft);color:#075a78;border:1.5px solid #9CCFE3;border-radius:999px;padding:3px 12px;font-weight:800;white-space:nowrap}
+.pgno{font-family:var(--mono);font-size:14px;font-weight:800;background:var(--ink);color:#fff;border-radius:999px;padding:5px 12px;white-space:nowrap}
+.kicker .win{margin-left:auto;color:var(--muted);letter-spacing:.04em;font-family:var(--mono);text-transform:none;font-weight:600}
+.audience{display:inline-flex;align-items:center;gap:12px;background:var(--amber-soft);border:2px solid var(--amber);color:var(--amber-ink);border-radius:999px;padding:10px 22px;font-size:22px;font-weight:700}
+.audience .tag{font-size:13px;letter-spacing:.12em;text-transform:uppercase;background:var(--amber);color:#fff;border-radius:999px;padding:3px 10px}
+.pill{display:inline-block;border-radius:999px;padding:6px 16px;font-size:18px;font-weight:700}
+.pill.warn{background:var(--warn-soft);color:var(--warn);border:1.5px solid #F2B79B}
+.pill.teal{background:var(--teal-soft);color:#075a78}
+.pill.amber{background:var(--amber-soft);color:var(--amber-ink)}
+.caveat{font-size:17px;font-weight:700;color:var(--warn)}
+.caveat::before{content:"! ";display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--warn);color:#fff;text-align:center;line-height:22px;font-size:14px;margin-right:8px}
+
+/* beats: progressive reveal */
+[data-b]{transition:opacity .38s var(--ease) var(--d,0ms),transform .38s var(--ease) var(--d,0ms),visibility 0s linear var(--d,0ms)}
+[data-b]:not(.on){opacity:0;transform:translateY(18px);visibility:hidden;transition:opacity .2s,transform .2s,visibility 0s linear .2s}
+.ghost-out{transition:opacity .35s var(--ease),transform .35s var(--ease),visibility 0s linear .35s}
+
+/* chapter wipe */
+#wipe{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;font-size:520px;font-weight:900;letter-spacing:-.06em;color:rgba(13,126,168,.07);opacity:0;z-index:5}
+#wipe.run{animation:wipe .6s var(--ease) both}
+@keyframes wipe{0%{opacity:0;transform:translateX(18%)}35%{opacity:1}100%{opacity:0;transform:translateX(-18%)}}
+
+/* tap edges (touch/pen only; keyboard uses bottom bar) */
+.edge{position:absolute;top:0;bottom:0;width:64px;z-index:6;border:0;background:transparent;cursor:pointer;opacity:0;transition:opacity .2s;font-size:40px;color:var(--muted)}
+.edge:hover{opacity:.7;background:linear-gradient(90deg,rgba(20,27,38,.04),transparent)}
+.edge.r{right:0}.edge.r:hover{background:linear-gradient(270deg,rgba(20,27,38,.04),transparent)}
+.edge.l{left:0}
+
+/* ---------- bottom bar ---------- */
+.botbar{position:fixed;left:0;right:0;bottom:0;height:var(--botH);display:flex;align-items:center;gap:10px;padding:0 16px;background:rgba(255,255,255,.95);border-top:1px solid var(--line);z-index:30}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.btn:hover{border-color:var(--teal);color:var(--teal)}
+.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.primary:hover{background:#26324a;color:#fff}
+.btn[aria-pressed="true"],.btn[aria-expanded="true"]{background:var(--teal-soft);border-color:var(--teal);color:#075a78}
+.btn kbd{font-size:11px;padding:0 5px}
+.dots{display:flex;gap:7px;align-items:center;margin:0 6px}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--line);transition:background .25s,transform .25s}
+.dots i.on{background:var(--teal)}
+.dots i.cur{transform:scale(1.35)}
+.where{font-size:14px;color:var(--muted);margin-left:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
+.where b{color:var(--ink)}
+.bot-right{display:flex;gap:8px;margin-left:auto}
+
+/* ---------- notes drawer (presenter) ---------- */
+.sal{border:1.5px solid var(--line);border-left:4px solid var(--teal);border-radius:10px;padding:8px 12px;margin:0 0 12px;background:#fff}
+.sal p{margin:3px 0}
+.sal b{display:inline-block;min-width:64px;margin-right:6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+.s2 .stack .layer.L-model{grid-template-columns:auto 1fr;gap:22px;padding:10px 20px}
+.s2 div.routing{top:764px}
+.s2 .stack .L-model .ex.mx{font-size:16px;line-height:1.35;white-space:nowrap}
+.s2 .L-model .ex.mx b{color:var(--ink);font-weight:700}
+.pv-link{font-size:13px;color:var(--muted)}
+.unlock{display:flex;align-items:center;gap:4px;margin-left:6px;opacity:.38;transition:opacity .2s}
+.unlock:hover,.unlock:focus-within{opacity:.9}
+.unlock .kk{font-size:14px;color:var(--muted);cursor:text}
+.unlock input{width:74px;height:24px;font:12px/1 inherit;padding:2px 6px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--ink)}
+.unlock input::placeholder{color:var(--muted);opacity:.8}
+.unlock #pv-lock{font-size:12px;padding:2px 8px}
+.unlock.shake{animation:pvshake .32s linear}
+@keyframes pvshake{0%,100%{transform:none}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+html.unlocked .unlock input,html.unlocked .unlock .kk{display:none}
+html.presenter .unlock{display:none}
+html:not(.unlocked):not(.presenter) #b-notes,html:not(.unlocked):not(.presenter) .nk{display:none}
+html:not(.unlocked):not(.presenter) #notes{display:none!important}
+@media print{html:not(.unlocked):not(.presenter) #notes,html:not(.unlocked):not(.presenter) #notes[hidden]{display:none!important}.unlock{display:none!important}}
+
+.pv-link a{color:var(--muted)}
+html.presenter{--pw:clamp(380px,34vw,620px)}
+html.presenter #notes,html.presenter #notes[hidden]{display:flex!important;width:var(--pw)}
+html.presenter body #viewport{right:var(--pw)}
+html.presenter #b-notes{display:none}
+@media (max-width:720px){html.presenter #notes,html.presenter #notes[hidden]{position:static;width:auto}html.presenter body #viewport{right:0}}
+
+#notes{position:fixed;top:var(--topH);bottom:var(--botH);right:0;width:440px;background:var(--surface);border-left:1px solid var(--line);z-index:25;display:flex;flex-direction:column;box-shadow:-10px 0 30px rgba(20,27,38,.06)}
+#notes[hidden]{display:none}
+.notes-head{padding:14px 18px 8px;border-bottom:1px solid var(--line)}
+.notes-head h2{margin:0;font-size:16px}
+.notes-head .cue{margin:6px 0 0;padding:0;list-style:none;font-size:13px;color:var(--muted)}
+.notes-head .cue li.now{color:var(--ink);font-weight:700}
+.notes-head .cue li span{font-family:var(--mono);margin-right:6px}
+[role="tablist"]{display:flex;gap:4px;padding:8px 12px 0;border-bottom:1px solid var(--line)}
+[role="tab"]{appearance:none;border:1px solid transparent;border-bottom:0;background:transparent;padding:8px 12px;border-radius:8px 8px 0 0;font-size:14px;font-weight:700;color:var(--muted);cursor:pointer}
+[role="tab"][aria-selected="true"]{background:var(--bg);border-color:var(--line);color:var(--ink)}
+#notes-panel{flex:1;overflow:auto;padding:14px 18px 30px;background:var(--bg);font-size:15px;line-height:1.55}
+.stage-notes{display:none}
+.stage-notes.cur{display:block}
+.np{display:none}
+#notes[data-tab="say"] .np.say,#notes[data-tab="ref"] .np.ref,#notes[data-tab="cav"] .np.cav,#notes[data-tab="src"] .np.src{display:block}
+.np h4{margin:14px 0 4px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+.np h4:first-child{margin-top:0}
+.np-title{display:none}
+
+/* ---------- dialogs: reference + timeline ---------- */
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(251,248,243,.97);overflow:auto}
+.overlay[hidden]{display:none}
+.ov-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:12px;padding:14px 22px;background:rgba(255,255,255,.97);border-bottom:1px solid var(--line)}
+.ov-head h2{margin:0;font-size:20px;flex:1}
+.ov-body{max-width:1000px;margin:0 auto;padding:22px 22px 80px}
+.ref-toc{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px;padding:0;list-style:none}
+.ref-toc a{display:inline-block;text-decoration:none;font-size:13px;padding:4px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted)}
+.ref-sec{background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px 22px 18px;margin:0 0 16px}
+.ref-sec h3{font-size:19px;margin:16px 0 4px}
+.ref-sec .sub{color:var(--muted);font-size:14px;margin:0 0 8px}
+.ref-sec h4{font-size:16px;margin:16px 0 4px}
+.refdoc,.np{font-size:15.5px;line-height:1.55}
+table{width:100%;border-collapse:collapse;margin:10px 0;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:.94em}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#F6F1E8;font-size:.82em;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
+tbody th{text-transform:none;letter-spacing:0;font-size:.9em;color:var(--ink);width:150px}
+tr:last-child td,tr:last-child th{border-bottom:0}
+blockquote{margin:10px 0;padding:10px 14px;background:#F7F4EE;border-left:4px solid var(--teal);border-radius:0 10px 10px 0}
+pre{background:#F3EFE7;color:var(--ink);border:1px solid var(--line);padding:12px 14px;border-radius:10px;overflow-x:auto;font-family:var(--mono);font-size:.88em;line-height:1.5}
+code{font-family:var(--mono);font-size:.9em;background:#F1ECE2;padding:1px 5px;border-radius:4px}
+pre code{background:transparent;padding:0}
+.callout{border-left:4px solid var(--teal);background:var(--teal-soft);padding:10px 14px;border-radius:0 10px 10px 0;margin:10px 0}
+.callout.warn{border-left-color:var(--amber);background:var(--amber-soft)}
+.callout.info{border-left-color:var(--teal);background:var(--teal-soft)}
+.ref-pointer{font-size:.95em;color:var(--muted);border:1px dashed var(--line);border-radius:10px;padding:8px 12px}
+.checklist label{display:flex;gap:8px;align-items:flex-start;margin:6px 0}
+.footer-note{color:var(--muted);font-size:14px;margin-top:20px}
+.tl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin:0 0 18px}
+.tl-card{display:grid;grid-template-columns:76px 1fr;gap:12px;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer}
+.tl-card:hover{border-color:var(--teal)}
+.tl-card .m{background:linear-gradient(135deg,var(--teal),var(--green));color:#fff;border-radius:10px;padding:8px 6px;text-align:center;font-weight:800;font-size:15px;line-height:1.15}
+.tl-card .m small{display:block;font-weight:600;font-size:12px;opacity:.95}
+.tl-card strong{display:block}
+.tl-card span{color:var(--muted);font-size:14px}
+.keys{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:15px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+
+/* ---------- local tallies ---------- */
+.tally{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.vote{appearance:none;display:inline-flex;align-items:center;gap:12px;border:2px solid var(--line);background:#fff;border-radius:14px;padding:10px 18px;font-size:24px;font-weight:800;cursor:pointer}
+.vote:hover{border-color:var(--teal)}
+.vote output{min-width:46px;text-align:center;font-family:var(--mono);font-size:24px;background:var(--cream);border-radius:8px;padding:2px 8px}
+.mini{appearance:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-size:16px;font-weight:700;cursor:pointer;color:var(--muted)}
+.mini:hover{border-color:var(--teal);color:var(--teal)}
+.mini.go{background:var(--ink);color:#fff;border-color:var(--ink)}
+.local-note{font-size:14px;color:var(--muted);margin-top:8px}
+
+/* ========== STAGE 1 · hero + golden circle ========== */
+.s1 .left{position:absolute;left:80px;top:128px;width:1360px;display:flex;flex-direction:column;gap:22px;transition:width .5s var(--ease)}
+.s1 .hero-title{font-size:108px;transition:font-size .5s var(--ease)}
+.s1 .hero-title .w{display:inline-block;animation:rise .6s var(--ease) both;animation-delay:calc(var(--i) * 70ms)}
+@keyframes rise{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+.s1 .hero-title em{font-style:normal;color:var(--teal)}
+.s1 .meta{font-size:26px;color:var(--muted);margin:0}
+.s1 .meta b{color:var(--ink)}
+.s1 .lede{font-size:30px;line-height:1.35;margin:0;max-width:1100px}
+.s1 .lede .k{color:var(--teal);font-weight:800}
+.s1 .lede .h{color:var(--amber-ink);font-weight:800}
+.s1[data-at="2"] .left,.s1[data-at="3"] .left{width:800px}
+.s1[data-at="2"] .hero-title{font-size:76px}
+.s1[data-at="3"] .hero-title{font-size:58px}
+.s1[data-at="2"] .lede{font-size:26px}
+.s1[data-at="3"] .lede,.s1[data-at="3"] .meta{display:none}
+.s1 .flip{display:flex;flex-direction:column;gap:18px}
+.s1[data-at="1"] .flip,.s1[data-at="2"] .flip{display:none}
+.s1 .flip h3{margin:0;font-size:40px;letter-spacing:-.02em;line-height:1.1}
+.s1 .flip h3 .ai{color:var(--teal)}
+.s1 .flip p{margin:0;font-size:22px;color:var(--muted)}
+.s1 .bar{position:relative;height:74px;border-radius:16px;background:var(--amber-soft);border:2px solid var(--amber);overflow:hidden}
+.s1 .bar .ai{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,var(--teal),var(--green));transition:width 1.1s var(--ease) .25s;display:flex;align-items:center;padding-left:22px;color:#fff;font-weight:800;font-size:26px;white-space:nowrap}
+.s1 .flip.on .bar .ai{width:80%}
+.s1 .bar .hu{position:absolute;right:0;width:20%;top:0;bottom:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;color:var(--amber-ink);text-align:center;line-height:1.1}
+.s1 .flip p.caveat{color:var(--warn)}
+.s1[data-at="1"] .left{top:220px}
+.s1 .circle-wrap{position:absolute;right:70px;top:108px;width:620px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.s1 svg.gc{width:540px;height:540px;overflow:visible}
+.gc .ring{fill:none;stroke:var(--ink);stroke-width:3;stroke-dasharray:var(--c);stroke-dashoffset:var(--c);transition:stroke-dashoffset .9s var(--ease) var(--rd),stroke .5s,fill .5s}
+.gc .disk{transition:fill .5s var(--ease)}
+.s1 .circle-wrap.on .ring{stroke-dashoffset:0}
+.gc .lab{font:800 30px var(--font);letter-spacing:.14em;fill:var(--ink);text-anchor:middle;opacity:0;transition:opacity .4s var(--ease) var(--rd)}
+.s1 .circle-wrap.on .lab{opacity:1}
+.gc .sub{font:700 19px var(--font);text-anchor:middle;opacity:0;transition:opacity .4s .3s}
+.s1[data-at="3"] .gc .sub{opacity:1}
+.s1[data-at="3"] .gc .d-what{fill:var(--amber-soft)}
+.s1[data-at="3"] .gc .d-how{fill:var(--teal-soft)}
+.s1[data-at="3"] .gc .d-why{fill:#FFE2B8}
+.s1[data-at="3"] .gc .r-how{stroke:var(--teal)}
+.s1[data-at="3"] .gc .r-what,.s1[data-at="3"] .gc .r-why{stroke:var(--amber)}
+.s1 .quote{margin:0;text-align:center;font-family:var(--serif);font-style:italic;font-size:30px;line-height:1.25;max-width:600px}
+.s1 .quote cite{display:block;margin-top:8px;font-family:var(--font);font-style:normal;font-size:15px;color:var(--muted)}
+.s1 .apple{font-size:17px;color:var(--muted);margin:0}
+.s1 .apple b{color:var(--ink)}
+.s1[data-at="3"] .quote-block{opacity:.0;visibility:hidden}
+.s1 .hands{position:absolute;left:80px;bottom:60px}
+.s1 .tags{display:flex;gap:10px;flex-wrap:wrap}
+
+/* ========== STAGE 2 · layered stack ========== */
+.s2 .statement{position:absolute;left:80px;top:150px;width:1440px;transition:all .55s var(--ease)}
+.s2 .stage-h{font-size:128px;transition:font-size .55s var(--ease)}
+.s2 .not{position:relative;color:var(--warn);display:inline-block}
+.s2 .not::after{content:"";position:absolute;left:-4%;right:-4%;bottom:10%;height:12%;background:var(--warn);opacity:.25;transform:scaleX(0);transform-origin:left;animation:strike .7s var(--ease) .45s forwards}
+@keyframes strike{to{transform:scaleX(1)}}
+.s2 .claude{position:absolute;left:80px;top:470px;width:1440px;display:flex;align-items:center;gap:22px;transition:all .55s var(--ease)}
+.s2 .cc{background:var(--ink);color:#fff;border-radius:18px;padding:18px 26px;font-size:30px;font-weight:800;white-space:nowrap}
+.s2 .cc small{display:block;font-size:15px;font-weight:600;opacity:.75;letter-spacing:.06em;text-transform:uppercase}
+.s2 .verbs{display:flex;gap:12px;flex-wrap:wrap}
+.s2 .verb{background:#fff;border:2px solid var(--line);border-radius:999px;padding:10px 20px;font-size:24px;font-weight:700}
+.s2 .verb.call{border-color:var(--teal);color:#075a78;background:var(--teal-soft)}
+.s2[data-at="2"] .statement,.s2[data-at="3"] .statement{width:700px;top:130px}
+.s2[data-at="2"] .stage-h,.s2[data-at="3"] .stage-h{font-size:80px}
+.s2[data-at="2"] .claude{width:700px;top:420px;flex-direction:column;align-items:flex-start;gap:14px}
+.s2[data-at="2"] .verb{font-size:21px}
+.s2[data-at="3"] .claude{opacity:0;visibility:hidden;transform:translateY(-10px)}
+.s2 .stack{position:absolute;right:80px;top:118px;width:720px;display:flex;flex-direction:column-reverse;gap:10px}
+.s2 .layer{display:grid;grid-template-columns:190px 1fr;align-items:center;gap:16px;border-radius:16px;padding:14px 20px;border:2px solid transparent;opacity:0;transform:translateY(40px);transition:opacity .45s var(--ease) var(--ld),transform .45s var(--ease) var(--ld)}
+.s2 .stack.on .layer{opacity:1;transform:none}
+.s2 .layer .ln{font-size:28px;font-weight:800;letter-spacing:-.01em}
+.s2 .layer .ex{font-size:17px;color:var(--muted)}
+.s2 .layer .dec{font-size:21px;font-weight:700}
+.s2 .L-backend{background:var(--ink);color:#fff}.s2 .L-backend .ex{color:#C9D2DE}
+.s2 .L-model{background:#DCEFF7;border-color:#A9D3E5}
+.s2 .L-harness{background:var(--green-soft);border-color:#A8DCD5}
+.s2 .L-interface{background:#fff;border-color:var(--line)}
+.s2 .L-orch{background:var(--amber-soft);border-color:#F3C78A}
+.s2 .routing{position:absolute;right:80px;top:742px;width:720px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.s2 .rt{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:10px 16px;font-size:19px}
+.s2 .rt b{display:block;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal)}
+.s2 .poll{position:absolute;left:80px;top:420px;width:700px;background:#fff;border:2px solid var(--line);border-radius:22px;padding:24px 28px;box-shadow:0 10px 30px rgba(20,27,38,.06)}
+.s2 .poll .q{font-size:34px;font-weight:800;letter-spacing:-.02em;margin:6px 0 16px;line-height:1.15}
+.s2 .poll .ans{margin-top:14px;font-size:22px;line-height:1.35;border-radius:14px;padding:14px 18px;background:var(--warn-soft);border:2px solid #F2B79B}
+.s2 .poll .ans b{color:var(--warn);font-size:30px;margin-right:8px}
+.s2 .poll .ans[hidden]{display:none}
+
+/* ========== STAGE 3 · myth card + route map ========== */
+.s3 .stage-h{font-size:64px;margin-top:20px}
+.s3 .myth{position:absolute;left:300px;top:250px;width:1000px;height:470px;perspective:1600px;transition:all .55s var(--ease)}
+.s3 .card{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .7s var(--ease)}
+.s3 .myth.flipped .card{transform:rotateY(180deg)}
+.s3 .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:26px;padding:34px 40px;display:flex;flex-direction:column;gap:16px}
+.s3 .front{background:#fff;border:3px solid var(--ink);box-shadow:0 18px 50px rgba(20,27,38,.1)}
+.s3 .back{background:var(--warn-soft);border:3px solid var(--warn);transform:rotateY(180deg)}
+.s3 .face .tag{font-size:16px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--warn)}
+.s3 .face .claim{font-size:46px;font-weight:800;line-height:1.12;letter-spacing:-.02em;margin:0}
+.s3 .face .claim .money{color:var(--teal)}
+.s3 .back .verdict{font-size:84px;font-weight:900;color:var(--warn);letter-spacing:-.03em;line-height:1}
+.s3 .back p{font-size:26px;margin:0;line-height:1.35}
+.s3 .myth-ctl{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:auto}
+.s3[data-at="2"] .myth{left:80px;top:250px;width:640px;height:520px}
+.s3[data-at="2"] .face .claim{font-size:34px}
+.s3[data-at="2"] .back .verdict{font-size:60px}
+.s3[data-at="2"] .back p{font-size:22px}
+.s3[data-at="3"] .myth,.s3[data-at="3"] .ladder{opacity:0;visibility:hidden;transform:translateY(-12px)}
+.s3 .myth,.s3 .ladder{transition:all .55s var(--ease),visibility 0s}
+.s3 .ladder{position:absolute;left:790px;top:250px;width:730px;display:flex;flex-direction:column;gap:0}
+.s3 .ladder h3{margin:0 0 14px;font-size:30px;letter-spacing:-.01em}
+.s3 .q4{display:flex;align-items:center;gap:16px;background:#fff;border:2px solid var(--line);border-radius:16px;padding:14px 20px;font-size:28px;font-weight:800;opacity:0;transform:translateX(30px);transition:opacity .4s var(--ease) var(--qd),transform .4s var(--ease) var(--qd)}
+.s3 .q4 .i{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--ink);color:#fff;font-size:20px}
+.s3 .neq{align-self:center;font-size:44px;font-weight:900;color:var(--warn);line-height:1;padding:2px 0;opacity:0;transform:scale(2.2);transition:opacity .3s var(--ease) var(--qd),transform .3s var(--ease) var(--qd)}
+.s3 .ladder.on .q4{opacity:1;transform:none}
+.s3 .ladder.on .neq{opacity:1;transform:none}
+.s3 .ribbon{position:absolute;left:80px;right:80px;top:200px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.s3 .ribbon .chip{background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:7px 16px;font-size:18px;font-weight:700}
+.s3 .ribbon .chip.x{border-color:#F2B79B;background:var(--warn-soft);color:var(--warn)}
+.s3 .routes{position:absolute;left:80px;right:80px;top:262px;height:520px}
+.s3 .routes svg.lanes{position:absolute;left:0;top:0;width:1440px;height:520px;overflow:visible;pointer-events:none}
+.s3 .lane{fill:none;stroke:#CFC7BA;stroke-width:3;transition:stroke .3s,stroke-width .3s}
+.s3 .lane.sel{stroke:var(--teal);stroke-width:6}
+.s3 .packet{fill:var(--teal)}
+.s3 .src{position:absolute;left:0;top:200px;width:250px;height:120px;border-radius:18px;background:var(--ink);color:#fff;display:flex;flex-direction:column;justify-content:center;padding:0 22px;font-size:26px;font-weight:800;line-height:1.15}
+.s3 .src small{font-size:14px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.75}
+.s3 .rlist{position:absolute;left:430px;top:0;width:560px;display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none}
+.s3 .route{appearance:none;width:100%;height:76px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;text-align:left;background:#fff;border:2px solid var(--line);border-radius:16px;padding:0 18px;cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
+.s3 .route:hover{border-color:var(--teal)}
+.s3 .route[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft);transform:translateX(6px)}
+.s3 .route .rn{font-size:20px;font-weight:800;line-height:1.15}
+.s3 .route .at{font-size:16px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--cream);white-space:nowrap}
+.s3 .route.aws .at{background:var(--teal-soft);color:#075a78}
+.s3 .route.gov .at{background:var(--amber-soft);color:var(--amber-ink)}
+.s3 .route.local .at{background:var(--green-soft);color:#0a6b61}
+.s3 .detail{position:absolute;right:0;top:0;width:420px;min-height:520px;background:#fff;border:2px solid var(--line);border-radius:22px;padding:24px 26px;display:flex;flex-direction:column;gap:10px}
+.s3 .detail .dl{font-size:14px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.s3 .detail .dv{font-size:36px;font-weight:900;letter-spacing:-.02em;line-height:1.05}
+.s3 .detail .dk{font-size:22px;line-height:1.35}
+.s3 .detail .dx{font-size:17px;color:var(--muted);line-height:1.4}
+.s3 .detail .dx code{font-size:15px}
+.s3 .detail .hint{font-size:22px;color:var(--muted);margin:auto 0}
+.s3 .cav{position:absolute;left:80px;right:80px;bottom:40px;display:flex;gap:28px;flex-wrap:wrap}
+
+/* ========== shared for stages 4–11 ========== */
+.sx .stage-h{font-size:60px;margin-top:16px}
+.sx .stage-h .t{color:var(--teal)}
+.sx .stage-h .a{color:var(--amber-ink)}
+.box{position:absolute;background:#fff;border:1.5px solid var(--line);border-radius:20px;box-shadow:0 10px 30px rgba(20,27,38,.06)}
+.lbl-s{display:block;font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:8px}
+.lbl-s.am{color:var(--amber-ink)}
+.prompt-text{font-family:var(--mono);font-size:16px;line-height:1.5;color:var(--ink);background:var(--cream);border-left:5px solid var(--teal);border-radius:10px;padding:12px 16px}
+.sim{display:inline-block;font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--warn);background:var(--warn-soft);border:1.5px solid #F2B79B;border-radius:999px;padding:3px 12px}
+.cavrow{position:absolute;left:80px;right:80px;bottom:26px;display:flex;gap:26px;flex-wrap:wrap}
+.cavrow .caveat{font-size:16px}
+.ok{color:var(--green);font-weight:800}.bad{color:var(--warn);font-weight:800}
+.local-note{font-size:14px;color:var(--muted)}
+
+/* ===== S4 harness hub + tool cards ===== */
+.s4 .hub{position:absolute;left:70px;top:205px;width:500px;height:500px}
+.s4 .hub .orbit{position:absolute;left:55px;top:55px;width:390px;height:390px;border-radius:50%;border:3px dashed #B9D9E6}
+.s4 .hub .spin{position:absolute;left:55px;top:55px;width:390px;height:390px;border-radius:50%;animation:spin 9s linear infinite}
+.s4 .hub .spin::before{content:"";position:absolute;left:50%;top:-9px;width:18px;height:18px;margin-left:-9px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 6px var(--teal-soft)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.s4 .core{position:absolute;left:160px;top:160px;width:180px;height:180px;border-radius:50%;background:var(--ink);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:34px;font-weight:800}
+.s4 .core small{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#C9D2DE;font-weight:700}
+.s4 .node{position:absolute;transform:translate(-50%,-50%) scale(.6);opacity:0;background:#fff;border:2px solid var(--teal);color:#075a78;border-radius:999px;padding:8px 16px;font-size:19px;font-weight:800;white-space:nowrap;transition:transform .45s var(--ease) var(--nd),opacity .45s var(--ease) var(--nd)}
+.s4 .hub.on .node{transform:translate(-50%,-50%) scale(1);opacity:1}
+.s4 .hub-cap{position:absolute;left:0;right:0;bottom:-46px;text-align:center;font-size:22px;font-weight:700;margin:0}
+.s4 .hub-cap b{color:var(--teal)}
+.s4 .doors{left:620px;top:205px;width:900px;height:200px;padding:16px 22px}
+.s4 .door-row{display:flex;gap:12px;align-items:center}
+.s4 .door{flex:1;border:2px solid var(--ink);border-radius:14px 14px 4px 4px;padding:10px 14px;font-size:21px;font-weight:800;text-align:center;background:linear-gradient(#fff,#F8F5EF)}
+.s4 .same{font-size:15px;color:var(--muted);font-weight:700;white-space:nowrap}
+.s4 .talk{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.s4 .talk span{background:var(--teal-soft);color:#075a78;border-radius:999px;padding:5px 13px;font-size:16px;font-weight:700}
+.s4 .tools{position:absolute;left:620px;top:425px;width:900px}
+.s4 .tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.s4 .tool{appearance:none;cursor:pointer;text-align:left;border:2px solid var(--line);background:#fff;border-radius:14px;padding:10px 12px;height:74px;font-size:17px;font-weight:800;line-height:1.15;display:flex;align-items:center;gap:8px;transition:border-color .2s,background .2s,transform .3s var(--ease) var(--td,0ms),opacity .3s var(--ease) var(--td,0ms)}
+.s4 .tools:not(.on) .tool{opacity:0;transform:translateY(12px)}
+.s4 .tool:hover{border-color:var(--teal)}
+.s4 .tool[aria-pressed="true"]{border-color:var(--amber);background:var(--amber-soft)}
+.s4 .tool .pk{margin-left:auto;font-size:13px;color:var(--amber-ink);display:none}
+.s4 .tool[aria-pressed="true"] .pk{display:inline}
+.s4 .stat{border-radius:14px;background:var(--ink);color:#fff;padding:6px 12px;height:74px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.s4 .stat b{font-size:24px;font-weight:900;color:#8FD3EE;line-height:1}
+.s4 .stat span{font-size:11.5px;line-height:1.2;color:#DCE3EC}
+.s4 .tfoot .mini{white-space:nowrap}
+.s4 .tdetail{margin-top:10px;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:10px 16px;min-height:118px;font-size:18px;line-height:1.35}
+.s4 .tdetail .nm{font-weight:800;font-size:20px}
+.s4 .tdetail .w{color:var(--warn);font-weight:700}
+.s4 .tfoot{display:flex;align-items:center;gap:14px;margin-top:8px;font-size:15px;color:var(--muted)}
+.s4 .tfoot b{color:var(--ink)}
+
+/* ===== S5 context anatomy ===== */
+.s5 .window{position:absolute;left:80px;top:195px;width:960px;padding:14px;border-radius:24px;border:3px solid var(--ink);background:#fff}
+.s5 .wtitle{position:absolute;top:-15px;left:24px;background:var(--ink);color:#fff;font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;border-radius:999px;padding:4px 12px}
+.s5 .band{display:flex;align-items:center;gap:16px;height:72px;margin:7px 0;padding:0 14px;border-radius:14px;background:var(--bc);opacity:0;transform:translateX(-30px);transition:opacity .4s var(--ease) var(--bd),transform .4s var(--ease) var(--bd)}
+.s5 .window.on .band{opacity:1;transform:none}
+.s5 .band .i{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#fff;font-weight:900;font-size:18px;flex:none}
+.s5 .band .tx{flex:1;font-size:19px;line-height:1.25}
+.s5 .band .tx b{display:block;font-size:23px}
+.s5 .band .vote{font-size:18px;padding:6px 12px;visibility:hidden;opacity:0;transition:opacity .3s}
+.s5[data-at="2"] .band .vote{visibility:visible;opacity:1}
+.s5 .band .vote output{font-size:18px;min-width:34px}
+.s5 .band.top{outline:3px solid var(--amber);outline-offset:2px}
+.s5 .arrow{position:absolute;left:1060px;top:420px;width:90px;height:40px}
+.s5 .arrow::before{content:"";position:absolute;left:0;right:22px;top:16px;height:8px;background:var(--teal);border-radius:4px}
+.s5 .arrow::after{content:"";position:absolute;right:0;top:4px;border-left:28px solid var(--teal);border-top:16px solid transparent;border-bottom:16px solid transparent}
+.s5 .out{left:1170px;top:250px;width:350px;padding:24px}
+.s5 .out h3{margin:0 0 6px;font-size:38px;line-height:1.05}
+.s5 .out p{font-size:19px;margin:6px 0}
+.s5 .skip{left:1170px;top:560px;width:350px;padding:18px 22px}
+.s5 .skip .lead{font-size:24px;font-weight:800;color:var(--amber-ink);min-height:62px}
+
+/* ===== S6 strip + ADR + tree ===== */
+.s6 .strip{position:absolute;left:80px;top:190px;width:1440px;display:flex;align-items:center;gap:0}
+.s6 .ps{flex:1;text-align:center;padding:14px 8px;border-radius:14px;background:#fff;border:2px solid var(--line);font-size:20px;font-weight:800;opacity:0;transform:translateY(10px);transition:opacity .35s var(--ease) var(--sd),transform .35s var(--ease) var(--sd)}
+.s6 .strip.on .ps{opacity:1;transform:none}
+.s6 .ps small{display:block;font-size:12px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.s6 .ps.dec{background:var(--amber-soft);border-color:var(--amber);color:var(--amber-ink)}
+.s6 .ps.ai{background:var(--teal-soft);border-color:#9CCFE3}
+.s6 .chev{width:26px;text-align:center;color:var(--muted);font-weight:900;font-size:22px}
+.s6 .adr{left:80px;top:300px;width:820px;padding:22px 28px;border-top:8px solid var(--amber)}
+.s6 .adr .doc-h{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.s6 .adr .doc-h b{font-size:26px}
+.s6 .adr table{border-collapse:collapse;width:100%;font-size:18px;line-height:1.35}
+.s6 .adr th{width:150px;text-align:left;vertical-align:top;padding:7px 10px 7px 0;color:var(--amber-ink);font-size:15px;letter-spacing:.06em;text-transform:uppercase}
+.s6 .adr td{padding:7px 0;border-bottom:1px solid var(--line)}
+.s6 .adr code{font-size:16px;background:var(--cream);padding:1px 6px;border-radius:5px}
+.s6 .tree{position:absolute;left:940px;top:300px;width:580px;height:520px}
+.s6 .root{background:var(--ink);color:#fff;border-radius:16px;padding:14px 18px;font-size:20px;font-weight:800;line-height:1.25;text-align:center}
+.s6 .branches{display:flex;gap:12px;margin-top:44px;position:relative}
+.s6 .branches::before{content:"";position:absolute;left:16%;right:16%;top:-24px;height:24px;border:3px solid #CFC6B6;border-bottom:0;border-radius:12px 12px 0 0}
+.s6 .branches::after{content:"";position:absolute;left:50%;top:-44px;height:20px;border-left:3px solid #CFC6B6}
+.s6 .fmt{flex:1;appearance:none;cursor:pointer;border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px 6px;font-size:21px;font-weight:800}
+.s6 .fmt:hover{border-color:var(--teal)}
+.s6 .fmt[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft)}
+.s6 .fmt small{display:block;font-size:12px;font-weight:800;color:var(--amber-ink);letter-spacing:.06em;text-transform:uppercase;min-height:15px}
+.s6 .leaf{margin-top:14px;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:14px 18px;min-height:130px;font-size:19px;line-height:1.4}
+.s6 .disk{margin-top:14px;font-size:20px;font-weight:700;line-height:1.35}
+.s6 .disk b{color:var(--teal)}
+
+/* ===== S7 predict + synthetic dashboard ===== */
+.s7 .p1{left:80px;top:185px;width:700px;height:262px;padding:14px 18px}
+.s7 .p2{left:810px;top:185px;width:710px;height:262px;padding:14px 18px}
+.s7 .eq{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.s7 .eq span{font-size:14px;font-weight:700;background:var(--teal-soft);color:#075a78;border-radius:999px;padding:3px 10px}
+.s7 .pred{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.s7 .pred .vote{font-size:17px;padding:4px 9px;gap:6px}
+.s7 .pred .vote output{font-size:17px;min-width:30px}
+.s7 .pred .tag{font-size:13px;font-weight:900;letter-spacing:.12em;background:var(--amber);color:#fff;border-radius:999px;padding:4px 10px}
+.s7 .dash{position:absolute;left:80px;top:465px;width:1440px;height:400px;display:grid;grid-template-columns:520px 1fr 380px;gap:16px}
+.s7 .dash > div{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:12px 16px;position:relative}
+.s7 .inp{display:grid;grid-template-columns:150px 1fr 82px;align-items:center;gap:4px 10px;font-size:15px}
+.s7 .inp label{font-weight:700}
+.s7 .inp input[type=range]{width:100%;accent-color:var(--teal)}
+.s7 .inp input[type=number]{width:82px;font:600 15px var(--mono);padding:3px 4px;border:1.5px solid var(--line);border-radius:7px}
+.s7 .inp input[aria-invalid="true"]{border-color:var(--warn);background:var(--warn-soft)}
+.s7 .ctl{display:flex;gap:8px;align-items:center;margin-top:6px}
+.s7 .val{font-size:14px;color:var(--warn);font-weight:700;min-height:18px;margin:4px 0 0}
+.s7 .chain{font-family:var(--mono);font-size:15.5px;line-height:1.55;margin:0}
+.s7 .chain div{border-bottom:1px dashed var(--line);padding:3px 0}
+.s7 .chain b{color:var(--teal)}
+.s7 .checks{margin-top:6px;font-size:14px;line-height:1.45}
+.s7 .big{font-size:84px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--teal)}
+.s7 .big small{font-size:28px;color:var(--ink)}
+.s7 .big.nos{font-size:40px;color:var(--warn)}
+.s7 .human{margin-top:8px;background:var(--amber-soft);border:2px solid var(--amber);border-radius:12px;padding:8px 12px;font-size:15.5px;line-height:1.35;color:#5b3300}
+.s7 .ribbon7{position:absolute;right:12px;top:10px}
+
+/* ===== S8 boundary wall ===== */
+.s8 .zone{position:absolute;top:200px;height:540px;border-radius:24px;padding:24px 28px}
+.s8 .outz{left:80px;width:640px;background:#fff;border:2px dashed #CFC6B6}
+.s8 .inz{left:880px;width:640px;background:var(--amber-soft);border:3px solid var(--amber)}
+.s8 .wall{position:absolute;left:740px;top:180px;width:120px;height:580px;border-radius:14px;background:repeating-linear-gradient(135deg,#141B26 0 14px,#2E3A4E 14px 28px);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;font-size:14px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.s8 .wall .lk{font-size:40px}
+.s8 .zone h3{margin:0 0 4px;font-size:30px}
+.s8 .zone .sub{font-size:18px;color:var(--muted);margin:0 0 18px}
+.s8 .codes{display:flex;flex-direction:column;gap:14px}
+.s8 .code{display:flex;align-items:center;gap:16px;font-size:22px}
+.s8 .code code{font:800 30px var(--mono);background:var(--teal-soft);color:#075a78;border-radius:12px;padding:8px 16px}
+.s8 .code span{color:var(--muted)}
+.s8 .key{background:#fff;border:2px solid var(--amber);border-radius:16px;padding:12px 18px;transition:transform .5s var(--ease)}
+.s8 .key table{width:100%;border-collapse:collapse;font-size:22px}
+.s8 .key td{padding:7px 4px;border-bottom:1px solid var(--line)}
+.s8 .key code{font:800 22px var(--mono)}
+.s8 .key.push{animation:push .9s var(--ease)}
+@keyframes push{0%{transform:none}45%{transform:translateX(-110px)}60%{transform:translateX(-96px)}100%{transform:none}}
+.s8 .try{margin-top:16px;display:flex;gap:12px;align-items:center}
+.s8 .msg{font-size:19px;font-weight:700;color:var(--warn);min-height:52px;margin:10px 0 0}
+.s8 .iec{font-size:16px;color:var(--muted);margin-top:18px}
+.s8 .stamp{position:absolute;left:80px;right:80px;bottom:34px;text-align:center;font-size:22px;font-weight:800;color:var(--warn)}
+
+/* ===== S9 pipeline + gate ===== */
+.s9 .p3{left:80px;top:185px;width:740px;height:250px;padding:14px 18px}
+.s9 .p3 code{font-size:15px}
+.s9 .git{position:absolute;left:850px;top:185px;width:670px;height:250px;background:#fff;border:1.5px solid var(--line);border-radius:20px}
+.s9 .git svg{width:100%;height:100%}
+.s9 .git .ln{fill:none;stroke-width:6;stroke-linecap:round}
+.s9 .git .main{stroke:#9AA6B8}.s9 .git .feat{stroke:var(--teal)}
+.s9 .git .merge{stroke:var(--amber);stroke-dasharray:10 10}
+.s9[data-merged="1"] .git .merge{stroke-dasharray:none}
+.s9 .git text{font:700 15px var(--font);fill:var(--ink)}
+.s9 .steps{position:absolute;left:80px;top:455px;width:1440px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.s9 .step{background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px 14px;height:250px;font-size:16.5px;line-height:1.35;position:relative}
+.s9 .step .n{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--teal);color:#fff;font-weight:900;margin-right:6px}
+.s9 .step.h .n{background:var(--amber)}
+.s9 .step.h{border-color:#F3C78A;background:#FFFBF4}
+.s9 .step b.t{font-size:19px}
+.s9 .step .st{position:absolute;left:14px;right:14px;bottom:10px;font-size:14px;font-weight:800;color:var(--muted)}
+.s9 .step.done{border-color:var(--teal)}
+.s9 .step.done .st{color:var(--green)}
+.s9 .ai-steps,.s9 .gate{display:contents}
+.s9 .ai-steps:not(.on) .step,.s9 .gate:not(.on) .step{opacity:0;transform:translateY(14px)}
+.s9 .step{transition:opacity .35s var(--ease),transform .35s var(--ease),border-color .3s}
+.s9 .rv label{display:block;font-size:14.5px;margin:3px 0}
+.s9 .gatebar{position:absolute;left:80px;right:80px;top:718px;display:flex;gap:14px;align-items:center}
+.s9 .mergeb{appearance:none;border:2px solid var(--amber);background:var(--amber);color:#fff;border-radius:999px;padding:9px 20px;font-size:18px;font-weight:800;cursor:pointer}
+.s9 .mergeb:disabled{background:#fff;color:var(--muted);border-color:var(--line);cursor:not-allowed}
+.s9 .gmsg{font-size:17px;font-weight:700}
+
+/* ===== S10 conductor tiers ===== */
+.s10 .tiers{position:absolute;left:80px;top:200px;width:690px}
+.s10 .tier{border-radius:16px;padding:14px 20px;margin-bottom:12px;font-size:19px;border:2px solid var(--line);background:#fff;opacity:0;transform:translateY(-10px);transition:opacity .35s var(--ease) var(--td),transform .35s var(--ease) var(--td)}
+.s10 .tiers.on .tier{opacity:1;transform:none}
+.s10 .tier b{display:block;font-size:24px}
+.s10 .tier small{display:block;font-size:12.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.s10 .tier.o{background:var(--ink);color:#fff;border-color:var(--ink)}
+.s10 .tier.o small{color:#C9D2DE}
+.s10 .tier.h{background:var(--teal-soft);border-color:#9CCFE3}
+.s10 .tier.m{background:var(--cream)}
+.s10 .rail{position:absolute;left:1270px;top:200px;width:250px;height:470px;border-radius:20px;background:var(--amber-soft);border:3px solid var(--amber);padding:18px;color:#5b3300;font-size:17px;line-height:1.35}
+.s10 .rail h3{margin:0 0 8px;font-size:24px;color:var(--amber-ink)}
+.s10 .rail li{margin:6px 0;font-weight:700}
+.s10 .cmp{left:800px;top:200px;width:440px;height:470px;padding:18px 20px}
+.s10 .seg{display:flex;border:2px solid var(--ink);border-radius:999px;overflow:hidden;margin-bottom:12px}
+.s10 .seg button{flex:1;appearance:none;border:0;background:#fff;padding:9px 6px;font-size:17px;font-weight:800;cursor:pointer}
+.s10 .seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.s10 .row{padding:8px 0;border-bottom:1px solid var(--line);font-size:17.5px;line-height:1.3}
+.s10 .row small{display:block;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
+.s10 .tp{position:absolute;left:80px;top:690px;width:690px;font-size:19px;line-height:1.4;font-weight:600}
+.s10 .tp b{color:var(--amber-ink)}
+
+/* ===== S11 action card + recap ribbon ===== */
+.s11 .recap{position:absolute;left:80px;top:190px;width:1440px;display:flex;flex-wrap:wrap;gap:8px}
+.s11 .recap span{background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;font-size:16px;font-weight:700;opacity:0;transform:scale(.9);transition:opacity .3s var(--ease) var(--rd),transform .3s var(--ease) var(--rd)}
+.s11 .recap.on span{opacity:1;transform:none}
+.s11 .recap span i{font-style:normal;color:var(--teal);font-weight:900;margin-right:4px}
+.s11 .card11{left:80px;top:320px;width:960px;padding:22px 28px;border:3px solid var(--ink)}
+.s11 .card11 h3{margin:0 0 10px;font-size:30px}
+.s11 .fld{display:grid;grid-template-columns:150px 1fr;gap:8px 14px;align-items:center;font-size:18px}
+.s11 .fld label{font-weight:800}
+.s11 .fld label.am{color:var(--amber-ink)}
+.s11 .fld input{font:500 18px var(--font);padding:8px 12px;border:1.5px solid var(--line);border-radius:10px;background:#FFFDF9}
+.s11 .howline{margin-top:14px;display:flex;gap:12px;align-items:center;font-size:19px;font-weight:700}
+.s11 .howline .pill{font-size:16px}
+.s11 .qa{left:1080px;top:320px;width:440px;height:480px;padding:26px;background:var(--ink);color:#fff;border-color:var(--ink)}
+.s11 .qa h3{margin:0;font-size:64px;letter-spacing:-.03em}
+.s11 .qa p{font-size:20px;line-height:1.4;color:#DCE3EC}
+.s11 .qa .crit{font-size:17px;color:#8FD3EE;font-weight:700}
+
+/* ========== v3: trimmed stages + offline replays ========== */
+.s1 .goalnote{font-size:17px;color:var(--muted);font-weight:600;margin:0}
+/* S4 three example tools */
+.s4 .tools{top:430px}
+.s4 .tri{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.s4 .tc{background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px 14px;font-size:15.5px;line-height:1.35;opacity:0;transform:translateY(12px);transition:opacity .4s var(--ease),transform .4s var(--ease)}
+.s4 .tools.on .tc{opacity:1;transform:none}
+.s4 .tools.on .tc:nth-child(2){transition-delay:.12s}.s4 .tools.on .tc:nth-child(3){transition-delay:.24s}
+.s4 .tc small{display:block;font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
+.s4 .tc b.nm{display:block;font-size:19px;margin:2px 0 8px;line-height:1.2}
+.s4 .tc p{margin:4px 0}
+.s4 .tc .w{color:var(--warn);font-weight:700}
+.s4 .tmsg{margin:14px 0 0;font-size:19px;line-height:1.38;background:var(--amber-soft);border:2px solid var(--amber);border-radius:14px;padding:12px 18px;color:#5b3300}
+.s4 .tmsg b{color:var(--ink)}
+/* S5 rhetorical prompt */
+.s5 .skip .lead{min-height:0;margin:12px 0 0}
+/* replay engine */
+.rp{display:flex;flex-direction:column;padding:12px 16px 14px}
+.rp-head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.rp-head .lbl-s{margin:0}
+.rp-hint{margin-left:auto;font-size:12.5px;color:var(--muted);font-weight:600;white-space:nowrap}
+.rp-hint kbd{font-size:11px}
+.rp-head .mini{font-size:13px;padding:3px 10px}
+.rp-log{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;gap:8px;padding-right:4px}
+.rp-log .ln{flex:none;font-size:16px;line-height:1.42;border-radius:12px;padding:7px 12px;white-space:pre-wrap;overflow-wrap:anywhere;animation:lnIn .25s var(--ease) both}
+@keyframes lnIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.rp-log .user{align-self:flex-end;max-width:88%;background:var(--ink);color:#fff}
+.rp-log .user::before{content:"You";display:block;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
+.rp-log .ai{align-self:flex-start;max-width:94%;background:var(--teal-soft);color:#0b3a4d;padding:5px 12px}
+.rp-log .ai.key{font-weight:800;background:#CDEAF6;font-size:18px}
+.rp-log .note{align-self:center;background:var(--amber-soft);color:var(--amber-ink);font-weight:800;border:2px dashed var(--amber)}
+.term{background:#17202C;border-color:#17202C}
+.term .lbl-s{color:#8FD3EE}.term .rp-hint{color:#9FB0C4}
+.term .rp-hint kbd{background:#24303F;color:#DCE3EC;border-color:#3A4758}
+.term .rp-head .mini{background:#24303F;color:#DCE3EC;border-color:#3A4758}
+.term .rp-log{gap:3px}
+.term .rp-log .ln{font-family:var(--mono);font-size:14.5px;line-height:1.45;color:#DCE3EC;background:transparent;padding:2px 4px;border-radius:4px;max-width:none;align-self:stretch}
+.term .rp-log .user{color:#FFD9A0;margin-top:6px}
+.term .rp-log .user::before{content:"you › ";display:inline;font-size:inherit;letter-spacing:0;text-transform:none;opacity:1;font-weight:800}
+.term .rp-log .ai{color:#CFE9F5}
+.term .rp-log .ai::before{content:"● ";color:#8FD3EE}
+.term .rp-log .cmd{color:#fff;font-weight:700;margin-top:4px}
+.term .rp-log .cmd::before{content:"$ ";color:#7EE2B8}
+.term .rp-log .out{color:#9FB0C4}
+.term .rp-log .tool{color:#E2D4FF}
+.term .rp-log .bad{color:#FF9B85;font-weight:700}
+.term .rp-log .good{color:#7EE2B8;font-weight:800}
+.term .rp-log .pr{background:#fff;color:var(--ink);font-family:var(--font);font-size:15.5px;border-radius:12px;padding:10px 14px;margin-top:6px;white-space:normal;border-left:6px solid var(--amber)}
+.term .rp-log .pr span{font-weight:700;color:var(--muted)}
+.term .rp-log .pr .nm{color:var(--warn)}
+/* S7 layout */
+.s7 .s7rp{left:80px;top:176px;width:800px;height:692px}
+.s7 .s7q{left:900px;top:176px;width:620px;padding:14px 18px}
+.s7 .s7q .eq{gap:8px}
+.s7 .s7q .eq span{font-size:16px;padding:5px 12px;background:#fff;border:1.5px solid var(--line);color:var(--muted);transition:background .3s,border-color .3s,color .3s}
+.s7 .s7q .eq span.hit{background:var(--teal-soft);border-color:var(--teal);color:#075a78}
+.s7 .s7q .eq span.hit::before{content:"✓ "}
+.s7 .s7pred{left:900px;top:352px;width:620px;padding:14px 18px;transition:opacity .38s var(--ease),transform .38s var(--ease),top .45s var(--ease),visibility 0s}
+.s7 .pq{font-size:20px;font-weight:700;margin:0 0 4px}
+.s7[data-at="3"] .s7q{opacity:0;visibility:hidden}
+.s7[data-at="3"] .s7pred{top:176px}
+.s7 .s7calc{left:900px;top:340px;width:620px;height:528px;padding:12px 16px}
+.s7:not(.rpdone) .s7calc{opacity:0!important;visibility:hidden!important;transform:translateY(18px)!important}
+.s7 .calc-grid{display:grid;grid-template-columns:320px 1fr;gap:14px}
+.s7 .s7calc .inp{grid-template-columns:116px 1fr 60px;font-size:13.5px;gap:3px 8px}
+.s7 .s7calc .inp input[type=number]{width:60px;font-size:13px}
+.s7 .s7calc .big{font-size:62px}
+.s7 .s7calc .big.nos{font-size:30px}
+.s7 .s7calc .human{font-size:14px;line-height:1.3}
+.s7 .s7calc .chain{font-size:13px;line-height:1.35;margin-top:6px}
+.s7 .s7calc .chain div{padding:2px 0}
+.s7 .s7calc .checks{font-size:12.5px;line-height:1.35;margin-top:4px}
+.s7 .s7calc .ctl .mini{font-size:13px;padding:4px 10px}
+.s7 .s7calc .val{min-height:0}
+/* S9 layout */
+.s9 .s9rp{left:80px;top:172px;width:860px;height:696px}
+.s9 .git{left:960px;top:172px;width:560px;height:150px}
+.s9 .pipe{position:absolute;left:960px;top:334px;width:560px;display:flex;flex-direction:column;gap:7px}
+.s9 .pipe .step{height:auto;padding:7px 12px;font-size:14.5px;display:grid;grid-template-columns:36px 1fr auto;align-items:center;column-gap:6px}
+.s9 .pipe .step p{grid-column:2/4;margin:0;font-size:14px;color:var(--muted)}
+.s9 .pipe .step .st{position:static;font-size:12.5px;text-align:right;white-space:nowrap}
+.s9 .pipe .step b.t{font-size:17px}
+.s9 .pipe .step .n{width:28px;height:28px;margin:0}
+.s9 .pipe .cks{grid-column:2/4;margin-top:4px}
+.s9 .pipe .cks label{display:inline-flex;gap:5px;align-items:center;margin:2px 14px 2px 0;font-size:14.5px;font-weight:700}
+.s9 .pipe .cks input:disabled+*{opacity:.5}
+.s9 .gatebar{left:960px;right:auto;width:560px;top:806px;gap:10px;flex-wrap:wrap}
+.s9 .mergeb{font-size:16px;padding:8px 16px}
+.s9 .gmsg{font-size:14.5px}
+/* S10 */
+.s10 .qlist{margin:6px 0 0;padding-left:24px;font-size:21px;line-height:1.35}
+.s10 .qlist li{margin:12px 0;font-weight:700}
+.s10 .tp{top:700px;font-size:22px}
+/* S11 */
+.s11 .card11{width:900px;top:300px}
+.s11 .card11 .crit{margin:10px 0 0;font-size:16px;color:var(--teal);font-weight:700}
+.s11 .take{left:1004px;top:300px;width:516px;height:570px;padding:22px 26px;background:var(--ink);color:#fff;border-color:var(--ink)}
+.s11 .take .lbl-s{color:#8FD3EE}
+.s11 .take .msg{font-size:27px;font-weight:800;line-height:1.22;margin:0 0 16px;letter-spacing:-.01em}
+.s11 .take h4{margin:0 0 4px;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:#FFC779}
+.s11 .take ol{margin:0;padding-left:22px;font-size:16.5px;line-height:1.38;color:#DCE3EC}
+.s11 .take li{margin:6px 0}
+.s11 .take .qa-row{position:absolute;left:26px;right:26px;bottom:18px;display:flex;align-items:center;gap:12px}
+.s11 .take .qa-row b{font-size:44px;letter-spacing:-.03em;margin-right:auto}
+.s11 .take .dlb{background:transparent;color:#C9D2DE;border-color:#3A4758;font-size:13px;padding:4px 12px}
+.s11 .take .dlb:hover{color:#fff;border-color:#8FD3EE}
+#b-dl{color:var(--muted)}
+.s4 .doors{height:auto}
+.s4 .tools{top:360px}
+.s4 .tc{font-size:16.5px}
+.s4 .tmsg{font-size:20px}
+.s7 .s7rp{top:186px;height:682px}
+.s7 .s7q,.s7[data-at="3"] .s7pred{top:186px}
+.s7 .s7calc{top:346px;height:522px}
+.s11 .recap span{font-size:14.5px;padding:5px 12px}
+.s11 .card11{top:340px}
+.s11 .take{top:340px;height:530px}
+@media (max-width:720px){.rp-log{max-height:none;overflow:visible}.s7 .s7calc,.s7 .s7q,.s7 .s7pred,.s9 .pipe,.s9 .gatebar,.s11 .take{margin:12px 0;height:auto}.s11 .take .qa-row{margin-top:12px}.rp-hint{display:none}}
+@media print{.kicker .pgsub,.pgno{display:none}.rp-log{overflow:visible}.s7 .s7calc{opacity:1!important;visibility:visible!important;transform:none!important}}
+
+/* ---------- small screens: stack, no scaling ---------- */
+@media (max-width:720px){
+  body{overflow:auto}
+  .tl,.clock{display:none}
+  #viewport{position:static;margin:var(--topH) 0 var(--botH)}
+  body.notes-open #viewport{right:0}
+  #canvas{position:relative;left:auto;top:auto;width:100%;height:auto;transform:none!important;border-radius:0;box-shadow:none}
+  .stage{position:relative;padding:22px 18px 40px}
+  .stage *{position:static!important;width:auto!important;max-width:100%}
+  .stage .stage-h{font-size:40px!important}
+  .s1 .left,.s2 .statement,.s2 .claude,.s2 .poll,.s3 .myth,.s3 .ladder,.s3 .routes,.s1 .circle-wrap{margin:16px 0;height:auto!important}
+  .s1 svg.gc{width:300px!important;height:300px}
+  .s3 .myth{height:auto!important}.s3 .card{height:auto}.s3 .face{position:relative!important}
+  .s3 .myth .back{display:none}.s3 .myth.flipped .front{display:none}.s3 .myth.flipped .back{display:flex;transform:none}.s3 .myth.flipped .card{transform:none}
+  .s3 svg.lanes{display:none}
+  .s3 .route{height:auto;padding:12px}
+  .s2 .stack{margin:16px 0}.s2 .routing{grid-template-columns:1fr;margin-top:10px}
+  .s4 .hub .spin,.s4 .hub .orbit,.s5 .arrow,.s9 .git{display:none}
+  .s4 .hub{height:auto!important}.s4 .node{display:inline-block;transform:none!important;opacity:1;margin:4px}.s4 .core{width:auto!important;height:auto;border-radius:16px;padding:12px}.s4 .hub-cap{margin:8px 0}
+  .s4 .tgrid{grid-template-columns:1fr 1fr}.s7 .dash,.s9 .steps{display:block;height:auto}.s7 .dash > div,.s9 .step{margin:10px 0;height:auto}.s9 .step .st{display:block;margin-top:6px}
+  .s8 .zone,.s8 .wall,.s10 .rail,.s10 .cmp,.s11 .qa,.s7 .p1,.s7 .p2,.s9 .p3{height:auto;margin:12px 0;display:block}
+  #notes{width:100%}
+  .edge{display:none}
+  .botbar{flex-wrap:wrap;height:auto;padding:6px}
+  .where{display:none}
+  .stage [data-b]:not(.on),.s1[data-at="3"] .quote-block,.s2[data-at="3"] .claude,.s3[data-at="3"] .myth,.s3[data-at="3"] .ladder{display:none!important}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  #wipe{display:none}
+}
+html.static *,html.static *::before,html.static *::after{animation:none!important;transition:none!important}
+
+/* ---------- print: every stage fully revealed, then all notes, then full reference ---------- */
+@media print{
+  @page{size:A4 landscape;margin:10mm}
+  html,body{height:auto;overflow:visible;background:#fff}
+  .topbar,.botbar,.edge,#wipe,#tl-dialog,.mini,.ov-head .btn,.no-print{display:none!important}
+  #viewport{position:static;margin:0}
+  #canvas{position:relative;left:auto;top:auto;transform:none!important;width:1600px;height:auto;box-shadow:none;border-radius:0;zoom:.62;background:#fff;overflow:visible}
+  .stage{position:relative!important;display:block!important;height:900px;break-after:page;transform:none!important;opacity:1!important;border-bottom:1px solid var(--line)}
+  .stage[hidden]{display:block!important}
+  [data-b]{opacity:1!important;visibility:visible!important;transform:none!important}
+  .s1 .quote-block,.s2 .claude,.s3 .myth,.s3 .ladder{display:none!important}
+  .s4 .tool,.s4 .tools:not(.on) .tool,.s5 .band,.s6 .ps,.s9 .step,.s10 .tier,.s11 .recap span,.s4 .node{opacity:1!important;transform:none!important}
+  .s4 .hub .spin{display:none}.s4 .node{transform:translate(-50%,-50%)!important}
+  #notes{position:static;display:block!important;width:auto;border:0;box-shadow:none;break-before:page}
+  #notes[hidden]{display:block!important}
+  #notes [role="tablist"],.notes-head .cue{display:none}
+  #notes-panel{overflow:visible;background:#fff}
+  .stage-notes{display:block!important;break-inside:auto;border-top:2px solid var(--ink);padding-top:8px;margin-top:14px}
+  .np{display:block!important}
+  .np-title{display:block;font-size:18px;margin:6px 0}
+  #ref{position:static;display:block!important;background:#fff;overflow:visible;break-before:page}
+  #ref[hidden]{display:block!important}
+  .ov-head{position:static}
+  .ref-sec{break-inside:auto}
+  a{color:var(--ink)}
+}
+</style>
+</head>
+<body>
+<a class="sr-only" href="#" id="skip-ref">Open the full reference</a>
+<header class="topbar">
+  <div class="brand">AI Master Class <span>· 60 min</span></div>
+  <ol class="tl" id="tl" aria-label="Timeline: 11 stages, 60 minutes"></ol>
+  <div class="clock" id="clock" aria-hidden="true"></div>
+</header>
+
+<main id="viewport" aria-label="Presentation">
+  <div id="canvas">
+    <div id="wipe" aria-hidden="true"></div>
+
+    <!-- ================= STAGE 1 · 0–4 · hero + golden circle ================= -->
+    <section class="stage s1" id="s1" data-n="1" aria-roledescription="slide" aria-labelledby="s1-h">
+      <div class="kicker"><span class="num">01</span> Start with why · the AI flip <span class="win">0–4 min</span><span class="pg" aria-label="Page 1 of 11">Page 1 of 11<span class="pgsub"></span></span></div>
+      <div class="left">
+        <h2 class="stage-h hero-title" id="s1-h" tabindex="-1"><span class="w" style="--i:0">Turn</span> <span class="w" style="--i:1">an</span> <span class="w" style="--i:2">engineering</span> <span class="w" style="--i:3">goal</span> <span class="w" style="--i:4">into</span> <span class="w" style="--i:5">a</span> <em class="w" style="--i:6">checked</em> <em class="w" style="--i:7">result.</em></h2>
+        <p class="meta" data-b="1" style="--d:500ms"><b>Christian</b> · Orientation for engineers · 60 minutes</p>
+        <p class="lede" data-b="1" style="--d:750ms">Define what matters. Choose the tools and <span class="k">data boundaries</span>. Give it context. Delegate the work — <span class="h">keep human review and accountability.</span></p>
+        <div class="flip" data-b="3">
+          <h3>The flip: <span class="ai">AI proposes the how.</span></h3>
+          <p>The how used to consume us — syntax, boilerplate, wiring, test scaffolding. Our job moves inward: <b style="color:var(--amber-ink)">why, what, and how we’ll know it’s right.</b></p>
+          <div class="bar" role="img" aria-label="Target split: roughly 80% AI effort, 20% human effort">
+            <div class="ai">AI does most of the doing · ≈ 80%</div>
+            <div class="hu">You decide<br>≈ 20%</div>
+          </div>
+          <p style="font-size:19px">Your 20%: <b style="color:var(--ink)">strategy · risk · outcome review · exceptions</b></p>
+          <p class="goalnote">A goal, not a measurement</p>
+        </div>
+      </div>
+      <div class="circle-wrap" data-b="2">
+        <svg class="gc" viewBox="0 0 540 540" role="img" aria-label="Golden circle: Why at the centre, How around it, What on the outside">
+          <circle class="disk d-what" cx="270" cy="270" r="255" fill="#FFFFFF"/>
+          <circle class="disk d-how" cx="270" cy="270" r="172" fill="#FFFFFF"/>
+          <circle class="disk d-why" cx="270" cy="270" r="88" fill="#F4EFE6"/>
+          <circle class="ring r-why" cx="270" cy="270" r="88" style="--c:553;--rd:0ms"/>
+          <circle class="ring r-how" cx="270" cy="270" r="172" style="--c:1081;--rd:250ms"/>
+          <circle class="ring r-what" cx="270" cy="270" r="255" style="--c:1602;--rd:500ms"/>
+          <text class="lab" x="270" y="280" style="--rd:100ms">WHY</text>
+          <text class="lab" x="270" y="146" style="--rd:350ms">HOW</text>
+          <text class="lab" x="270" y="62" style="--rd:600ms">WHAT</text>
+          <text class="sub" x="270" y="310" fill="#9A5300">we own</text>
+          <text class="sub" x="270" y="174" fill="#0D7EA8">AI proposes</text>
+          <text class="sub" x="270" y="90" fill="#9A5300">we define</text>
+        </svg>
+        <div class="quote-block ghost-out">
+          <blockquote class="quote" style="background:none;border:0;padding:0">“People don't buy what you do; they buy why you do it.”<cite>— Simon Sinek, How great leaders inspire action, TEDxPuget Sound, 2009</cite></blockquote>
+          <p class="apple" style="text-align:center;margin-top:8px">Apple’s order: <b>belief</b> → how it acts on it → <b>what</b> it sells.</p>
+        </div>
+      </div>
+      <div class="hands" data-b="3" style="--d:900ms"><span class="audience"><span class="tag">Hands up</span> Who spent last week mostly on the how?</span></div>
+    </section>
+
+    <!-- ================= STAGE 2 · 4–9 · layered stack ================= -->
+    <section class="stage s2" id="s2" data-n="2" aria-roledescription="slide" aria-labelledby="s2-h" hidden>
+      <div class="kicker"><span class="num">02</span> Models &amp; inference <span class="win">4–9 min</span><span class="pg" aria-label="Page 2 of 11">Page 2 of 11<span class="pgsub"></span></span></div>
+      <div class="statement"><h2 class="stage-h" id="s2-h" tabindex="-1">The agent tool is <span class="not">not</span> the model.</h2></div>
+      <div class="claude" data-b="1" style="--d:250ms">
+        <div class="cc"><small>Agentic tooling</small>Claude Code</div>
+        <div class="verbs"><span class="verb">reads files</span><span class="verb">runs commands</span><span class="verb">edits code</span><span class="verb call">calls a model →</span></div>
+      </div>
+      <div class="stack" data-b="2" role="list" aria-label="Layer stack, bottom to top">
+        <div class="layer L-backend" role="listitem" style="--ld:0ms"><div><div class="ln">Backend</div><div class="ex">Anthropic, OpenAI, Bedrock, local</div></div><div class="dec">Where inference and data go</div></div>
+        <div class="layer L-model" role="listitem" style="--ld:180ms"><div><div class="ln">Model</div><div class="ex mx"><b>Anthropic:</b> Claude Fable, Opus, Sonnet, Haiku<br><b>OpenAI:</b> GPT-6 Astra, GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Luna</div></div><div class="dec">Reasoning quality, speed, cost</div></div>
+        <div class="layer L-harness" role="listitem" style="--ld:360ms"><div><div class="ln">Harness</div><div class="ex">Claude Code, Codex, Copilot agent</div></div><div class="dec">Tools, permissions, loop, memory</div></div>
+        <div class="layer L-interface" role="listitem" style="--ld:540ms"><div><div class="ln">Interface</div><div class="ex">Terminal, VS Code, Desktop, voice</div></div><div class="dec">How you see and steer it</div></div>
+        <div class="layer L-orch" role="listitem" style="--ld:720ms"><div><div class="ln">Orchestrator</div><div class="ex">Assistants that delegate work</div></div><div class="dec">Who delegates work and asks you</div></div>
+      </div>
+      <div class="poll" data-b="3">
+        <span class="audience" style="font-size:16px;padding:6px 14px"><span class="tag">Poll</span> hands up</span>
+        <p class="q">A desktop app means a local model?</p>
+        <div class="tally">
+          <button type="button" class="vote" data-vote="s2:yes" aria-label="Add one Yes vote">Yes <output data-count="s2:yes" aria-live="polite">0</output></button>
+          <button type="button" class="vote" data-vote="s2:no" aria-label="Add one No vote">No <output data-count="s2:no" aria-live="polite">0</output></button>
+          <button type="button" class="mini go" data-reveal="s2-ans" aria-expanded="false" aria-controls="s2-ans">Reveal</button>
+          <button type="button" class="mini" data-reset="s2">Reset</button>
+        </div>
+        <div class="ans" id="s2-ans" hidden><b>No.</b> A desktop app is an interface. Unless you run open-weights models on your own hardware, inference happens in someone’s cloud.</div>
+      </div>
+      <div class="routing" data-b="3" style="--d:200ms">
+        <div class="rt"><b>Route by task</b>Routine → faster model · hard reasoning → stronger model</div>
+        <div class="rt"><b>Name families right</b>Fable · Opus · Sonnet · Haiku = Anthropic Claude · Astra · Sol · Terra · Luna = OpenAI GPT-6</div>
+      </div>
+    </section>
+
+    <!-- ================= STAGE 3 · 9–15 · myth card + route map ================= -->
+    <section class="stage s3" id="s3" data-n="3" aria-roledescription="slide" aria-labelledby="s3-h" hidden>
+      <div class="kicker"><span class="num">03</span> Backends &amp; GovCloud <span class="win">9–15 min</span><span class="pg" aria-label="Page 3 of 11">Page 3 of 11<span class="pgsub"></span></span></div>
+      <h2 class="stage-h" id="s3-h" tabindex="-1">Backend choice sets <span style="color:var(--teal)">where data goes.</span></h2>
+      <div class="myth" data-b="1" id="s3-myth">
+        <div class="card">
+          <div class="face front">
+            <span class="tag">Myth or fact?</span>
+            <p class="claim">Paying <span class="money">$200</span> rather than <span class="money">$20</span> a month for ChatGPT keeps your prompts off OpenAI’s servers.</p>
+            <div class="myth-ctl">
+              <button type="button" class="vote" data-vote="s3:myth" aria-label="Add one Myth vote">Myth <output data-count="s3:myth" aria-live="polite">0</output></button>
+              <button type="button" class="vote" data-vote="s3:fact" aria-label="Add one Fact vote">Fact <output data-count="s3:fact" aria-live="polite">0</output></button>
+              <button type="button" class="mini go" id="s3-flip" aria-controls="s3-myth" aria-pressed="false">Reveal</button>
+              <button type="button" class="mini" data-reset="s3">Reset</button>
+            </div>
+          </div>
+          <div class="face back" aria-hidden="true">
+            <span class="tag">Reveal</span>
+            <div class="verdict">Myth.</div>
+            <p>Both are consumer plans; OpenAI still processes every prompt. The training toggle exists on Free, Plus and Pro alike.</p>
+            <p style="font-size:19px;color:var(--muted)">Plan tier changes limits and features, never where the model executes.</p>
+            <div class="myth-ctl"><button type="button" class="mini" id="s3-unflip">Show the claim</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="ladder" data-b="2" aria-label="Four different questions">
+        <h3>Four different questions.</h3>
+        <div class="q4" style="--qd:0ms"><span class="i">1</span>Training opt-out</div>
+        <div class="neq" style="--qd:250ms" aria-label="is not">≠</div>
+        <div class="q4" style="--qd:350ms"><span class="i">2</span>No provider processing</div>
+        <div class="neq" style="--qd:600ms" aria-label="is not">≠</div>
+        <div class="q4" style="--qd:700ms"><span class="i">3</span>Data residency</div>
+        <div class="neq" style="--qd:950ms" aria-label="is not">≠</div>
+        <div class="q4" style="--qd:1050ms"><span class="i">4</span>Local / offline inference</div>
+      </div>
+      <div class="ribbon" data-b="3">
+        <span class="chip x">$200 vs $20: still processed by the provider</span>
+        <span class="chip">Opt-out ≠ no processing ≠ residency ≠ local</span>
+        <span class="chip">Plan tier changes limits, never where the model executes</span>
+      </div>
+      <div class="routes" data-b="3" style="--d:150ms">
+        <svg class="lanes" viewBox="0 0 1440 520" aria-hidden="true">
+          <path class="lane" id="lane-0" d="M250 260 C340 260 340 38 430 38"/>
+          <path class="lane" id="lane-1" d="M250 260 C340 260 340 126 430 126"/>
+          <path class="lane" id="lane-2" d="M250 260 C340 260 340 214 430 214"/>
+          <path class="lane" id="lane-3" d="M250 260 C340 260 340 302 430 302"/>
+          <path class="lane" id="lane-4" d="M250 260 C340 260 340 390 430 390"/>
+          <path class="lane" id="lane-5" d="M250 260 C340 260 340 478 430 478"/>
+          <circle class="packet" r="9" cx="0" cy="0" opacity="0"><animateMotion id="packet-anim" dur="0.9s" begin="indefinite" fill="freeze" path="M250 260 C340 260 340 38 430 38"/></circle>
+        </svg>
+        <div class="src"><small>You send</small>Prompt + selected context</div>
+        <ul class="rlist" aria-label="Where inference runs: pick a route">
+          <li><button type="button" class="route" data-lane="0" aria-pressed="false"><span class="rn">ChatGPT Plus / Pro ($20 / $200 a month)</span><span class="at">OpenAI cloud</span></button>
+            <div class="rd" hidden><div class="dv">OpenAI cloud</div><div class="dk">Training opt-out available; still processed by OpenAI</div><div class="dx">Example plan prices; they change often.</div></div></li>
+          <li><button type="button" class="route" data-lane="1" aria-pressed="false"><span class="rn">ChatGPT Business / Enterprise</span><span class="at">OpenAI cloud</span></button>
+            <div class="rd" hidden><div class="dv">OpenAI cloud</div><div class="dk">Not used for training by default; admin controls</div></div></li>
+          <li><button type="button" class="route" data-lane="2" aria-pressed="false"><span class="rn">Claude Code, Anthropic API</span><span class="at">Anthropic cloud</span></button>
+            <div class="rd" hidden><div class="dv">Anthropic cloud</div><div class="dk">Commercial terms: not trained on; 30-day standard retention</div></div></li>
+          <li><button type="button" class="route aws" data-lane="3" aria-pressed="false"><span class="rn">Claude Code via Bedrock</span><span class="at">AWS region you set</span></button>
+            <div class="rd" hidden><div class="dv">AWS region you set</div><div class="dk">Cloud-hosted weights in AWS; some Anthropic checks remain</div><div class="dx">Runs in your AWS account and region. Your admins configure it.</div></div></li>
+          <li><button type="button" class="route gov" data-lane="4" aria-pressed="false"><span class="rn">Bedrock in GovCloud</span><span class="at">us-gov region</span></button>
+            <div class="rd" hidden><div class="dv">us-gov region</div><div class="dk">Partition matters; compliance is not automatic</div><div class="dx">AWS’s US government regions. Model choice can lag the commercial regions.</div></div></li>
+          <li><button type="button" class="route local" data-lane="5" aria-pressed="false"><span class="rn">Local open-weights model</span><span class="at">Your hardware</span></button>
+            <div class="rd" hidden><div class="dv">Your hardware</div><div class="dk">Only fully offline route; usually less capable</div></div></li>
+        </ul>
+        <div class="detail" aria-live="polite" id="s3-detail"><span class="dl">Model runs at</span><p class="hint">Six common routes. Each one answers: where does the model run?</p></div>
+      </div>
+      <div class="cav" data-b="3" style="--d:300ms">
+        <span class="caveat">GovCloud alone is not CUI, ITAR or CMMC compliance</span>
+        <span class="caveat">An app or subscription is not local inference</span>
+      </div>
+    </section>
+
+    <!-- ================= STAGE 4 · 15–23 · harness hub + three example tools ================= -->
+    <section class="stage sx s4" id="s4" data-n="4" aria-roledescription="slide" aria-labelledby="s4-h" hidden>
+      <div class="kicker"><span class="num">04</span> Harness &amp; tools <span class="win">15–23 min</span><span class="pg" aria-label="Page 4 of 11">Page 4 of 11<span class="pgsub"></span></span></div>
+      <h2 class="stage-h" id="s4-h" tabindex="-1">Same agent, <span class="t">several doors.</span></h2>
+      <div class="hub" data-b="1" role="img" aria-label="The harness loop around the model: tools, permissions, file access, memory files, hooks, stop conditions">
+        <div class="orbit"></div><div class="spin"></div>
+        <div class="core"><small>inside the loop</small>Model</div>
+        <span class="node" style="left:250px;top:60px;--nd:0ms">Tools</span>
+        <span class="node" style="left:418px;top:155px;--nd:120ms">Permissions</span>
+        <span class="node" style="left:418px;top:345px;--nd:240ms">File access</span>
+        <span class="node" style="left:250px;top:440px;--nd:360ms">Memory files</span>
+        <span class="node" style="left:82px;top:345px;--nd:480ms">Hooks</span>
+        <span class="node" style="left:82px;top:155px;--nd:600ms">Stop conditions</span>
+        <p class="hub-cap">A <b>harness</b> is the loop around the model.</p>
+      </div>
+      <div class="box doors" data-b="2">
+        <span class="lbl-s">One agent · several doors</span>
+        <div class="door-row"><div class="door">Terminal</div><span class="same">=</span><div class="door">VS Code extension</div><span class="same">=</span><div class="door">Desktop app</div></div>
+        <div class="talk" aria-label="Ways to steer it"><span>Plain-language goals</span><span>CLAUDE.md</span><span>Slash commands</span><span>Skills</span><span>Plan mode</span><span>Voice</span></div>
+      </div>
+      <div class="tools" data-b="3">
+        <div class="tri">
+          <div class="tc"><small>Terminal agent</small><b class="nm">e.g. Claude Code, Codex CLI</b><p><b>Sees:</b> the whole repo and a shell</p><p><b>Does:</b> edits files, runs tests, commits</p><p class="w">Watch: what you allow it to run</p></div>
+          <div class="tc"><small>IDE assistant</small><b class="nm">e.g. GitHub Copilot, Claude Code in VS Code</b><p><b>Sees:</b> your open workspace</p><p><b>Does:</b> suggests and edits; Copilot’s agent can open PRs</p><p class="w">Watch: model menu varies by plan</p></div>
+          <div class="tc"><small>Desktop chat app</small><b class="nm">e.g. Claude or ChatGPT desktop</b><p><b>Sees:</b> what you paste or attach</p><p><b>Does:</b> answers and drafts; some run agent tasks</p><p class="w">Watch: a desktop app is not a local model</p></div>
+        </div>
+        <p class="tmsg"><b>Same models everywhere. The difference is what the tool can see and do.</b> Copilot isn’t model-limited either: it offers Claude and GPT models. Compare workflows, not leaderboards.</p>
+      </div>
+    </section>
+
+    <!-- ================= STAGE 5 · 23–27 · context anatomy ================= -->
+    <section class="stage sx s5" id="s5" data-n="5" aria-roledescription="slide" aria-labelledby="s5-h" hidden>
+      <div class="kicker"><span class="num">05</span> Context <span class="win">23–27 min</span><span class="pg" aria-label="Page 5 of 11">Page 5 of 11<span class="pgsub"></span></span></div>
+      <h2 class="stage-h" id="s5-h" tabindex="-1">Output <span class="t">follows context.</span></h2>
+      <div class="window ia" data-b="1" id="s5-window" role="list" aria-label="Context menu: seven things to give the agent"><span class="wtitle">What you give the agent</span></div>
+      <div class="arrow" data-b="1" style="--d:900ms" aria-hidden="true"></div>
+      <div class="box out" data-b="1" style="--d:1000ms"><span class="lbl-s">Output</span><h3>Better in, better out.</h3><p>Seven items, one window. Each one you skip is a guess the agent makes for you.</p></div>
+      <div class="box skip" data-b="2"><span class="audience" style="font-size:15px;padding:4px 12px"><span class="tag">Ask yourself</span> Which do you skip most?</span>
+        <p class="lead">Pick one to add on your next task.</p></div>
+    </section>
+
+    <!-- ================= STAGE 6 · 27–32 · stage strip + ADR + storage tree ================= -->
+    <section class="stage sx s6" id="s6" data-n="6" aria-roledescription="slide" aria-labelledby="s6-h" hidden>
+      <div class="kicker"><span class="num">06</span> Planning &amp; ADR <span class="win">27–32 min</span><span class="pg" aria-label="Page 6 of 11">Page 6 of 11<span class="pgsub"></span></span></div>
+      <h2 class="stage-h" id="s6-h" tabindex="-1" style="font-size:56px">Decide <span class="a">before</span> building.</h2>
+      <div class="strip" data-b="1" aria-label="Planning stages">
+        <div class="ps" style="--sd:0ms"><small>1</small>Why &amp; constraints</div><span class="chev">›</span>
+        <div class="ps" style="--sd:110ms"><small>2</small>Options</div><span class="chev">›</span>
+        <div class="ps dec" style="--sd:220ms"><small>3 · human</small>Decision (ADR)</div><span class="chev">›</span>
+        <div class="ps ai" style="--sd:330ms"><small>4</small>Plan</div><span class="chev">›</span>
+        <div class="ps ai" style="--sd:440ms"><small>5</small>Build</div><span class="chev">›</span>
+        <div class="ps" style="--sd:550ms"><small>6</small>Verify</div>
+      </div>
+      <div class="box adr" data-b="2"><div class="doc-h"><b>One-page ADR</b><span class="sim">Synthetic example</span></div><div data-clone="ref-adr-body"></div></div>
+      <div class="tree ia" data-b="3">
+        <div class="root">What shape is the data — and who reads or writes it?</div>
+        <div class="branches" id="s6-fmts" role="group" aria-label="Storage formats"></div>
+        <div class="leaf" id="s6-leaf" aria-live="polite"><span class="lbl-s">Pick by data shape</span>ADR-001 picks JSON for numbers and Markdown for rationale.</div>
+        <p class="disk"><b>All three are files on disk.</b> Pick storage by data shape and who uses it.</p>
+      </div>
+    </section>
+
+    <!-- ================= STAGE 7 · 32–40 · offline replay + predict + calculator ================= -->
+    <section class="stage sx s7" id="s7" data-n="7" aria-roledescription="slide" aria-labelledby="s7-h" hidden>
+      <div class="kicker"><span class="num">07</span> Engineering demo · replay <span class="win">32–40 min</span><span class="pg" aria-label="Page 7 of 11">Page 7 of 11<span class="pgsub"></span></span></div>
+      <h2 class="stage-h" id="s7-h" tabindex="-1" style="font-size:46px;margin-top:10px">Off-grid weather station: <span class="t">how long to refill?</span> <span class="sim" style="vertical-align:middle">Recorded run · synthetic example · not a certified design</span></h2>
+      <div class="box rp s7rp" data-b="1">
+        <div class="rp-head"><span class="lbl-s">Replay · AI chat</span><span class="rp-hint"><kbd>Next</kbd> <kbd>→</kbd> <kbd>Space</kbd> plays the next line</span><button type="button" class="mini" data-rp-all="s7">Show all</button></div>
+        <div class="rp-log" id="s7-log" aria-live="polite"></div>
+      </div>
+      <div class="box s7q" data-b="1"><span class="lbl-s">A good assistant asks first</span>
+        <div class="eq" id="s7-eq" aria-label="Questions the AI should ask"><span data-q="1">load profile</span><span data-q="2">sun hours</span><span data-q="3">days of autonomy</span><span data-q="4">battery chemistry &amp; depth of discharge</span><span data-q="5">temperature</span><span data-q="6">system losses</span></div></div>
+      <div class="box s7pred ia" data-b="2"><span class="lbl-s am">Predict · hands up</span><p class="pq">How many days to refill after a 3-day outage?</p>
+        <div class="pred">
+          <button type="button" class="vote" data-vote="s7:3">3 d <output data-count="s7:3">0</output></button>
+          <button type="button" class="vote" data-vote="s7:7">7 d <output data-count="s7:7">0</output></button>
+          <button type="button" class="vote" data-vote="s7:13">13 d <output data-count="s7:13">0</output></button>
+          <button type="button" class="vote" data-vote="s7:30">30 d <output data-count="s7:30">0</output></button>
+          <button type="button" class="mini" data-reset="s7">Reset</button></div></div>
+      <div class="box s7calc ia" data-b="3" id="s7-dash">
+        <div class="calc-grid">
+          <div><span class="lbl-s">Check the AI’s math yourself</span>
+            <div class="inp" id="s7-inp"></div>
+            <div class="ctl"><button type="button" class="mini go" id="s7-reset">Reset to declared values</button></div>
+            <p class="val" id="s7-val" role="alert"></p></div>
+          <div><span class="lbl-s am">Refill after the outage</span><div class="big" id="s7-big" aria-live="polite">13.3 <small>days</small></div>
+            <div class="human" id="s7-human"></div></div>
+        </div>
+        <div class="chain" id="s7-chain" aria-live="polite"></div><div class="checks" id="s7-checks"></div>
+      </div>
+    </section>
+
+    <!-- ================= STAGE 8 · 40–44 · boundary wall split ================= -->
+    <section class="stage sx s8" id="s8" data-n="8" aria-roledescription="slide" aria-labelledby="s8-h" hidden>
+      <div class="kicker"><span class="num">08</span> Data boundaries <span class="win">40–44 min</span><span class="pg" aria-label="Page 8 of 11">Page 8 of 11<span class="pgsub"></span></span></div>
+      <h2 class="stage-h" id="s8-h" tabindex="-1" style="font-size:54px">Code names don’t make data <span class="a">safe to share.</span></h2>
+      <div class="zone outz" data-b="1"><h3>Outside</h3><p class="sub">Discuss generalized, coded problems here.</p>
+        <div class="codes" id="s8-codes"></div>
+</div>
+      <div class="wall" data-b="1" style="--d:200ms" aria-hidden="true"><span class="lk">🔒</span>Approved<br>boundary</div>
+      <div class="zone inz ia" data-b="2"><h3>Approved secure environment</h3><p class="sub">The mapping key lives here, and only here.</p>
+        <div class="key" id="s8-key"><span class="lbl-s am">Mapping key</span><table><tbody id="s8-keyrows"></tbody></table></div>
+        <div class="try"><button type="button" class="mini go" id="s8-try">Try moving the key outside</button><button type="button" class="mini" id="s8-clear">Clear</button></div>
+        <p class="msg" id="s8-msg" aria-live="polite"></p></div>
+      <p class="stamp" data-b="2" style="--d:300ms">Controlled payload stays inside, whatever the labels. Anonymization never authorizes moving it out.</p>
+    </section>
+
+    <!-- ================= STAGE 9 · 44–53 · offline terminal replay + human gate ================= -->
+    <section class="stage sx s9" id="s9" data-n="9" aria-roledescription="slide" aria-labelledby="s9-h" hidden>
+      <div class="kicker"><span class="num">09</span> Prompt to pull request · replay <span class="win">44–53 min</span><span class="pg" aria-label="Page 9 of 11">Page 9 of 11<span class="pgsub"></span></span></div>
+      <h2 class="stage-h" id="s9-h" tabindex="-1" style="font-size:54px">AI does the loop. <span class="a">Humans gate.</span> <span class="sim" style="vertical-align:middle">Recorded run · synthetic example</span></h2>
+      <div class="box rp term s9rp" data-b="1">
+        <div class="rp-head"><span class="lbl-s">Replay · coding agent in a terminal</span><span class="rp-hint"><kbd>Next</kbd> <kbd>→</kbd> <kbd>Space</kbd> plays the next line</span><button type="button" class="mini" data-rp-all="s9">Show all</button></div>
+        <div class="rp-log" id="s9-log" aria-live="polite"></div>
+      </div>
+      <div class="git" data-b="1" style="--d:200ms"><svg viewBox="0 0 670 250" role="img" aria-label="Branch diagram: feat/power-budget branches off main into a worktree, opens a pull request, merges back only when approved">
+        <path class="ln main" d="M30 190 H640"/><path class="ln feat" d="M110 190 C160 190 160 80 210 80 H470"/><path class="ln merge" d="M470 80 C520 80 520 190 570 190"/>
+        <circle cx="110" cy="190" r="11" fill="#9AA6B8"/><circle cx="260" cy="80" r="11" fill="#0D7EA8"/><circle cx="350" cy="80" r="11" fill="#0D7EA8"/><circle cx="470" cy="80" r="14" fill="#fff" stroke="#0D7EA8" stroke-width="5"/><circle cx="570" cy="190" r="13" fill="#E8890C"/>
+        <text x="30" y="225">main</text><text x="210" y="50">feat/power-budget · worktree</text><text x="440" y="118">PR</text><text x="640" y="225" text-anchor="end">merge only when approved</text></svg></div>
+      <div class="pipe" data-b="1" style="--d:300ms">
+        <div class="step" id="s9-st1"><span class="n">1</span><b class="t">Worktree per task</b><span class="st">waiting</span><p>Keeps parallel agents isolated.</p></div>
+        <div class="step" id="s9-st2"><span class="n">2</span><b class="t">AI implements</b><span class="st">waiting</span><p>Code, tests, fix, commit.</p></div>
+        <div class="step" id="s9-st3"><span class="n">3</span><b class="t">Remind to finish</b><span class="st">waiting</span><p>Agents stop early: ask for tests, PR and a re-check.</p></div>
+        <div class="step h rv ia" id="s9-st4"><span class="n">4</span><b class="t">Human reviews</b><span class="st" id="s9-st4s">after the PR</span><p>Strategy, outcome, exceptions; not every line.</p>
+          <div class="cks"><label><input type="checkbox" class="s9-ck" disabled> Strategy fits the why</label><label><input type="checkbox" class="s9-ck" disabled> Outcome meets criteria</label><label><input type="checkbox" class="s9-ck" disabled> Exception call made</label></div></div>
+        <div class="step h" id="s9-st5"><span class="n">5</span><b class="t">Merge only when approved</b><span class="st" id="s9-st5s">locked</span><p>Required checks pass; never bypass approvals.</p></div>
+      </div>
+      <div class="gatebar ia" data-b="3">
+        <button type="button" class="mergeb" id="s9-merge" disabled>Approve merge (simulated)</button>
+        <button type="button" class="mini" id="s9-reset">Reset</button>
+        <span class="gmsg" id="s9-msg" aria-live="polite">Nothing here touches a real repo.</span>
+      </div>
+    </section>
+
+    <!-- ================= STAGE 10 · 53–57 · agents that act + human gates ================= -->
+    <section class="stage sx s10" id="s10" data-n="10" aria-roledescription="slide" aria-labelledby="s10-h" hidden>
+      <div class="kicker"><span class="num">10</span> Agents &amp; approvals <span class="win">53–57 min</span><span class="pg" aria-label="Page 10 of 11">Page 10 of 11<span class="pgsub"></span></span></div>
+      <h2 class="stage-h" id="s10-h" tabindex="-1" style="font-size:50px">Agents that act for you — <span class="a">and the gates you keep.</span></h2>
+      <div class="tiers" data-b="1">
+        <div class="tier" style="--td:0ms"><small>You</small><b>Set the goal</b>Voice or chat, in plain language</div>
+        <div class="tier o" style="--td:150ms"><small>Assistant · orchestrator</small><b>Plans and delegates</b>Hands work to other tools and asks you when unsure</div>
+        <div class="tier h" style="--td:300ms"><small>Coding agent · harness</small><b>Reads, edits, runs tests</b>Inside the permissions you set</div>
+        <div class="tier m" style="--td:450ms"><small>Model + backend</small><b>Same rules as stages 2–3</b>The backend decides where your data goes</div>
+      </div>
+      <div class="rail" data-b="1" style="--d:600ms"><h3>Human approval</h3><ul style="padding-left:18px;margin:0"><li>Sends</li><li>Spend</li><li>Merges</li><li>Irreversible steps</li></ul><p style="margin-top:16px">No agent replaces these gates.</p></div>
+      <div class="box cmp" data-b="2"><span class="lbl-s">Ask any agent tool</span>
+        <ol class="qlist"><li>What can it touch? Files, repos, email, money?</li><li>What does it do without asking me?</li><li>Where does the model run?</li><li>Can I see and undo what it did?</li></ol></div>
+      <p class="tp" data-b="2" style="--d:200ms">More autonomy means you need <b>clearer gates</b>, not fewer.</p>
+    </section>
+
+    <!-- ================= STAGE 11 · 57–60 · action card + take-home ================= -->
+    <section class="stage sx s11" id="s11" data-n="11" aria-roledescription="slide" aria-labelledby="s11-h" hidden>
+      <div class="kicker"><span class="num">11</span> Recap &amp; closing <span class="win">57–60 min</span><span class="pg" aria-label="Page 11 of 11">Page 11 of 11<span class="pgsub"></span></span></div>
+      <h2 class="stage-h" id="s11-h" tabindex="-1" style="font-size:72px">Your <span class="t">move.</span></h2>
+      <div class="recap" data-b="1" id="s11-recap" aria-label="Recap of the hour"></div>
+      <div class="box card11 ia" data-b="2"><h3>Pick one task you did by hand this week.</h3>
+        <div class="fld">
+          <label class="am" for="s11-why">Why</label><input id="s11-why" type="text" autocomplete="off" placeholder="Why does it matter?">
+          <label class="am" for="s11-what">What</label><input id="s11-what" type="text" autocomplete="off" placeholder="What exactly should exist?">
+          <label for="s11-c1">Criterion 1</label><input id="s11-c1" class="s11-c" type="text" autocomplete="off" placeholder="How will we know it is right?">
+          <label for="s11-c2">Criterion 2</label><input id="s11-c2" class="s11-c" type="text" autocomplete="off">
+          <label for="s11-c3">Criterion 3</label><input id="s11-c3" class="s11-c" type="text" autocomplete="off">
+        </div>
+        <div class="howline"><span class="pill teal">The how → your AI agent</span><span class="pill amber">You review outcome + exceptions</span><button type="button" class="mini" id="s11-clear">Clear</button></div>
+        <p class="crit" id="s11-count" aria-live="polite">0 of 3 acceptance criteria written</p></div>
+      <div class="box take" data-b="2" style="--d:250ms"><span class="lbl-s">Take-home</span>
+        <p class="msg">You own the why, the what and the check; let AI do the how, and never skip the review.</p>
+        <h4>Do this Monday</h4>
+        <ol><li>Pick one task you did by hand last week. Write its why, its what and 3 acceptance criteria.</li><li>Give an agent that brief plus the relevant files. Ask it to plan before it codes.</li><li>Have it write tests and a PR description, then review the outcome yourself. Never paste controlled data.</li></ol>
+        <div class="qa-row"><b>Q&amp;A</b><button type="button" class="mini dlb no-print" data-download>⤓ Download for offline use</button></div></div>
+    </section>
+
+    <button type="button" class="edge l" id="edge-l" tabindex="-1" aria-hidden="true">‹</button>
+    <button type="button" class="edge r" id="edge-r" tabindex="-1" aria-hidden="true">›</button>
+  </div>
+</main>
+
+<div class="sr-only" id="live" aria-live="polite" aria-atomic="true"></div>
+
+<nav class="botbar" aria-label="Presentation controls">
+  <button type="button" class="btn" id="prev" aria-label="Previous beat (Left arrow)">‹ Back</button>
+  <div class="dots" id="dots" role="img" aria-label=""></div>
+  <span class="pgno" id="pgno" aria-hidden="true">1.1 / 11</span>
+  <button type="button" class="btn primary" id="next" aria-label="Next beat (Right arrow or Space)">Next ›</button>
+  <div class="where" id="where"></div>
+  <div class="bot-right">
+    <button type="button" class="btn" id="b-tl" aria-haspopup="dialog" aria-expanded="false" aria-controls="tl-dialog">Timeline <kbd>T</kbd></button>
+    <button type="button" class="btn" id="b-notes" aria-expanded="false" aria-controls="notes">Notes <kbd>N</kbd></button>
+    <button type="button" class="btn" id="b-ref" aria-haspopup="dialog" aria-expanded="false" aria-controls="ref">Reference <kbd>R</kbd></button>
+    <button type="button" class="btn" id="b-print">Print <kbd>P</kbd></button>
+    <button type="button" class="btn no-print" id="b-dl" data-download title="Save this whole deck as one HTML file that works without internet">⤓ Download for offline use</button>
+  </div>
+  <span class="unlock no-print" id="pv-unlock"><label for="pv-code" class="kk" aria-hidden="true">⚿</label><input id="pv-code" type="password" inputmode="numeric" maxlength="8" autocomplete="off" spellcheck="false" placeholder="presenter" aria-label="Presenter code"><button type="button" id="pv-lock" class="mini" hidden title="Hide speaker notes">lock</button></span>
+</nav>
+<!-- ================= Presenter notes drawer (hidden until N) ================= -->
+<aside id="notes" data-tab="say" aria-labelledby="notes-title" hidden>
+  <div class="notes-head">
+    <h2 id="notes-title">Presenter notes</h2>
+    <ul class="cue" id="notes-cue"></ul>
+  </div>
+  <div role="tablist" aria-label="Notes layers" id="notes-tabs">
+    <button type="button" role="tab" id="tab-say" data-tab="say" aria-selected="true" aria-controls="notes-panel">Say</button>
+    <button type="button" role="tab" id="tab-ref" data-tab="ref" aria-selected="false" aria-controls="notes-panel" tabindex="-1">Reference</button>
+    <button type="button" role="tab" id="tab-cav" data-tab="cav" aria-selected="false" aria-controls="notes-panel" tabindex="-1">Caveats</button>
+    <button type="button" role="tab" id="tab-src" data-tab="src" aria-selected="false" aria-controls="notes-panel" tabindex="-1">Sources</button>
+  </div>
+  <div id="notes-panel" role="tabpanel" aria-labelledby="tab-say" tabindex="0">
+
+    <div class="stage-notes" data-for="1">
+      <h3 class="np-title">Page 1 of 11 · 0–4 · Start with why</h3>
+      <div class="np say">
+        <div class="sal"><p><b>Say</b>AI now does much of the how. Today is about the why, the what and the check.</p><p><b>Ask</b>Hands up: who spent last week mostly on the how?</p><p><b>Land</b>You own why and what; AI proposes the how.</p></div>
+        <h4>0:00–1:30 · Opening line (read aloud)</h4><div data-clone="ref-opener"></div>
+        <h4>1:30–2:45 · Golden circle + quote</h4><p>Let the rings draw, then let the quote land on its own. Then tell the Apple story:</p><div data-clone="ref-paraphrase"></div>
+        <h4>2:45–4:00 · The flip</h4><div data-clone="ref-flip"></div><div data-clone="ref-8020"></div>
+        <h4>Ask the room</h4><p>Hands up: who spent last week mostly on the how? Look around. That’s the time we’re going to win back.</p>
+      </div>
+      <div class="np ref"><h4>80/20 split</h4><div data-clone="ref-split-table"></div><div data-clone="ref-split-p"></div></div>
+      <div class="np cav"><ul>
+        <li>80/20 is a goal, not a measurement.</li>
+        <li>The quote is Sinek’s; the Apple story is in my own words.</li>
+      </ul></div>
+      <div class="np src"><ul><li data-clone="src-11"></li></ul></div>
+    </div>
+
+    <div class="stage-notes" data-for="2">
+      <h3 class="np-title">Page 2 of 11 · 4–9 · Models &amp; inference</h3>
+      <div class="np say">
+        <div class="sal"><p><b>Say</b>Claude Code is a tool that calls a model. It is not the model.</p><p><b>Ask</b>Does a desktop app mean a local model? (poll, then Reveal)</p><p><b>Land</b>The agent tool is not the model. The backend decides where your data goes.</p></div>
+        <h4>4:00–5:30 · Agent tool ≠ model</h4><div data-clone="ref-seg-4-9-1"></div>
+        <h4>5:30–7:30 · The stack</h4><p>Walk the five layers from the bottom. The backend decides where your data goes. The model decides quality, speed and cost. The harness is the tool loop. The interface is how you see and steer it. On top sit assistants that hand work to the others.</p>
+        <h4>7:30–9:00 · Poll, then routing</h4><p>Poll: “Does a desktop app mean a local model?” Count hands for Yes and No, tap the counts in, then Reveal.</p><div data-clone="ref-seg-4-9-3"></div><div data-clone="ref-seg-4-9-2"></div>
+      </div>
+      <div class="np ref"><h4>Model, harness, interface, backend</h4><div data-clone="ref-stack-table"></div><h4>Model lineup (as of Nov 2026, recheck)</h4><div data-clone="ref-models-table"></div></div>
+      <div class="np cav"><ul><li>A desktop app is an interface, not local inference.</li><li>Model names are as of Nov 2026; recheck the two model pages before class.</li></ul></div>
+      <div class="np src"><ul><li data-clone="src-12"></li><li data-clone="src-13"></li></ul></div>
+    </div>
+
+    <div class="stage-notes" data-for="3">
+      <h3 class="np-title">Page 3 of 11 · 9–15 · Backends &amp; GovCloud</h3>
+      <div class="np say">
+        <div class="sal"><p><b>Say</b>A pricier plan buys limits and features, not a different place for your data.</p><p><b>Ask</b>Does $200 instead of $20 keep your prompts off OpenAI’s servers? (vote, then Reveal)</p><p><b>Land</b>Your plan doesn’t change where data goes. Only a local open-weights model is fully offline.</p></div>
+        <h4>9:00–10:30 · Myth or fact (vote, then Reveal)</h4><p>Ask: does paying $200 instead of $20 a month for ChatGPT keep your prompts off OpenAI’s servers? Count Myth and Fact, then Reveal.</p><div data-clone="ref-seg-9-15-1"></div>
+        <h4>10:30–12:30 · Four different questions</h4><div data-clone="ref-seg-9-15-2"></div>
+        <h4>12:30–15:00 · Route map</h4><p>Click through the routes. The key lines: Bedrock runs Claude inside your AWS account and the region you choose. GovCloud is AWS’s US government partition, and model choice there can lag the commercial regions. Neither one is compliance by itself: authorization, approved models, settings and procedures still matter. Only a local open-weights model is fully offline.</p>
+      </div>
+      <div class="np ref"><h4>Where inference runs</h4><div data-clone="ref-routing-table"></div><div data-clone="ref-routing-price"></div><h4>Bedrock and GovCloud details</h4><div data-clone="ref-seg-9-15-3"></div><div data-clone="ref-seg-9-15-4"></div><div data-clone="ref-seg-9-15-5"></div></div>
+      <div class="np cav"><div data-clone="ref-routing-warn"></div><ul>
+        <li>GovCloud alone is not CUI, ITAR or CMMC compliance.</li>
+        <li>Plan prices change often; check current pricing before class.</li>
+      </ul></div>
+      <div class="np src"><ul><li data-clone="src-1"></li><li data-clone="src-2"></li><li data-clone="src-3"></li><li data-clone="src-4"></li><li data-clone="src-5"></li></ul></div>
+    </div>
+
+    <div class="stage-notes" data-for="4">
+      <h3 class="np-title">Page 4 of 11 · 15–23 · Harness &amp; tools</h3>
+      <div class="np say">
+        <div class="sal"><p><b>Say</b>A harness is the loop around the model: tools, permissions, memory, stop rules.</p><p><b>Ask</b>Which of these three do you use today, and what can it see?</p><p><b>Land</b>Same models; tools differ in what they see and do. Compare workflows, not leaderboards.</p></div>
+        <h4>15:00–17:30 · Harness loop</h4><div data-clone="ref-seg-15-23-1"></div>
+        <h4>17:30–19:30 · Doors and ways to steer</h4><p>The same agent shows up in a terminal, inside VS Code, and as a desktop app: same loop, same rules. You steer it with plain-language goals, a CLAUDE.md file of project conventions, slash commands, skills, plan mode and voice.</p>
+        <h4>19:30–23:00 · Three example tools</h4><p>Walk the three cards. A desktop chat app sees only what you paste. An IDE assistant sees your workspace. A terminal agent can see the whole repo and run commands. The models are largely the same everywhere; Copilot, for example, offers Claude and GPT models. What differs is what each tool can see and do, so compare workflows, not leaderboards.</p><div data-clone="ref-seg-15-23-4"></div>
+      </div>
+      <div class="np ref"><h4>Detailed tool comparison</h4><div data-clone="ref-tools-body"></div></div>
+      <div class="np cav"><ul><li>Model menus vary by product and plan; check before class.</li><li>Copilot is not model-limited; fair differences sit in the harness.</li></ul></div>
+      <div class="np src"><ul><li data-clone="src-6"></li><li data-clone="src-8"></li><li data-clone="src-9"></li><li data-clone="src-10"></li></ul></div>
+    </div>
+
+    <div class="stage-notes" data-for="5">
+      <h3 class="np-title">Page 5 of 11 · 23–27 · Context</h3>
+      <div class="np say">
+        <div class="sal"><p><b>Say</b>The agent only knows what you give it.</p><p><b>Ask</b>Which of the seven do you skip most?</p><p><b>Land</b>Output follows context. Every gap is a guess the agent makes for you.</p></div>
+        <h4>23:00–25:00 · Seven things to give the agent</h4><p>Walk the seven items top to bottom. Every item you skip is a guess the agent makes for you.</p>
+        <h4>25:00–27:00 · Which do you skip?</h4><p>Ask the room, no counting: which of these do you usually skip? Take two or three answers, then ask everyone to pick one to add on their next task.</p>
+      </div>
+      <div class="np ref"><h4>Context checklist</h4><div data-clone="ref-context-body"></div></div>
+      <div class="np cav"><ul><li>More context isn’t always better: give what is relevant to the task.</li></ul></div>
+      <div class="np src"><p>No outside sources for this stage.</p></div>
+    </div>
+
+    <div class="stage-notes" data-for="6">
+      <h3 class="np-title">Page 6 of 11 · 27–32 · Planning &amp; ADR</h3>
+      <div class="np say">
+        <div class="sal"><p><b>Say</b>Options and plans are cheap for AI. The decision is ours.</p><p><b>Ask</b>Where would you write down why we chose JSON over SQLite?</p><p><b>Land</b>Decide before building, and write the decision down.</p></div>
+        <h4>27:00–28:30 · Planning stages</h4><div data-clone="ref-seg-23-32-2"></div><p>The decision step is ours. The AI is great at options and plans.</p>
+        <h4>28:30–30:30 · ADR-001</h4><p>An ADR is a one-page decision record: what we decided, why, what we rejected, and what would make us revisit it. It also stops the agent from re-arguing settled decisions.</p>
+        <h4>30:30–32:00 · Storage choice</h4><p>Click JSON, Markdown and SQLite in turn. All three are files on disk. Pick by the shape of the data and who reads or writes it.</p>
+      </div>
+      <div class="np ref"><h4>Example one-page ADR</h4><div data-clone="ref-adr-body"></div><h4>Storage choice</h4><div data-clone="ref-storage-body"></div></div>
+      <div class="np cav"><ul><li>ADR-001 is a made-up example.</li></ul></div>
+      <div class="np src"><p>No outside sources for this stage.</p></div>
+    </div>
+
+    <div class="stage-notes" data-for="7">
+      <h3 class="np-title">Page 7 of 11 · 32–40 · Engineering demo (replay)</h3>
+      <div class="np say">
+        <div class="sal"><p><b>7.1 Say</b>Watch it ask questions before it calculates. That is what a good engineer does too.</p><p><b>7.2 Ask</b>3, 7, 13 or 30 days to refill after a 3-day outage? Hands up.</p><p><b>7.3 Land</b>13.3 days. The AI computed it; an engineer decides if that is acceptable.</p></div>
+        <h4>32:00–34:30 · Questions before numbers</h4><p>This is a recorded run, so it works with no internet or login. Press Next to play each line. The point: a good assistant asks questions before it calculates. The chips on the right light up as it asks.</p>
+        <h4>34:30–36:30 · Prompt 2 + predict</h4><p>Prompt 2 gives it real numbers. At the pause line, ask the room: 3, 7, 13 or 30 days? Tap one count per raised hand.</p>
+        <h4>36:30–40:00 · Reveal, sliders, human call</h4><p>Play the answer line by line: 120 Wh a day, a 720 Wh battery (60 Ah at 12 V), a 49 W panel so we choose 60 W, and 13.3 days to refill. Then move a slider live, say a bigger panel or more sun, and watch the number change. Close on the human call: is 13 days acceptable? The AI computed it; an engineer decides.</p>
+      </div>
+      <div class="np ref"><h4>Demo kit</h4><div data-clone="ref-demo-body"></div><h4>Slider formulas</h4><ul><li>Daily energy = load × 24 h</li><li>Usable energy = daily × days of autonomy; battery = usable ÷ depth of discharge; Ah = Wh ÷ V</li><li>Panel required = daily ÷ (sun hours × efficiency); the chosen panel is the engineer’s pick (60 W)</li><li>Surplus = chosen panel × sun hours × efficiency − daily</li><li>Refill = usable ÷ surplus; no surplus means it never refills</li></ul></div>
+      <div class="np cav"><ul><li>Synthetic example, not a certified design: no temperature derating, no seasonal sun data.</li><li>The replay is scripted, not a live AI run. The sliders are plain arithmetic in the page.</li></ul></div>
+      <div class="np src"><p>No outside sources for this stage.</p></div>
+    </div>
+
+    <div class="stage-notes" data-for="8">
+      <h3 class="np-title">Page 8 of 11 · 40–44 · Data boundaries</h3>
+      <div class="np say">
+        <div class="sal"><p><b>Say</b>Coded labels can travel. The key that decodes them cannot.</p><p><b>Ask</b>If I rename the battery =S1-G2, can I paste its controlled data into a public chat?</p><p><b>Land</b>Code names don’t make data safe to share. The key stays inside.</p></div>
+        <h4>40:00–42:00 · Coded labels outside</h4><p>Coded labels like =S1-G1 let you discuss the shape of a problem outside a secure environment, for example with a public AI tool.</p>
+        <h4>42:00–44:00 · The key stays inside</h4><p>Press “Try moving the key outside”: it snaps back. The key that maps codes to real items stays in the approved environment. And code names don’t make controlled data shareable: if the content itself is controlled, it stays inside, whatever the labels say.</p>
+      </div>
+      <div class="np ref"><h4>Coded labels</h4><div data-clone="ref-crosswalk-body"></div></div>
+      <div class="np cav"><ul><li>Coded names are not declassification and not decontrol.</li><li>When in doubt, ask your security or export-control lead before using any AI tool.</li></ul></div>
+      <div class="np src"><p>No outside sources for this stage.</p></div>
+    </div>
+
+    <div class="stage-notes" data-for="9">
+      <h3 class="np-title">Page 9 of 11 · 44–53 · Prompt to pull request (replay)</h3>
+      <div class="np say">
+        <div class="sal"><p><b>9.1 Say</b>One prompt: branch, tests, PR, and don’t merge. It plans first, in its own worktree.</p><p><b>9.2 Ask</b>Would you have spotted the watts vs watt-hours bug? The test did.</p><p><b>9.3 Land</b>AI does the loop; humans gate the merge.</p></div>
+        <h4>44:00–46:30 · Plan + worktree</h4><p>Another recorded run, this time a coding agent in a terminal. It plans first, waits for a yes, then works in its own git worktree so parallel tasks don’t collide.</p>
+        <h4>46:30–50:00 · Code, test, fix</h4><p>Play the coding steps. The first test run fails: the agent mixed watts and watt-hours and got 6.5 hours instead of 13.3 days. It finds the units bug, fixes it, and all three tests pass. That is why we always ask for tests.</p>
+        <h4>50:00–53:00 · PR + human review</h4><p>Notice the reminder: agents tend to stop early, so ask explicitly for tests, the PR and a re-check. The PR says “Not merged”. Ask a volunteer to call out the three review checks while you tick them. Only then does Approve merge unlock. There is no bypass button.</p>
+      </div>
+      <div class="np ref"><h4>Prompt-to-PR kit</h4><div data-clone="ref-github-body"></div></div>
+      <div class="np cav"><ul><li>Simulated: nothing on this page touches a real repo.</li><li>Never point an agent at real repos, cloud accounts or controlled data without approval.</li></ul></div>
+      <div class="np src"><ul><li data-clone="src-8"></li><li data-clone="src-9"></li></ul></div>
+    </div>
+
+    <div class="stage-notes" data-for="10">
+      <h3 class="np-title">Page 10 of 11 · 53–57 · Agents &amp; approvals</h3>
+      <div class="np say">
+        <div class="sal"><p><b>Say</b>Assistants now act for you: they plan, delegate and use tools.</p><p><b>Ask</b>What can your agent touch without asking you first?</p><p><b>Land</b>Agents act; you keep the gates. More autonomy means clearer gates, not fewer.</p></div>
+        <h4>53:00–55:00 · Tiers + approval rail</h4><p>Assistants that act for you sit on top of the same layers: they hand work to a coding agent, which calls a model on some backend. None of that changes the data rules from stages 2 and 3. The orange rail is the point: sends, spend, merges and irreversible steps always wait for a human.</p>
+        <h4>55:00–57:00 · Four questions</h4><p>Read the four questions. Ask them of any agent tool before you trust it with real work. More autonomy means you need clearer gates, not fewer.</p>
+      </div>
+      <div class="np ref"><h4>Layers</h4><div data-clone="ref-stack-table"></div><h4>Agents and approvals</h4><div data-clone="ref-conductor-body"></div></div>
+      <div class="np cav"><ul><li>Agent assistants are new and change fast; use only what your organization has approved.</li></ul></div>
+      <div class="np src"><ul><li data-clone="src-9"></li></ul></div>
+    </div>
+
+    <div class="stage-notes" data-for="11">
+      <h3 class="np-title">Page 11 of 11 · 57–60 · Recap &amp; closing</h3>
+      <div class="np say">
+        <div class="sal"><p><b>Say</b>Ten lines, one per page. Read them, don’t re-teach them.</p><p><b>Ask</b>Which one task will you hand to an agent on Monday?</p><p><b>Land</b>You own the why, the what and the check; let AI do the how, and never skip the review.</p></div>
+        <h4>57:00–58:00 · Recap</h4><p>Read the recap chips in one breath, one line per stage.</p>
+        <h4>58:00–60:00 · Take-home + Q&amp;A</h4><p>Read the take-home line aloud: “You own the why, the what and the check; let AI do the how, and never skip the review.” Then the three things to do on Monday. If there’s time, fill in the card with one real example from the room. Then open for questions.</p><div data-clone="ref-closing-body"></div>
+      </div>
+      <div class="np ref"><h4>80/20 split</h4><div data-clone="ref-split-table"></div><div data-clone="ref-split-p"></div><h4>Roles</h4><div data-clone="ref-roles"></div><h4>Before class</h4><div data-clone="ref-preflight"></div></div>
+      <div class="np cav"><ul><li>80/20 is a goal, not a measurement.</li></ul></div>
+      <div class="np src"><p>All sources are in Reference → Sources.</p></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ================= Timeline + keys dialog (T) ================= -->
+<div id="tl-dialog" class="overlay" role="dialog" aria-modal="true" aria-labelledby="tl-title" hidden>
+  <div class="ov-head"><h2 id="tl-title">Exact 60-minute timeline</h2><button type="button" class="btn" data-close>Close <kbd>Esc</kbd></button></div>
+  <div class="ov-body">
+    <div class="tl-grid" id="tl-grid"></div>
+    <p id="tl-total"></p>
+    <h3>Keys</h3>
+    <div class="keys">
+      <span><kbd>→</kbd> <kbd>Space</kbd> <kbd>PgDn</kbd></span><span>Next beat (reveals the rest of a stage before moving on)</span>
+      <span><kbd>←</kbd> <kbd>PgUp</kbd></span><span>Back one beat</span>
+      <span>Page numbers</span><span><b>7.2</b> = page 7, step 2 (11 pages). Press <kbd>7</kbd> to jump to page 7, then <kbd>→</kbd> for its steps</span>
+      <span>Stages 7 and 9</span><span><kbd>→</kbd> <kbd>Space</kbd> or Next plays the next replay line, then moves on · <kbd>Shift</kbd>+<kbd>→</kbd> skips the rest of the replay beat</span>
+      <span><kbd>Home</kbd> <kbd>End</kbd></span><span>First / last stage</span>
+      <span><kbd>1</kbd>–<kbd>9</kbd>, <kbd>0</kbd></span><span>Jump to stage 1–9; 0 = stage 10</span>
+      <span><kbd>T</kbd> <kbd class="nk">N</kbd> <kbd>R</kbd> <kbd>P</kbd></span><span>Timeline<span class="nk"> · notes</span> · reference · print</span>
+      <span><kbd>Esc</kbd></span><span>Close the open panel</span>
+      <span>Touch</span><span>Swipe left / right, or tap the right / left third of the stage</span>
+    </div>
+    <p class="footer-note">Shortcuts are ignored while typing in a field or moving a slider.</p>
+  </div>
+</div>
+<!-- ================= Full reference (R): source curriculum, unchanged ================= -->
+<div id="ref" class="overlay" role="dialog" aria-modal="true" aria-labelledby="ref-title" hidden>
+  <div class="ov-head"><h2 id="ref-title">Full reference — AI Master Class, 60-minute teaching plan</h2><button type="button" class="btn" id="ref-print">Print <kbd>P</kbd></button><button type="button" class="btn" data-close>Close <kbd>Esc</kbd></button></div>
+  <div class="ov-body refdoc">
+    <ul class="ref-toc" aria-label="Reference sections">
+      <li><a href="#ref-about">About</a></li><li><a href="#ref-timeline">Timeline</a></li><li><a href="#ref-opening">Opening</a></li><li><a href="#ref-notes">Notes</a></li><li><a href="#ref-stack">Stack</a></li><li><a href="#ref-routing">Inference</a></li><li><a href="#ref-tools">Tools</a></li><li><a href="#ref-context">Context</a></li><li><a href="#ref-adr">ADR</a></li><li><a href="#ref-storage">Storage</a></li><li><a href="#ref-demo">Demo</a></li><li><a href="#ref-crosswalk">Crosswalk</a></li><li><a href="#ref-github">GitHub</a></li><li><a href="#ref-conductor">Agents</a></li><li><a href="#ref-split">80/20</a></li><li><a href="#ref-closing">Closing</a></li><li><a href="#ref-sources">Sources</a></li><li><a href="#ref-coverage">Coverage map</a></li>
+    </ul>
+
+    <section class="ref-sec" id="ref-about">
+      <h3>AI Master Class — 60-minute teaching plan</h3>
+      <p class="sub">Instructor: Christian · Orientation for engineers · Not a certification course</p>
+      <p class="sub">Exact 60-minute agenda · works offline from one file</p>
+      <p>A one-hour orientation for engineers: start with why, separate model from harness from backend, see where inference really runs, then take one synthetic engineering problem from concept to checked calculation to a reviewed pull request.</p>
+      <p class="pv-link">Presenter view (notes always on). Audience view: <a href="https://christianmackin.github.io/ai-master-class/">christianmackin.github.io/ai-master-class/</a></p>
+    </section>
+
+    <section class="ref-sec" id="ref-timeline">
+      <h3>Exact 60-minute timeline</h3>
+      <p class="sub">Total = 60 minutes.</p>
+      <table><thead><tr><th>Window</th><th>Min</th><th>Block</th><th>Purpose</th></tr></thead><tbody id="ref-agenda"></tbody></table>
+      <p>One running example threads the hour: a synthetic remote weather-station power budget. It is planned (ADR), given context, stored (JSON/Markdown), crosswalked, calculated, and shipped as a PR. The detailed tool and routing tables are facilitator reference; in the timed lesson, highlight two or three rows.</p>
+    </section>
+
+    <section class="ref-sec" id="ref-opening">
+      <h3>Opening read-aloud (0–4)</h3>
+      <p class="sub">Framing · Sinek · Why/What vs How · 80/20 target</p>
+      <p><strong>Opening framing (read aloud first):</strong></p>
+      <blockquote id="ref-opener">Today you’ll learn how to turn an engineering goal into a checked result with AI: define what matters, choose the tools and data boundaries, give it context, and delegate the work while keeping human review and accountability.</blockquote>
+      <p>The only direct quote in the deck is Simon Sinek’s, shown once on Stage 1 (talk listed in Sources).</p>
+      
+      <p id="ref-paraphrase"><em>In my words:</em> Sinek's point is that most companies explain themselves from the outside in. Here is what we make, here is how it is better, please buy it. His Apple illustration reverses the order. Apple leads with a belief, challenging the status quo and thinking differently, then explains how it acts on that belief with well-designed, easy-to-use products, and only then mentions what it sells: computers. Same products, different order, and the belief is what people respond to.</p>
+      <p id="ref-flip">The flip: for most of engineering history the how consumed us. Syntax, boilerplate, wiring, test scaffolding. With agentic AI, much of the how can be delegated. Our job moves inward: why are we building this, what exactly should exist, and how will we know it is right. The AI proposes the how. We keep the acceptance criteria and the accountability.</p>
+      <p id="ref-8020">My working target is roughly 80% AI effort and 20% human effort, with our 20% spent on strategy, risk, outcome review and exceptions. It is a goal, not a measurement. This class was built that way: I set the why and the topics, AI drafted, and I reviewed and decided what ships.</p>
+    </section>
+
+    <section class="ref-sec" id="ref-notes">
+      <h3>Segment notes (facilitator)</h3>
+      <p class="sub">4–32 talking points</p>
+      <h4>4–9 Models, inference, local vs cloud</h4>
+      <ol id="ref-seg-4-9">
+        <li id="ref-seg-4-9-1">Claude Code is agentic tooling: it reads files, runs commands, edits code and calls a model. It is not itself a model.</li>
+        <li id="ref-seg-4-9-2">Models differ in capability, speed, cost and context window. Route routine work to faster models, hard reasoning to stronger ones. Name families correctly: Fable, Opus, Sonnet and Haiku are Anthropic's Claude models (Fable is the new top tier, above Opus); Astra, Sol, Terra and Luna are OpenAI's GPT-6 models. As of Nov 2026, recheck.</li>
+        <li id="ref-seg-4-9-3">Inference is the model call. Prompt plus selected context goes to whichever backend is configured. A desktop app is an interface; unless you run open-weights models on your own hardware, inference happens in someone's cloud.</li>
+      </ol>
+      <h4>9–15 Backends, plan myths, Bedrock vs GovCloud</h4>
+      <ol id="ref-seg-9-15">
+        <li id="ref-seg-9-15-1">Teachable correction: paying $200 rather than $20 for ChatGPT does not make inference stay off the provider. Both are consumer plans; OpenAI still processes every prompt. The training toggle exists on Free, Plus and Pro alike.</li>
+        <li id="ref-seg-9-15-2">Opting out of training is not the same as no provider processing, which is not data residency, which is not local or offline inference. Four different questions.</li>
+        <li id="ref-seg-9-15-3">Bedrock backend (<code>CLAUDE_CODE_USE_BEDROCK=1</code>): inference goes to Amazon Bedrock in the region you set, using your AWS credentials and IAM.</li>
+        <li id="ref-seg-9-15-4">Per Claude Code docs, Bedrock defaults turn off metrics, error reports and /feedback upload, but a session survey prompt and a WebFetch hostname check to Anthropic still run unless disabled (<code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code>, <code>skipWebFetchPreflight</code>).</li>
+        <li id="ref-seg-9-15-5">GovCloud regions use the <code>us-gov.</code> inference-profile prefix; model availability can lag commercial. GovCloud alone is not CUI, ITAR or CMMC compliance: authorization, approved models, settings, telemetry, networking and procedures all matter.</li>
+      </ol>
+      <h4>15–23 Harness and interfaces</h4>
+      <ol id="ref-seg-15-23">
+        <li id="ref-seg-15-23-1">A harness is the loop around the model: tools, permissions, file access, memory files, hooks, stop conditions.</li>
+        <li id="ref-seg-15-23-2">New ways to talk to it: plain-language goals, CLAUDE.md, slash commands, skills, plan mode, voice.</li>
+        <li id="ref-seg-15-23-3">Same harness, different doors: terminal, VS Code extension, Claude Code Desktop. Use the comparison table; compare harness, context and permissions, not just model names.</li>
+        <li id="ref-seg-15-23-4">VS Code is still the most used editor: 70.9% regular use in Stack Overflow’s 2026 survey. What is changing is where the agent lives, not the editor’s reach.</li>
+      </ol>
+      <h4>23–32 Context, planning, storage</h4>
+      <ol id="ref-seg-23-32">
+        <li id="ref-seg-23-32-1">Walk the context menu below; ask the room which item they skip most.</li>
+        <li id="ref-seg-23-32-2">Planning stages: why and constraints, options, decision (ADR), plan, build, verify.</li>
+        <li id="ref-seg-23-32-3">Show the one-page ADR and the storage matrix for the running example.</li>
+      </ol>
+    </section>
+
+    <section class="ref-sec" id="ref-stack">
+      <h3>Model, harness, interface, backend</h3>
+      <p class="sub">Layer map</p>
+      <table id="ref-stack-table">
+        <thead><tr><th>Layer</th><th>Example</th><th>What it decides</th></tr></thead>
+        <tbody>
+          <tr><td>Model</td><td>Anthropic: Claude Fable, Opus, Sonnet, Haiku · OpenAI: GPT-6 Astra, GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Luna (as of Nov 2026, recheck)</td><td>Reasoning quality, speed, cost</td></tr>
+          <tr><td>Harness</td><td>Claude Code, Codex, Copilot agent</td><td>Tools, permissions, loop, memory</td></tr>
+          <tr><td>Interface</td><td>Terminal, VS Code, Desktop, voice</td><td>How you see and steer it</td></tr>
+          <tr><td>Backend</td><td>Anthropic, OpenAI, Bedrock, local</td><td>Where inference and data go</td></tr>
+          <tr><td>Orchestrator</td><td>Assistants that delegate work</td><td>Who delegates work and asks you</td></tr>
+        </tbody>
+      </table>
+      <h4>Current model lineup (as of Nov 2026, recheck)</h4>
+      <table id="ref-models-table">
+        <thead><tr><th>Family</th><th>Model</th><th>Positioning (from the provider’s docs)</th></tr></thead>
+        <tbody>
+          <tr><td>Anthropic Claude</td><td>Claude Fable 5.2</td><td>New top tier, above Opus: demanding reasoning, long-horizon agentic work</td></tr>
+          <tr><td>Anthropic Claude</td><td>Claude Opus 5.5</td><td>Default for most work: long-running agentic coding</td></tr>
+          <tr><td>Anthropic Claude</td><td>Claude Sonnet 5.5</td><td>Balance of speed and intelligence</td></tr>
+          <tr><td>Anthropic Claude</td><td>Claude Haiku 5.5</td><td>Fastest; high-volume, latency-sensitive tasks</td></tr>
+          <tr><td>OpenAI GPT-6</td><td>GPT-6 Astra</td><td>Flagship for complex reasoning and coding</td></tr>
+          <tr><td>OpenAI GPT-6</td><td>GPT-6.1 Sol</td><td>Near-Astra performance at lower cost</td></tr>
+          <tr><td>OpenAI GPT-6</td><td>GPT-6.1 Terra</td><td>Fast, efficient; visual reasoning and computer use</td></tr>
+          <tr><td>OpenAI GPT-6</td><td>GPT-6 Luna</td><td>Most efficient; focused, high-volume tasks</td></tr>
+        </tbody>
+      </table>
+      <p class="sub">Model names change often; check the two model pages in Sources before class.</p>
+    </section>
+
+    <section class="ref-sec" id="ref-routing">
+      <h3>Where inference runs</h3>
+      <p class="sub">Routing table · plan myths</p>
+      <table id="ref-routing-table">
+        <thead><tr><th>Route</th><th>Model runs at</th><th>Key point</th></tr></thead>
+        <tbody>
+          <tr><td>ChatGPT Plus / Pro ($20 / $200 a month)</td><td>OpenAI cloud</td><td>Training opt-out available; still processed by OpenAI</td></tr>
+          <tr><td>ChatGPT Business / Enterprise</td><td>OpenAI cloud</td><td>Not used for training by default; admin controls</td></tr>
+          <tr><td>Claude Code, Anthropic API</td><td>Anthropic cloud</td><td>Commercial terms: not trained on; 30-day standard retention</td></tr>
+          <tr><td>Claude Code via Bedrock</td><td>AWS region you set</td><td>Cloud-hosted weights in AWS; some Anthropic checks remain</td></tr>
+          <tr><td>Bedrock in GovCloud</td><td>us-gov region</td><td>Partition matters; compliance is not automatic</td></tr>
+          <tr><td>Local open-weights model</td><td>Your hardware</td><td>Only fully offline route; usually less capable</td></tr>
+        </tbody>
+      </table>
+      <p id="ref-routing-price">Plan prices are examples ($20 Plus, $200 Pro a month) and change often; check current pricing before class. Plan tier changes limits and features, never where the model executes.</p>
+      <div class="callout warn" id="ref-routing-warn"><strong>Teaching warning:</strong> An app or subscription is not local inference. Unless you run open-weights models on your own hardware, inference happens in someone's cloud.</div>
+    </section>
+
+    <section class="ref-sec" id="ref-tools">
+      <h3>Tool comparison (facilitator reference)</h3>
+      <p class="sub">6 tools</p>
+      <div id="ref-tools-body">
+      <table>
+        <thead><tr><th>Tool</th><th>What it is</th><th>Watch for</th></tr></thead>
+        <tbody>
+          <tr><td>Claude Code Desktop</td><td>Desktop door to the Claude Code harness</td><td>Backend set by config: Anthropic or Bedrock</td></tr>
+          <tr><td>Codex in ChatGPT desktop</td><td>OpenAI's coding harness: local, worktree or cloud tasks; built-in Git and PRs</td><td>The standalone Codex app's features now live in the ChatGPT desktop app</td></tr>
+          <tr><td>ChatGPT Desktop</td><td>Chat interface; hosts Codex and dots</td><td>A desktop app is not a local model</td></tr>
+          <tr><td>VS Code</td><td>Editor hosting Claude Code, Codex, Copilot extensions</td><td>70.9% regular use in 2026 survey</td></tr>
+          <tr><td>GitHub Copilot + GitHub</td><td>Copilot agent, PR review, cloud agent; can delegate to Claude or Codex agents (preview)</td><td>Model menu varies by surface and plan</td></tr>
+          <tr><td>OpenAI dots</td><td>Always-on ChatGPT agent with its own cloud computer</td><td>Pro and Business Premium; not all regions</td></tr>
+        </tbody>
+      </table>
+      <p>Copilot is not model-limited: GitHub's docs list Claude and GPT models (which versions varies by plan; as of Nov 2026, recheck), and a cloud agent that opens pull requests. Fair differences sit in the harness: how much repo and shell context it gathers, its permission model, local versus hosted execution, and how the PR loop is driven. Assume each tool runs its strongest officially listed model; compare workflows, not leaderboards.</p>
+      </div>
+    </section>
+
+    <section class="ref-sec" id="ref-context">
+      <h3>Context menu</h3>
+      <p class="sub">What to give the agent</p>
+      <ul id="ref-context-body">
+        <li><strong>The prompt</strong> — Goal, constraints, acceptance criteria</li>
+        <li><strong>Project memory</strong> — CLAUDE.md conventions, commands, do and don't</li>
+        <li><strong>Files and references</strong> — Point at specific files; the agent can read the repo</li>
+        <li><strong>Decision records</strong> — ADRs explain why, so the agent doesn't relitigate</li>
+        <li><strong>Structured data</strong> — JSON inputs and fixtures it can compute from</li>
+        <li><strong>Tools and skills</strong> — What it may run and reusable procedures</li>
+        <li><strong>Feedback</strong> — Test output, review comments, your corrections</li>
+      </ul>
+    </section>
+
+    <section class="ref-sec" id="ref-adr">
+      <h3>Example one-page ADR</h3>
+      <p class="sub">Synthetic station power budget</p>
+      <table id="ref-adr-body">
+        <tbody>
+          <tr><th>ADR-001</th><td>Store station power-budget inputs as JSON, narrative as Markdown</td></tr>
+          <tr><th>Status</th><td>Accepted (synthetic example)</td></tr>
+          <tr><th>Context</th><td>AI and humans both edit inputs; calculations must be reproducible and diff-able in Git.</td></tr>
+          <tr><th>Decision</th><td><code>inputs.json</code> for numbers, <code>design-notes.md</code> for rationale. No database yet.</td></tr>
+          <tr><th>Alternatives</th><td>SQLite: rejected for now, single user and no queries needed. Markdown tables only: rejected, not machine-checkable.</td></tr>
+          <tr><th>Consequences</th><td>Easy review in PRs. Revisit SQLite if we log readings from many stations.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="ref-sec" id="ref-storage">
+      <h3>Storage choice</h3>
+      <p class="sub">Markdown · JSON · SQLite</p>
+      <div id="ref-storage-body">
+      <table>
+        <thead><tr><th>Format</th><th>Best for</th><th>Watch out</th></tr></thead>
+        <tbody>
+          <tr><td>Markdown</td><td>Narrative, context, ADRs, runbooks</td><td>Not reliably parseable data</td></tr>
+          <tr><td>JSON</td><td>Config, structured exchange, fixtures</td><td>No queries, no transactions</td></tr>
+          <tr><td>SQLite</td><td>Queryable local app state, transactions</td><td>One writer at a time; not a server DB</td></tr>
+        </tbody>
+      </table>
+      <p>All three are files on disk. The question is not file versus database, it is what shape the data has and who reads or writes it.</p>
+      </div>
+    </section>
+
+    <section class="ref-sec" id="ref-demo">
+      <h3>Engineering demo kit (32–40)</h3>
+      <p class="sub">Prompts · calculations · human exception</p>
+      <div id="ref-demo-body">
+      <p><strong>Instructor prompt 1, general form:</strong></p>
+      <blockquote id="ref-prompt-1">This is roughly what I'm trying to achieve: a small off-grid sensor station that runs year-round on solar and a battery. What public standards, engineering principles and rules of thumb should I consider? List the questions and assumptions you need from me before estimating.</blockquote>
+      <p>Expected observation: the AI asks about load profile, sun hours, days of autonomy, battery chemistry and depth of discharge, temperature, and system losses. Nothing about the real project is revealed.</p>
+      <p><strong>Instructor prompt 2, declared numbers:</strong></p>
+      <blockquote id="ref-prompt-2">Assume 5 W average load, 3 days of autonomy, 12 V battery usable to 50%, 3.5 peak sun hours, 70% overall system efficiency. Size the battery and panel, show units at every step, then do an independent order-of-magnitude check and tell me how many days a full recharge takes.</blockquote>
+      <p><strong>Prepared calculations:</strong></p>
+      <pre><code>Daily energy = 5 W × 24 h = 120 Wh/day
+
+Battery = (120 × 3 Wh) / 0.5 = 720 Wh = 60 Ah at 12 V
+
+Panel = 120 Wh / (3.5 h × 0.7) = 49 W → choose 60 W
+
+Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></pre>
+      <p>Sanity check: 60 W × 3.5 h × 0.7 = 147 Wh/day, above the 120 Wh load. 60 Ah × 12 V × 0.5 = 360 Wh, three days of load.</p>
+      <div class="callout info"><strong>Human exception decision:</strong> The panel covers an average day but needs about 13 days to refill after a 3-day outage. Is that acceptable? The AI computed it; an engineer decides, perhaps a larger panel. Limitations: synthetic averages, no temperature derating, no seasonal sun data. A real design needs qualified engineering validation and the applicable codes.</div>
+      <p>On screen this is a scripted replay, so it needs no internet or login. If a live, approved agent is available, you can also run the prompts for real.</p>
+      <div class="callout warn"><strong>Warning:</strong> Synthetic-only example. Do not execute against real repos, AWS accounts, messages, or controlled data without a separate explicit ask.</div>
+      </div>
+    </section>
+
+    <section class="ref-sec" id="ref-crosswalk">
+      <h3>Data boundaries (40–44)</h3>
+      <p class="sub">Coded labels are not declassification</p>
+      <div id="ref-crosswalk-body">
+      <table>
+        <thead><tr><th>Coded label (illustrative)</th><th>Real item</th></tr></thead>
+        <tbody>
+          <tr><td><code>=S1-G1</code></td><td>Solar panel</td></tr>
+          <tr><td><code>=S1-G2</code></td><td>Battery</td></tr>
+          <tr><td><code>=S1-K1</code></td><td>Charge controller</td></tr>
+        </tbody>
+      </table>
+      <p>Labels are IEC 81346-inspired for illustration only. The pattern: discuss generalized, coded problems outside; keep the mapping key in the approved secure environment.</p>
+      <div class="callout warn"><strong>Coding is not declassification:</strong> Coded names do not make controlled data shareable. If the payload itself is controlled, it stays inside the approved boundary regardless of labels, and anonymization never authorizes moving it out.</div>
+      </div>
+    </section>
+
+    <section class="ref-sec" id="ref-github">
+      <h3>Prompt to pull request (44–53)</h3>
+      <p class="sub">Worktrees · AI PR · human gate</p>
+      <div id="ref-github-body">
+      <p><strong>Instructor prompt 3, run in a git worktree:</strong></p>
+      <blockquote id="ref-prompt-3">Create a branch, add inputs.json and a power-budget script with tests for the numbers we just checked, run the tests, open a pull request with a summary and the ADR link. Don't merge. When you think you're done, re-check: tests run, PR opened, description complete.</blockquote>
+      <ol>
+        <li><strong>Worktree per task</strong> — <code>git worktree add ../station-budget -b feat/power-budget</code> keeps parallel agents isolated</li>
+        <li><strong>AI implements</strong> — Code, tests, commit, PR description</li>
+        <li><strong>Remind to finish</strong> — Agents stop early; ask explicitly for tests, PR, and checks</li>
+        <li><strong>Human reviews</strong> — Strategy, outcome, exceptions; not every line</li>
+        <li><strong>Merge only when authorized</strong> — Required checks and branch protection pass; never bypass approvals</li>
+      </ol>
+      <p>On screen this is a scripted replay; nothing touches a real repo. To run it live, use a throwaway sandbox repo only.</p>
+      </div>
+    </section>
+
+    <section class="ref-sec" id="ref-conductor">
+      <h3>Agents and approvals (53–57)</h3>
+      <p class="sub">Assistants above a harness</p>
+      <div id="ref-conductor-body">
+      <table>
+        <thead><tr><th>Layer</th><th>What it does</th><th>Where the human gate sits</th></tr></thead>
+        <tbody>
+          <tr><td>You</td><td>Set the goal in plain language, by voice or chat</td><td>You own the why, the what and the acceptance criteria</td></tr>
+          <tr><td>Assistant (orchestrator)</td><td>Plans, delegates to other tools, asks when unsure</td><td>Approves sends, spend and irreversible steps</td></tr>
+          <tr><td>Coding agent (harness)</td><td>Reads, edits, runs tests, opens PRs</td><td>Permissions you set; merges need approval</td></tr>
+          <tr><td>Model + backend</td><td>Does the reasoning on some provider’s servers</td><td>Backend choice decides where data goes (stages 2–3)</td></tr>
+        </tbody>
+      </table>
+      <p>Examples include always-on assistants such as OpenAI’s dots; availability varies by plan and region. Whatever the product, it sits above a harness: it doesn’t change the model and backend rules, and it doesn’t replace human gates.</p>
+      </div>
+    </section>
+
+    <section class="ref-sec" id="ref-split">
+      <h3>80/20 responsibility split · roles · preflight</h3>
+      <p class="sub">Target, not measured fact</p>
+      <table id="ref-split-table">
+        <thead><tr><th>AI (target 80%)</th><th>Human (target 20%)</th></tr></thead>
+        <tbody>
+          <tr><td>Draft code, tests, docs</td><td>Why, what, acceptance criteria</td></tr>
+          <tr><td>Run calculations and checks</td><td>Risk and exception calls</td></tr>
+          <tr><td>Open PRs, summarize changes</td><td>Review outcomes, authorize merge</td></tr>
+          <tr><td>Propose options</td><td>Choose and own the decision</td></tr>
+        </tbody>
+      </table>
+      <p id="ref-split-p">Humans own why, what, acceptance criteria, and accountability. The 80% AI / 20% human split is a workflow target, not a universal measured fact.</p>
+      <h4>Co-teaching roles</h4>
+      <ul id="ref-roles">
+        <li><strong>Christian</strong> — Lead, read-aloud, replays, human decision points</li>
+        <li><strong>Volunteer engineer</strong> — Plays reviewer on the PR demo</li>
+      </ul>
+      <h4>Preflight checklist</h4>
+      <div class="checklist" id="ref-preflight">
+        <label><input type="checkbox" disabled /> Copy ai-master-class.html to a USB stick (use “Download for offline use”)</label>
+        <label><input type="checkbox" disabled /> Open it on the presenting laptop with Wi-Fi off; click through both replays</label>
+        <label><input type="checkbox" disabled /> Recheck plan prices and model availability (sources below)</label>
+        <label><input type="checkbox" disabled /> Line up a volunteer reviewer for Stage 9</label>
+        <label><input type="checkbox" disabled /> No infrastructure identifiers, accounts or controlled data on screen</label>
+      </div>
+    </section>
+
+    <section class="ref-sec" id="ref-closing">
+      <h3>Closing prompt (57–60)</h3>
+      <p class="sub">Takeaway exercise</p>
+      <div id="ref-closing-body">
+      <p><strong>Takeaway exercise:</strong></p>
+      <blockquote>Pick one task you did by hand this week. Write its why, its what, and three acceptance criteria. Hand the how to Claude Code, and review only the outcome and exceptions.</blockquote>
+      </div>
+    </section>
+
+    <section class="ref-sec" id="ref-sources">
+      <h3>Sources and pre-class rechecks</h3>
+      <p class="sub">13 links · volatile facts</p>
+      <ul>
+        <li id="src-1"><a href="https://code.claude.com/docs/en/amazon-bedrock">Claude Code on Amazon Bedrock</a> — code.claude.com</li>
+        <li id="src-2"><a href="https://code.claude.com/docs/en/data-usage">Claude Code data usage and telemetry</a> — code.claude.com</li>
+        <li id="src-3"><a href="https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-bedrock.html">Amazon Bedrock in AWS GovCloud (US)</a> — docs.aws.amazon.com</li>
+        <li id="src-4"><a href="https://help.openai.com/en/articles/7730893-data-controls-in-chatgpt">Data controls in ChatGPT</a> — help.openai.com</li>
+        <li id="src-5"><a href="https://help.openai.com/en/articles/9793128-about-chatgpt-pro-tiers">About ChatGPT Pro tiers</a> — help.openai.com</li>
+        <li id="src-6"><a href="https://learn.chatgpt.com/docs/environments/modes">Codex environments</a> — learn.chatgpt.com</li>
+        <li id="src-7"><a href="https://learn.chatgpt.com/docs/whats-new/dots-october-9-2026">Create your dot</a> — learn.chatgpt.com</li>
+        <li id="src-8"><a href="https://docs.github.com/en/copilot/reference/ai-models/supported-models">Supported AI models in GitHub Copilot</a> — docs.github.com</li>
+        <li id="src-9"><a href="https://docs.github.com/en/copilot/concepts/agent-capabilities/about-agents/about-third-party-coding-agents">Third-party coding agents on GitHub</a> — docs.github.com</li>
+        <li id="src-10"><a href="https://survey.stackoverflow.co/2026/technology/data/dev-ide">Stack Overflow 2026 survey: Dev IDEs</a> — survey.stackoverflow.co</li>
+        <li id="src-11"><a href="https://www.ted.com/talks/simon_sinek_how_great_leaders_inspire_action">Simon Sinek: How great leaders inspire action</a> — ted.com</li>
+        <li id="src-12"><a href="https://platform.claude.com/docs/en/models/overview">Claude models overview</a> — platform.claude.com</li>
+        <li id="src-13"><a href="https://developers.openai.com/api/docs/models">OpenAI API models</a> — developers.openai.com</li>
+      </ul>
+      <p>Recheck before class: the Claude and OpenAI model lineups, GovCloud Claude model availability, Claude Code defaults and telemetry, ChatGPT plan prices, Copilot model lists, and dots availability. These change often.</p>
+      <h4>Caveats</h4>
+      <ul>
+        <li><strong>Synthetic-only</strong> demo and ADR; nothing about a real project is revealed.</li>
+        <li><strong>Coded labels are not decontrol</strong> / not declassification.</li>
+        <li><strong>GovCloud alone is not compliance</strong> (not automatic CUI, ITAR, or CMMC).</li>
+        <li><strong>App / subscription is not local inference.</strong></li>
+        <li>Do <strong>not</strong> execute against real repos, AWS, messages, or controlled data without a separate explicit ask.</li>
+        <li>Prices and product facts change often; recheck them from the sources above before class.</li>
+      </ul>
+    </section>
+
+    <section class="ref-sec" id="ref-coverage">
+      <h3>Topic coverage map</h3>
+      <p class="sub">Where each topic is covered</p>
+      <table>
+        <thead><tr><th>Topic group</th><th>Where</th></tr></thead>
+        <tbody>
+          <tr><td>Start With Why + AI flip</td><td>0–4</td></tr>
+          <tr><td>80/20 human-in-the-loop target</td><td>0–4, 44–53</td></tr>
+          <tr><td>1 Claude Code as base solution</td><td>4–9, 15–23</td></tr>
+          <tr><td>2 Differences between models</td><td>4–9</td></tr>
+          <tr><td>3 Inference, local vs cloud, what reaches the provider</td><td>4–15</td></tr>
+          <tr><td>4 Bedrock in AWS</td><td>9–15</td></tr>
+          <tr><td>5 Bedrock commercial vs GovCloud</td><td>9–15</td></tr>
+          <tr><td>6 What a harness is</td><td>15–23</td></tr>
+          <tr><td>7 VS Code, Desktop apps, tool comparison</td><td>15–23</td></tr>
+          <tr><td>12 Context</td><td>23–27</td></tr>
+          <tr><td>13 Planning stages and ADRs</td><td>27–32</td></tr>
+          <tr><td>14 JSON vs Markdown vs SQLite</td><td>27–32</td></tr>
+          <tr><td>Engineering scenario demo</td><td>32–40</td></tr>
+          <tr><td>11 Frontier workflow and crosswalks</td><td>40–44</td></tr>
+          <tr><td>8 GitHub</td><td>44–53</td></tr>
+          <tr><td>9 Teamwork: worktrees, branches, AI PRs</td><td>44–53</td></tr>
+          <tr><td>10 Agents that act for you, and human gates</td><td>53–57</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <p class="footer-note">One self-contained file: no network, login or AI calls, so it runs offline from a USB stick.</p>
+  </div>
+</div>
+<script>
+(function(){
+  "use strict";
+  /* pristine copy of this page, taken before any script changes the DOM: used by "Download for offline use" */
+  var SNAP="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
+  var STAGES=[
+    {win:"0–4",min:4,title:"Start with why",purpose:"You own why and what; AI proposes the how.",beats:[["0:00–1:30","Opening line"],["1:30–2:45","Golden circle + Sinek quote"],["2:45–4:00","The flip"]]},
+    {win:"4–9",min:5,title:"Models & inference",purpose:"The agent tool is not the model.",beats:[["4:00–5:30","Agent tool ≠ model"],["5:30–7:30","Five-layer stack"],["7:30–9:00","Poll + model routing"]]},
+    {win:"9–15",min:6,title:"Backends & GovCloud",purpose:"Your plan doesn’t change where data goes.",beats:[["9:00–10:30","Myth or fact: vote, reveal"],["10:30–12:30","Four different questions"],["12:30–15:00","Route map: Bedrock, GovCloud"]]},
+    {win:"15–23",min:8,title:"Harness & tools",purpose:"Same models; tools differ in what they see and do.",beats:[["15:00–17:30","Harness loop"],["17:30–19:30","Doors + ways to steer"],["19:30–23:00","Three example tools"]]},
+    {win:"23–27",min:4,title:"Context",purpose:"Output follows context.",beats:[["23:00–25:00","Seven things to give it"],["25:00–27:00","Which do you skip?"]]},
+    {win:"27–32",min:5,title:"Planning & ADR",purpose:"Decide before building.",beats:[["27:00–28:30","Planning stages"],["28:30–30:30","ADR-001"],["30:30–32:00","Storage choice"]]},
+    {win:"32–40",min:8,title:"Engineering demo (replay)",purpose:"Ask first, then check the math.",beats:[["32:00–34:30","Replay: questions first"],["34:30–36:30","Prompt 2 + predict"],["36:30–40:00","Reveal 13.3 days, sliders, human call"]]},
+    {win:"40–44",min:4,title:"Data boundaries",purpose:"Code names don’t make data safe to share.",beats:[["40:00–42:00","Coded labels outside"],["42:00–44:00","The key stays inside"]]},
+    {win:"44–53",min:9,title:"Prompt to PR (replay)",purpose:"AI does the loop; humans gate the merge.",beats:[["44:00–46:30","Replay: plan + worktree"],["46:30–50:00","Code, test, fix"],["50:00–53:00","PR + human review"]]},
+    {win:"53–57",min:4,title:"Agents & approvals",purpose:"Agents act; you keep the gates.",beats:[["53:00–55:00","Agent tiers + approval rail"],["55:00–57:00","Questions for any agent"]]},
+    {win:"57–60",min:3,title:"Recap & closing",purpose:"Take-home + Q&A.",beats:[["57:00–58:00","Recap"],["58:00–60:00","Take-home + Q&A"]]}
+  ];
+  var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+  var html=document.documentElement, PRES=html.classList.contains("presenter");
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(/[?&]static/.test(location.search)){html.classList.add("static");reduce=true;}
+  var stages=$$(".stage"), N=stages.length, cur={s:0,b:0}, timers=[];
+
+  /* ---- clone verbatim source blocks from the Reference (single copy in the file) ---- */
+  function cloneOf(id){var src=document.getElementById(id); if(!src) return null; var c=src.cloneNode(true); c.removeAttribute("id"); $$("[id]",c).forEach(function(e){e.removeAttribute("id")}); return {src:src,c:c};}
+  $$("[data-clone]").forEach(function(ph){
+    var r=cloneOf(ph.getAttribute("data-clone")); if(!r) return;
+    var node=r.c;
+    if(r.src.tagName==="LI"&&ph.tagName!=="LI"){var list=document.createElement(r.src.parentNode.tagName); if(list.tagName==="OL") list.start=Array.prototype.indexOf.call(r.src.parentNode.children,r.src)+1; list.appendChild(node); node=list;}
+    if(ph.hasAttribute("data-inner")){while(node.firstChild) ph.appendChild(node.firstChild); ph.removeAttribute("data-clone"); ph.removeAttribute("data-inner"); return;}
+    ph.parentNode.replaceChild(node,ph);
+  });
+  /* reference agenda table */
+  var tb=$("#ref-agenda"), total=0;
+  STAGES.forEach(function(s){total+=s.min; var tr=document.createElement("tr"); [s.win,s.min,s.title,s.purpose].forEach(function(v){var td=document.createElement("td");td.textContent=v;tr.appendChild(td)}); tb.appendChild(tr);});
+  var trT=document.createElement("tr"); trT.innerHTML="<td colspan='4'><strong>Total minutes: "+total+"</strong> (must equal 60).</td>"; tb.appendChild(trT);
+
+  /* ---- timeline (top) + dialog ---- */
+  var tl=$("#tl"), grid=$("#tl-grid");
+  STAGES.forEach(function(s,i){
+    var li=document.createElement("li"); li.style.flex=s.min+" 1 0";
+    var b=document.createElement("button"); b.type="button"; b.setAttribute("aria-label","Stage "+(i+1)+": "+s.title+", minutes "+s.win.replace("–"," to "));
+    b.innerHTML="<span class='fill'></span><span class='lbl'>p"+(i+1)+" · "+s.title.replace(/&/g,"&amp;")+"</span>";
+    b.addEventListener("click",function(){go(i,0,{focus:true})}); li.appendChild(b); tl.appendChild(li);
+    var c=document.createElement("button"); c.type="button"; c.className="tl-card";
+    c.innerHTML="<div class='m'>"+s.win+"<small>"+s.min+" min</small></div><div><strong></strong><span></span></div>";
+    c.querySelector("strong").textContent="Page "+(i+1)+" · "+s.title; c.querySelector("span").textContent=s.purpose+" · Steps "+s.beats.map(function(b,j){return (i+1)+"."+(j+1)}).join(", ");
+    c.addEventListener("click",function(){closeDialog(); go(i,0,{focus:true})}); grid.appendChild(c);
+  });
+  $("#tl-total").innerHTML="<strong>Total minutes: "+total+"</strong> (must equal 60).";
+
+
+  /* ===== stages 4–11 (built from the Reference tables, so the text is extracted, not retyped) ===== */
+  function rows(sel){return $$(sel).map(function(tr){return $$("td",tr).map(function(td){return td.innerHTML})})}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  /* S5 context bands + local skip vote */
+  var ctx=$$("#ref-context-body li"), win5=$("#s5-window"), cols=["#E6F4FA","#E8F7F5","#F4EFE6","#FFF1DC","#E6F4FA","#E8F7F5","#F4EFE6"];
+  ctx.forEach(function(li,i){var parts=li.innerHTML.split(" — "),d=document.createElement("div");d.className="band";d.setAttribute("role","listitem");d.style.setProperty("--bc",cols[i]);d.style.setProperty("--bd",(i*110)+"ms");
+    d.innerHTML="<span class='i'>"+(i+1)+"</span><div class='tx'><b>"+parts[0].replace(/<\/?strong>/g,"")+"</b>"+(parts[1]||"")+"</div>";win5.appendChild(d);});
+  /* S6 storage tree */
+  var fm=rows("#ref-storage-body tbody tr"), br6=$("#s6-fmts"), leaf6=$("#s6-leaf"), leaf6Def=leaf6.innerHTML, adrPick={Markdown:"ADR-001: rationale",JSON:"ADR-001: numbers"};
+  fm.forEach(function(f){var b=document.createElement("button");b.type="button";b.className="fmt";b.setAttribute("aria-pressed","false");b.innerHTML="<small>"+(adrPick[f[0]]||"&nbsp;")+"</small>"+f[0];
+    b.addEventListener("click",function(){$$(".s6 .fmt").forEach(function(x){x.setAttribute("aria-pressed",String(x===b))});leaf6.innerHTML="<span class='lbl-s'>"+f[0]+"</span><b>Best for:</b> "+f[1]+"<br><b style='color:var(--warn)'>Watch out:</b> "+f[2];});br6.appendChild(b);});
+  function reset6(){$$(".s6 .fmt").forEach(function(x){x.setAttribute("aria-pressed","false")});leaf6.innerHTML=leaf6Def;}
+  /* S7 synthetic calculator (declared values from prompt 2; in-page arithmetic only) */
+  var S7=[["load","Average load","W",5,1,50,0.5],["days","Days of autonomy","days",3,1,10,1],["volt","Battery voltage","V",12,6,48,6],["dod","Usable depth","%",50,10,100,5],["sun","Peak sun hours","h",3.5,0.5,8,0.5],["eff","System efficiency","%",70,30,100,5],["panel","Chosen panel","W",60,10,400,10]];
+  var inp7=$("#s7-inp");
+  S7.forEach(function(p){inp7.insertAdjacentHTML("beforeend","<label for='s7-"+p[0]+"'>"+p[1]+" ("+p[2]+")</label><input type='range' id='s7-r-"+p[0]+"' min='"+p[4]+"' max='"+p[5]+"' step='"+p[6]+"' value='"+p[3]+"' aria-label='"+p[1]+" slider'><input type='number' id='s7-"+p[0]+"' step='any' value='"+p[3]+"'>");
+    var r=$("#s7-r-"+p[0]), n=$("#s7-"+p[0]);
+    r.addEventListener("input",function(){n.value=r.value;calc7()}); n.addEventListener("input",function(){if(n.value!==""&&isFinite(+n.value)) r.value=n.value; calc7()});});
+  function f1(x){return (Math.round(x*10)/10).toLocaleString("en-US")} function f0(x){return Math.round(x).toLocaleString("en-US")}
+  function calc7(){
+    var v={},bad=[];
+    S7.forEach(function(p){var el=$("#s7-"+p[0]),x=el.value.trim()===""?NaN:+el.value,ok=isFinite(x)&&x>0&&((p[0]!=="dod"&&p[0]!=="eff")||x<=100);el.setAttribute("aria-invalid",String(!ok));if(!ok)bad.push(p[1]);v[p[0]]=x;});
+    var chain=$("#s7-chain"),checks=$("#s7-checks"),big=$("#s7-big"),hum=$("#s7-human");
+    if(bad.length){$("#s7-val").textContent="Check: "+bad.join(", ")+" must be a number above 0"+(bad.some(function(b){return /depth|efficiency/i.test(b)})?" (percentages up to 100)":"")+".";chain.innerHTML="<div>Waiting for valid inputs. No result is shown for invalid numbers.</div>";checks.innerHTML="";big.className="big nos";big.textContent="—";hum.textContent="Fix the highlighted inputs first.";return;}
+    $("#s7-val").textContent="";
+    var dd=v.dod/100, ef=v.eff/100, daily=v.load*24, usable=daily*v.days, batt=usable/dd, ah=batt/v.volt, req=daily/(v.sun*ef), prod=v.panel*v.sun*ef, sur=prod-daily, refill=sur>0?usable/sur:null;
+    chain.innerHTML="<div>Daily = "+f1(v.load)+" W × 24 h = <b>"+f1(daily)+" Wh/day</b></div>"+
+      "<div>Battery = ("+f1(daily)+" × "+f1(v.days)+" Wh) / "+f1(dd)+" = <b>"+f0(batt)+" Wh = "+f1(ah)+" Ah</b> at "+f1(v.volt)+" V</div>"+
+      "<div>Panel needed = "+f1(daily)+" Wh / ("+f1(v.sun)+" h × "+f1(ef)+") = <b>"+f0(req)+" W</b> → chosen "+f0(v.panel)+" W</div>"+
+      "<div>Makes "+f0(v.panel)+" × "+f1(v.sun)+" × "+f1(ef)+" = "+f0(prod)+" Wh/day → surplus <b>"+f1(sur)+" Wh/day</b></div>"+
+      "<div>Refill = "+f0(usable)+" Wh / "+f1(sur)+" Wh/day = <b>"+(refill===null?"no surplus":f1(refill)+" days")+"</b></div>";
+    var c1=prod>=daily, c2=Math.abs(ah*v.volt*dd-usable)<1e-6, c3=v.panel>=req;
+    checks.innerHTML="<div><b>Units:</b> W × h = Wh · Wh ÷ V = Ah · Wh ÷ (h × η) = W</div>"+
+      "<div class='"+(c1?"ok":"bad")+"'>"+(c1?"✓":"✗")+" Sanity: "+f0(prod)+" Wh/day made vs "+f1(daily)+" Wh/day load</div>"+
+      "<div class='"+(c2?"ok":"bad")+"'>"+(c2?"✓":"✗")+" Independent: "+f1(ah)+" Ah × "+f1(v.volt)+" V × "+f1(dd)+" = "+f0(usable)+" Wh = "+f1(v.days)+" days of load</div>"+
+      "<div class='"+(c3?"ok":"bad")+"'>"+(c3?"✓":"✗")+" Chosen panel "+(c3?"≥":"<")+" required "+f0(req)+" W</div>";
+    if(refill===null){big.className="big nos";big.textContent="No surplus: can’t refill";hum.innerHTML="<b>Human call:</b> the panel makes no more than the load, so the battery never refills. An engineer decides: a larger panel, or a smaller load.";}
+    else{big.className="big";big.innerHTML=f1(refill)+" <small>days</small>";hum.innerHTML="<b>Human exception decision:</b> the panel covers an average day but needs about "+f0(refill)+" days to refill after a "+f1(v.days)+"-day outage. Is that acceptable? The AI computed it; an engineer decides, perhaps a larger panel.";}
+  }
+  function reset7(){S7.forEach(function(p){$("#s7-"+p[0]).value=p[3];$("#s7-r-"+p[0]).value=p[3]});calc7();}
+  $("#s7-reset").addEventListener("click",reset7); calc7();
+  /* S8 crosswalk: key stays inside */
+  var cw=rows("#ref-crosswalk-body tbody tr"), codes=$("#s8-codes"), kr=$("#s8-keyrows");
+  cw.forEach(function(r){codes.insertAdjacentHTML("beforeend","<div class='code'>"+r[0]+"<span>meaning stays inside</span></div>");kr.insertAdjacentHTML("beforeend","<tr><td>"+r[0]+"</td><td>→</td><td>"+r[1]+"</td></tr>");});
+  var key8=$("#s8-key"), msg8=$("#s8-msg");
+  $("#s8-try").addEventListener("click",function(){key8.classList.remove("push");void key8.offsetWidth;if(!reduce)key8.classList.add("push");msg8.textContent="Blocked. The key snaps back: it stays in the approved environment. Coded names do not make controlled data shareable.";});
+  $("#s8-clear").addEventListener("click",function(){msg8.textContent="";key8.classList.remove("push")});
+  /* ===== offline replays (stages 7 and 9): scripted step-through, no network, no AI call ===== */
+  function txt(id){var e=document.getElementById(id);return e?e.textContent.replace(/\s+/g," ").trim():"";}
+  function mkReplay(key,steps,sync){
+    var R={key:key,steps:steps,n:0,log:$("#"+key+"-log"),typing:null};
+    function line(st){var d=document.createElement("div");d.className="ln "+st.k;if(st.html)d.innerHTML=st.html;else d.textContent=st.t;return d;}
+    function scroll(){R.log.scrollTop=R.log.scrollHeight;}
+    R.finish=function(){if(!R.typing)return false;clearInterval(R.typing.iv);R.typing.el.textContent=R.typing.t;R.typing=null;scroll();return true;};
+    R.render=function(n){R.finish();R.log.innerHTML="";for(var i=0;i<n;i++)R.log.appendChild(line(steps[i]));R.n=n;sync(R);scroll();};
+    R.step=function(){if(R.finish())return true;if(R.n>=steps.length)return false;var st=steps[R.n],el=line(st);R.log.appendChild(el);R.n++;
+      if(!reduce&&!st.html&&st.t){var t=st.t,pos=0,dur=Math.min(1100,Math.max(250,t.length*14)),per=Math.max(1,Math.ceil(t.length/(dur/16)));el.textContent="";
+        R.typing={el:el,t:t,iv:setInterval(function(){pos+=per;if(pos>=t.length)R.finish();else{el.textContent=t.slice(0,pos);scroll();}},16)};}
+      sync(R);scroll();return true;};
+    R.start=function(at){return steps.filter(function(s){return s.b<at}).length;};
+    R.end=function(at){return steps.filter(function(s){return s.b<=at}).length;};
+    R.pending=function(at){return !!R.typing||R.n<R.end(at);};
+    return R;
+  }
+  var S7STEPS=[
+    {b:1,k:"user",t:txt("ref-prompt-1")},
+    {b:1,k:"ai",t:"Before I estimate anything, I need a few answers from you:"},
+    {b:1,k:"ai",q:1,t:"1. Load profile: average and peak power, and how often does it transmit?"},
+    {b:1,k:"ai",q:2,t:"2. Sun hours: where is it, and what are the peak sun hours in the worst month?"},
+    {b:1,k:"ai",q:3,t:"3. Days of autonomy: how many cloudy days must it ride through?"},
+    {b:1,k:"ai",q:4,t:"4. Battery chemistry and usable depth of discharge?"},
+    {b:1,k:"ai",q:5,t:"5. Temperature range: cold cuts capacity and limits charging."},
+    {b:1,k:"ai",q:6,t:"6. System losses: charge controller, wiring, dirt and heat on the panel?"},
+    {b:1,k:"ai",t:"I’ll state every assumption so an engineer can check it against solar data, the battery datasheet and the applicable codes."},
+    {b:2,k:"user",t:txt("ref-prompt-2")},
+    {b:2,k:"note",t:"⏸ Pause: predict first. 3, 7, 13 or 30 days?"},
+    {b:3,k:"ai",t:"Daily energy = 5 W × 24 h = 120 Wh/day"},
+    {b:3,k:"ai",t:"Battery = 120 Wh × 3 days ÷ 0.5 = 720 Wh → 720 Wh ÷ 12 V = 60 Ah"},
+    {b:3,k:"ai",t:"Panel = 120 Wh ÷ (3.5 h × 0.7) = 49 W → choose 60 W"},
+    {b:3,k:"ai",t:"Surplus = 60 W × 3.5 h × 0.7 − 120 Wh = 27 Wh/day"},
+    {b:3,k:"ai key",t:"Refill after a 3-day outage = 360 Wh ÷ 27 Wh/day ≈ 13.3 days"},
+    {b:3,k:"ai",t:"Check: 147 Wh/day made > 120 Wh/day used ✓ · 60 Ah × 12 V × 0.5 = 360 Wh = 3 days of load ✓"}
+  ];
+  var R7=mkReplay("s7",S7STEPS,function(R){var hit={};for(var i=0;i<R.n;i++)if(S7STEPS[i].q)hit[S7STEPS[i].q]=1;$$("#s7-eq span").forEach(function(s){s.classList.toggle("hit",!!hit[s.getAttribute("data-q")])});$("#s7").classList.toggle("rpdone",R.n>=S7STEPS.length);});
+  var S9STEPS=[
+    {b:1,k:"user",t:txt("ref-prompt-3")},
+    {b:1,k:"ai",t:"Plan: 1) new branch in its own worktree  2) inputs.json from ADR-001  3) power_budget.py  4) tests for 120 Wh/day, 60 Ah and 13.3 days  5) run the tests  6) open a PR. I won’t merge. Proceed?"},
+    {b:1,k:"user",t:"Yes, go ahead."},
+    {b:1,k:"cmd",t:"git worktree add ../station-budget -b feat/power-budget"},
+    {b:1,k:"out",done:1,t:"Preparing worktree (new branch 'feat/power-budget')"},
+    {b:2,k:"tool",t:"✎ Write inputs.json   {\"load_w\": 5, \"autonomy_days\": 3, \"battery_v\": 12, \"dod\": 0.5, \"sun_h\": 3.5, \"eff\": 0.7, \"panel_w\": 60}"},
+    {b:2,k:"tool",t:"✎ Write power_budget.py   daily_wh = load_w * 24 · battery_ah = daily_wh * days / dod / battery_v · refill_days = usable_wh / surplus"},
+    {b:2,k:"tool",t:"✎ Write test_power_budget.py   3 tests: daily energy 120 Wh, battery 60 Ah, refill 13.3 days"},
+    {b:2,k:"cmd",t:"pytest -q"},
+    {b:2,k:"bad",t:"..F   FAILED test_refill_days: assert 6.55 == approx(13.3)   1 failed, 2 passed"},
+    {b:2,k:"ai",t:"Units bug: I used surplus = panel_w − load_w, which is watts. 360 Wh ÷ 55 W = 6.5 hours, not days. Surplus must be energy per day."},
+    {b:2,k:"tool",t:"✎ Edit power_budget.py   surplus_wh_day = panel_w * sun_h * eff - daily_wh   # 27 Wh/day"},
+    {b:2,k:"cmd",t:"pytest -q"},
+    {b:2,k:"good",done:2,t:"...   3 passed"},
+    {b:3,k:"user",t:"Before you stop: tests run, PR opened, description complete?"},
+    {b:3,k:"cmd",t:"git add -A && git commit -m \"Add station power budget with tests\" && git push -u origin feat/power-budget"},
+    {b:3,k:"cmd",t:"gh pr create --title \"Station power budget\" --body-file pr.md"},
+    {b:3,k:"pr",done:3,html:"<b>PR #1 · Station power budget</b><br><span>Summary:</span> inputs.json + power_budget.py; refill after a 3-day outage = 13.3 days.<br><span>Tests:</span> 3 passed (units bug found and fixed).<br><span>Design:</span> ADR-001: JSON inputs, Markdown rationale.<br><span>Status:</span> <b class='nm'>Not merged</b>, waiting for human review."}
+  ];
+  var s9=$("#s9"), ran9=false;
+  var ST9=["","✓ worktree ready","✓ 3 tests pass","✓ PR opened · not merged"];
+  function gate9(){var all=$$(".s9-ck").every(function(c){return c.checked});$("#s9-merge").disabled=!(ran9&&all)||s9.getAttribute("data-merged")==="1";}
+  function sync9(R){var d=0;for(var i=0;i<R.n;i++)if(S9STEPS[i].done)d=Math.max(d,S9STEPS[i].done);
+    [1,2,3].forEach(function(k){var s=$("#s9-st"+k);s.classList.toggle("done",d>=k);$(".st",s).textContent=d>=k?ST9[k]:"waiting";});
+    var was=ran9; ran9=d>=3;
+    $$(".s9-ck").forEach(function(c){c.disabled=!ran9;if(!ran9)c.checked=false;});
+    $("#s9-st4s").textContent=ran9?"your turn":"after the PR";
+    if(!ran9){s9.removeAttribute("data-merged");$("#s9-st5").classList.remove("done");$("#s9-st5s").textContent="locked";$("#s9-msg").textContent="Nothing here touches a real repo.";}
+    else if(!was&&s9.getAttribute("data-merged")!=="1"){$("#s9-st5s").textContent="checks pass (simulated) · awaiting human";$("#s9-msg").textContent="AI loop done. Now a human reviews.";}
+    gate9();}
+  var R9=mkReplay("s9",S9STEPS,sync9);
+  var REPLAYS={6:R7,8:R9};
+  $$(".s9-ck").forEach(function(c){c.addEventListener("change",gate9)});
+  $("#s9-merge").addEventListener("click",function(){if(!ran9||!$$(".s9-ck").every(function(c){return c.checked}))return;s9.setAttribute("data-merged","1");$("#s9-st5").classList.add("done");$("#s9-st5s").textContent="✓ merged after human approval (simulated)";$("#s9-msg").textContent="Approved by a human. Nothing touched a real repo.";gate9();});
+  function reset9(){s9.removeAttribute("data-merged");$("#s9-st5").classList.remove("done");$$(".s9-ck").forEach(function(c){c.checked=false});ran9=false;sync9(R9);}
+  $("#s9-reset").addEventListener("click",reset9);
+  $$("[data-rp-all]").forEach(function(b){b.addEventListener("click",function(){var R=b.getAttribute("data-rp-all")==="s7"?R7:R9;R.render(R.end(cur.b+1));})});
+  /* download a clean, self-contained copy (works on GitHub Pages and from file://) */
+  function downloadDeck(){try{var blob=new Blob([SNAP],{type:"text/html;charset=utf-8"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=PRES?"ai-master-class-presenter.html":"ai-master-class.html";a.style.display="none";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},4000);}catch(e){alert("Download didn’t start. Use your browser’s Save Page As instead.");}}
+  $$("[data-download]").forEach(function(b){b.addEventListener("click",downloadDeck)});
+  /* S11 recap + local-only takeaway */
+  STAGES.slice(0,10).forEach(function(s,i){$("#s11-recap").insertAdjacentHTML("beforeend","<span style='--rd:"+(i*80)+"ms'><i>"+(i+1)+"</i>"+esc(s.purpose)+"</span>")});
+  function count11(){var n=$$(".s11-c").filter(function(c){return c.value.trim()}).length;$("#s11-count").textContent=n+" of 3 acceptance criteria written";}
+  $$(".s11 input").forEach(function(c){c.addEventListener("input",count11)});
+  $("#s11-clear").addEventListener("click",function(){$$(".s11 input").forEach(function(c){c.value=""});count11();});
+
+  /* ---- local presenter tallies (start at 0; never saved or sent) ---- */
+  var counts={};
+  function showCount(k){$$('[data-count="'+k+'"]').forEach(function(o){o.textContent=counts[k]||0})}
+  $$("[data-vote]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-vote");counts[k]=(counts[k]||0)+1;showCount(k)})});
+  $$("[data-reset]").forEach(function(b){b.addEventListener("click",function(){var p=b.getAttribute("data-reset")+":";Object.keys(counts).forEach(function(k){if(k.indexOf(p)===0){counts[k]=0;showCount(k)}})})});
+  $$("[data-reveal]").forEach(function(b){b.addEventListener("click",function(){var t=document.getElementById(b.getAttribute("data-reveal"));var open=t.hidden;t.hidden=!open;b.setAttribute("aria-expanded",String(open));b.textContent=open?"Hide":"Reveal"})});
+  function resetReveal(id){var t=document.getElementById(id);if(!t)return;t.hidden=true;var b=$('[data-reveal="'+id+'"]');if(b){b.setAttribute("aria-expanded","false");b.textContent="Reveal"}}
+
+  /* ---- stage 3: myth flip + route map ---- */
+  var myth=$("#s3-myth"), flipB=$("#s3-flip");
+  function setFlip(on){myth.classList.toggle("flipped",on);flipB.setAttribute("aria-pressed",String(on));$(".s3 .front").setAttribute("aria-hidden",String(on));$(".s3 .back").setAttribute("aria-hidden",String(!on));$$(".s3 .front button").forEach(function(x){x.tabIndex=on?-1:0});$$(".s3 .back button").forEach(function(x){x.tabIndex=on?0:-1});}
+  flipB.addEventListener("click",function(){setFlip(true);$("#s3-unflip").focus({preventScroll:true})});
+  $("#s3-unflip").addEventListener("click",function(){setFlip(false);flipB.focus({preventScroll:true})});
+  var detail=$("#s3-detail"), anim=$("#packet-anim"), packet=$(".s3 .packet");
+  function selectRoute(i){
+    $$(".s3 .route").forEach(function(r,j){r.setAttribute("aria-pressed",String(j===i))});
+    $$(".s3 .lane").forEach(function(l,j){l.classList.toggle("sel",j===i)});
+    if(i<0){detail.innerHTML="<span class='dl'>Model runs at</span><p class='hint'>Six common routes. Each one answers: where does the model run?</p>";packet.setAttribute("opacity","0");return;}
+    var rd=$$(".s3 .rd")[i]; detail.innerHTML="<span class='dl'>Model runs at</span>"+rd.innerHTML.replace('<div class="dk">','<span class="dl">Key point</span><div class="dk">');
+    var d=$("#lane-"+i).getAttribute("d");
+    if(reduce||!anim.beginElement){packet.setAttribute("opacity","0");return;}
+    anim.setAttribute("path",d); packet.setAttribute("opacity","1"); try{anim.beginElement()}catch(e){}
+  }
+  $$(".s3 .route").forEach(function(r){r.addEventListener("click",function(){selectRoute(+r.getAttribute("data-lane"))})});
+  setFlip(false);
+
+  /* per-stage state derived from the beat: going back un-reveals; re-entering resets toggles (tallies persist until Reset) */
+  function stageState(i,at,fresh){
+    if(i===1){ if(fresh||at<3) resetReveal("s2-ans"); }
+    if(i===2){ if(fresh||at<1) setFlip(false); if(at>=2) setFlip(true); if(fresh||at<3) selectRoute(-1); }
+    if(fresh){ if(i===5) reset6(); if(i===7) $("#s8-clear").click(); if(i===8) reset9(); }
+  }
+
+  /* ---- navigation ---- */
+  function beatsOf(i){return STAGES[i].beats.length}
+  function setStageVisible(el,vis){ if(vis){el.hidden=false;el.removeAttribute("inert");el.removeAttribute("aria-hidden");} else {el.hidden=true;el.setAttribute("inert","");} }
+  function applyBeat(el,at){ el.setAttribute("data-at",String(at)); $$("[data-b]",el).forEach(function(x){x.classList.toggle("on",+x.getAttribute("data-b")<=at)}); }
+  var wipe=$("#wipe");
+  function go(s,b,opts){
+    opts=opts||{}; s=Math.max(0,Math.min(N-1,s)); b=Math.max(0,Math.min(beatsOf(s)-1,b));
+    var prevS=cur.s, prevB=cur.b, changed=(s!==prevS)||opts.init, el=stages[s];
+    var back=(s<prevS)||(s===prevS&&b<prevB);
+    var focusWasInStage=document.activeElement&&stages[prevS].contains(document.activeElement);
+    timers.forEach(clearTimeout); timers=[];
+    if(changed){
+      stages.forEach(function(x,j){ if(j!==s&&j!==prevS) setStageVisible(x,false); x.classList.remove("pre-left","pre-right"); });
+      applyBeat(el,0); setStageVisible(el,true);
+      if(!reduce&&!opts.init&&s!==prevS){
+        var fwd=s>prevS, out=stages[prevS];
+        out.setAttribute("aria-hidden","true"); out.setAttribute("inert","");
+        el.classList.add(fwd?"pre-right":"pre-left"); void el.offsetWidth;
+        el.classList.remove("pre-right","pre-left"); out.classList.add(fwd?"pre-left":"pre-right");
+        timers.push(setTimeout(function(){out.classList.remove("pre-left","pre-right"); setStageVisible(out,false)},450));
+        wipe.textContent=String(s+1).padStart(2,"0"); wipe.classList.remove("run"); void wipe.offsetWidth; wipe.classList.add("run");
+      } else if(s!==prevS){ setStageVisible(stages[prevS],false); }
+    }
+    cur={s:s,b:b};
+    var at=b+1; void el.offsetWidth; applyBeat(el,at); stageState(s,at,changed);
+    var RP=REPLAYS[s]; if(RP&&(changed||b!==prevB)){ if(opts.init||back) RP.render(RP.end(at)); else { RP.render(RP.start(at)); RP.step(); } }
+    updateChrome();
+    if(changed&&(opts.focus||focusWasInStage)){ var h=$(".stage-h",el); if(h) h.focus({preventScroll:true}); }
+    try{history.replaceState(null,"","#/"+(s+1)+"/"+at)}catch(e){}
+  }
+  function next(skip){ var RP=REPLAYS[cur.s]; if(skip!==true&&RP&&RP.pending(cur.b+1)){ RP.step(); return; }
+    if(cur.b<beatsOf(cur.s)-1) go(cur.s,cur.b+1); else if(cur.s<N-1) go(cur.s+1,0); }
+  function prev(){ if(cur.b>0) go(cur.s,cur.b-1); else if(cur.s>0) go(cur.s-1,beatsOf(cur.s-1)-1); }
+
+  function updateChrome(){
+    var s=cur.s, st=STAGES[s], nb=beatsOf(s);
+    $$("#tl button").forEach(function(b,j){ b.toggleAttribute("aria-current",false); b.removeAttribute("aria-current"); if(j===s) b.setAttribute("aria-current","step"); b.classList.toggle("done",j<s); b.querySelector(".fill").style.width=(j<s?100:j===s?((cur.b+1)/beatsOf(j)*100):0)+"%"; });
+    var dots=$("#dots"); dots.innerHTML=""; for(var k=0;k<nb;k++){var i=document.createElement("i"); if(k<=cur.b)i.className="on"; if(k===cur.b)i.className+=" cur"; dots.appendChild(i);}
+    dots.setAttribute("aria-label","Beat "+(cur.b+1)+" of "+nb);
+    var beat=st.beats[cur.b];
+    var pgId=(s+1)+"."+(cur.b+1);
+    $("#clock").innerHTML="<b>"+beat[0]+"</b> · page "+pgId+" / "+N;
+    $("#pgno").textContent="Page "+pgId+" / "+N;
+    $$(".kicker .pgsub").forEach(function(x,j){x.textContent=j===s?" · "+pgId:"";});
+    $("#where").innerHTML="<b>"+(s+1)+" · "+st.title.replace(/&/g,"&amp;")+"</b> · "+st.win+" min · "+beat[1].replace(/&/g,"&amp;");
+    $("#prev").disabled=(s===0&&cur.b===0); $("#next").disabled=(s===N-1&&cur.b===nb-1);
+    $("#live").textContent="Page "+pgId+" of "+N+": "+st.title+". Step "+(cur.b+1)+" of "+nb+": "+beat[1]+".";
+    $$(".stage-notes").forEach(function(n){n.classList.toggle("cur",+n.getAttribute("data-for")===s+1)});
+    $("#notes-title").textContent="Notes · Page "+pgId+" of "+N+" · "+st.title+" ("+st.win+")";
+    var cue=$("#notes-cue"); cue.innerHTML=""; st.beats.forEach(function(bt,j){var li=document.createElement("li"); if(j===cur.b) li.className="now"; li.innerHTML="<span></span>"; li.firstChild.textContent=(s+1)+"."+(j+1)+" · "+bt[0]; li.appendChild(document.createTextNode(bt[1])); cue.appendChild(li);});
+  }
+
+  /* ---- notes drawer + tabs ---- */
+  var notes=$("#notes"), bNotes=$("#b-notes");
+  function toggleNotes(force,quiet){var open=PRES?true:(force!==undefined?force:notes.hidden); if(!PRES&&!html.classList.contains("unlocked")) open=false; notes.hidden=!open; document.body.classList.toggle("notes-open",open); bNotes.setAttribute("aria-expanded",String(open)); setTimeout(fit,320); fit(); if(quiet) return; if(open) $('[role="tab"][aria-selected="true"]').focus({preventScroll:true}); else if(notes.contains(document.activeElement)) bNotes.focus();}
+  bNotes.addEventListener("click",function(){toggleNotes()});
+  if(PRES) setTimeout(function(){toggleNotes(true,true)},0);
+  /* audience page: discreet presenter unlock; state lives in sessionStorage only (downloaded copy starts locked) */
+  (function(){
+    if(PRES) return;
+    var box=$("#pv-unlock"), code=$("#pv-code"), lockB=$("#pv-lock"), KEY="amc-notes-unlocked";
+    function ss(fn){try{return fn(window.sessionStorage)}catch(e){return null}}
+    function unlock(quiet){html.classList.add("unlocked"); lockB.hidden=false; code.value=""; ss(function(s){s.setItem(KEY,"1")}); toggleNotes(true,quiet); if(!quiet) lockB.focus({preventScroll:true});}
+    function lock(){toggleNotes(false,true); html.classList.remove("unlocked"); lockB.hidden=true; ss(function(s){s.removeItem(KEY)}); code.value=""; code.blur(); $("#next").focus({preventScroll:true});}
+    function shake(){box.classList.remove("shake"); void box.offsetWidth; box.classList.add("shake"); setTimeout(function(){code.value="";box.classList.remove("shake")},340);}
+    code.addEventListener("input",function(){var v=code.value.trim(); if(v==="2026") unlock(); else if(v.length>=4) shake();});
+    code.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault(); if(code.value.trim()==="2026") unlock(); else shake();} else if(e.key==="Escape"){code.value="";code.blur();}});
+    lockB.addEventListener("click",lock);
+    if(ss(function(s){return s.getItem(KEY)})==="1") setTimeout(function(){unlock(true)},0);
+  })();
+
+  var tabs=$$('[role="tab"]');
+  function selectTab(t){tabs.forEach(function(x){var on=x===t;x.setAttribute("aria-selected",String(on));x.tabIndex=on?0:-1}); notes.setAttribute("data-tab",t.getAttribute("data-tab")); $("#notes-panel").setAttribute("aria-labelledby",t.id); t.focus({preventScroll:true});}
+  tabs.forEach(function(t,i){t.addEventListener("click",function(){selectTab(t)}); t.addEventListener("keydown",function(e){var j=null; if(e.key==="ArrowRight")j=(i+1)%tabs.length; if(e.key==="ArrowLeft")j=(i-1+tabs.length)%tabs.length; if(e.key==="Home")j=0; if(e.key==="End")j=tabs.length-1; if(j!==null){e.preventDefault();e.stopPropagation();selectTab(tabs[j])}})});
+
+  /* ---- dialogs (timeline, reference) with focus return ---- */
+  var openDlg=null, returnTo=null;
+  function openDialog(id,trigger){ if(openDlg) closeDialog(); var d=document.getElementById(id); returnTo=trigger||document.activeElement; d.hidden=false; openDlg=d; $("#viewport").setAttribute("inert",""); $(".botbar").setAttribute("inert",""); $(".topbar").setAttribute("inert",""); notes.setAttribute("inert",""); var bt=trigger&&trigger.getAttribute?trigger:null; if(bt) bt.setAttribute("aria-expanded","true"); $("[data-close]",d).focus(); }
+  function closeDialog(){ if(!openDlg) return; openDlg.hidden=true; ["#viewport",".botbar",".topbar"].forEach(function(s){$(s).removeAttribute("inert")}); notes.removeAttribute("inert"); $("#b-ref").setAttribute("aria-expanded","false"); $("#b-tl").setAttribute("aria-expanded","false"); openDlg=null; if(returnTo&&returnTo.focus) returnTo.focus({preventScroll:true}); }
+  $$("[data-close]").forEach(function(b){b.addEventListener("click",closeDialog)});
+  $("#b-ref").addEventListener("click",function(){openDialog("ref",$("#b-ref"))});
+  $("#skip-ref").addEventListener("click",function(e){e.preventDefault();openDialog("ref",$("#b-ref"))});
+  $("#b-tl").addEventListener("click",function(){openDialog("tl-dialog",$("#b-tl"))});
+  $$(".ref-toc a").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();var t=document.getElementById(a.getAttribute("href").slice(1)); if(t) t.scrollIntoView({block:"start",behavior:reduce?"auto":"smooth"})})});
+  function doPrint(){window.print()}
+  $("#b-print").addEventListener("click",doPrint); $("#ref-print").addEventListener("click",doPrint);
+  /* print: every stage at its last beat; restore afterwards */
+  window.addEventListener("beforeprint",function(){stages.forEach(function(el,i){applyBeat(el,beatsOf(i))}); R7.render(S7STEPS.length); R9.render(S9STEPS.length); setFlip(true); selectRoute(3); $("#s6-fmts .fmt:nth-child(2)").click(); $("#s8-try").click();});
+  window.addEventListener("afterprint",function(){var c=cur; stages.forEach(function(el,i){if(i!==c.s) applyBeat(el,0)}); go(c.s,c.b,{init:true});});
+
+  $("#prev").addEventListener("click",function(){prev()}); $("#next").addEventListener("click",function(){next()});
+  $("#edge-l").addEventListener("click",function(){prev()}); $("#edge-r").addEventListener("click",function(){next()});
+
+  /* ---- keyboard: scoped away from form fields, sliders, contenteditable, tabs, focused buttons ---- */
+  function typingTarget(el){ if(!el||el===document.body) return false; if(el.isContentEditable) return true; var t=el.tagName; if(t==="INPUT"||t==="TEXTAREA"||t==="SELECT") return true; if(el.getAttribute&&/^(slider|spinbutton|textbox|combobox|listbox)$/.test(el.getAttribute("role")||"")) return true; return !!(el.closest&&el.closest("[contenteditable]:not([contenteditable='false'])")); }
+  document.addEventListener("keydown",function(e){
+    if(e.defaultPrevented||e.ctrlKey||e.metaKey||e.altKey) return;
+    var t=e.target, k=e.key;
+    if(typingTarget(t)) return;
+    if(openDlg){ if(k==="Escape"){e.preventDefault();closeDialog();} else if((k==="r"||k==="R")&&openDlg.id==="ref"){e.preventDefault();closeDialog();} else if((k==="t"||k==="T")&&openDlg.id==="tl-dialog"){e.preventDefault();closeDialog();} else if(k==="p"||k==="P"){e.preventDefault();doPrint();} return; }
+    if(t&&t.getAttribute&&t.getAttribute("role")==="tab"&&/^Arrow|^Home$|^End$/.test(k)) return;
+    var onControl=t&&t.closest&&t.closest("button,a,summary,[role='button']");
+    if(onControl&&(k===" "||k==="Enter")) return;
+    if(notes.contains(t)&&/^(ArrowUp|ArrowDown|PageUp|PageDown|Home|End| )$/.test(k)) return;
+    var h=true;
+    switch(k){
+      case "ArrowRight": case "PageDown": case " ": next(e.shiftKey===true); break;
+      case "ArrowLeft": case "PageUp": prev(); break;
+      case "Home": go(0,0); break;
+      case "End": go(N-1,0); break;
+      case "t": case "T": openDialog("tl-dialog",$("#b-tl")); break;
+      case "n": case "N": if(PRES||html.classList.contains("unlocked")) toggleNotes(); else h=false; break;
+      case "r": case "R": openDialog("ref",$("#b-ref")); break;
+      case "p": case "P": doPrint(); break;
+      case "Escape": if(!notes.hidden) toggleNotes(false); else h=false; break;
+      default:
+        if(/^[0-9]$/.test(k)){ var n=k==="0"?10:+k; if(n<=N) go(n-1,0); } else h=false;
+    }
+    if(h) e.preventDefault();
+  });
+
+  /* ---- touch: swipe, or tap left/right third (touch/pen only; ignores controls) ---- */
+  var vp=$("#viewport"), sx=null, sy=null, st0=0, ptype="";
+  vp.addEventListener("pointerdown",function(e){ if(e.pointerType==="mouse"||e.target.closest("button,a,input,textarea,select,label,[contenteditable],.ia")){sx=null;return;} sx=e.clientX; sy=e.clientY; st0=Date.now(); ptype=e.pointerType;});
+  vp.addEventListener("pointerup",function(e){ if(sx===null) return; var dx=e.clientX-sx, dy=e.clientY-sy; sx=null;
+    if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5){ dx<0?next():prev(); return; }
+    if(Math.abs(dx)<10&&Math.abs(dy)<10&&Date.now()-st0<500){ var r=vp.getBoundingClientRect(), x=(e.clientX-r.left)/r.width; if(x>2/3) next(); else if(x<1/3) prev(); } });
+
+  /* ---- fit the 16:9 canvas ---- */
+  var canvas=$("#canvas");
+  function fit(){ if(window.innerWidth<=720){canvas.style.transform="";return;} var w=vp.clientWidth-24, h=vp.clientHeight-24; var sc=Math.min(w/1600,h/900); canvas.style.transform="translate(-50%,-50%) scale("+sc+")"; }
+  window.addEventListener("resize",fit);
+
+  function fromHash(){ var m=/^#\/(\d+)(?:\/(\d+))?/.exec(location.hash||""); if(!m) return null; return {s:(+m[1]||1)-1,b:(+m[2]||1)-1}; }
+  window.addEventListener("hashchange",function(){var h=fromHash(); if(h&&(h.s!==cur.s||h.b!==cur.b)) go(h.s,h.b);});
+  var h0=fromHash()||{s:0,b:0};
+  fit(); cur.s=Math.max(0,Math.min(N-1,h0.s)); go(h0.s,h0.b,{init:true});
+  if(/[?&]notes/.test(location.search)) toggleNotes(true);
+  if(/[?&]ref/.test(location.search)) openDialog("ref",$("#b-ref"));
+  if(/[?&]tl/.test(location.search)) openDialog("tl-dialog",$("#b-tl"));
+  window.__deck={go:go,next:next,prev:prev,cur:function(){return {s:cur.s+1,b:cur.b+1}},counts:counts,replays:{s7:R7,s9:R9},snapshotLength:SNAP.length};
+})();
+</script>
+</body>
+</html>

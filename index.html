@@ -98,6 +98,35 @@ body.notes-open #viewport{right:440px}
 .bot-right{display:flex;gap:8px;margin-left:auto}
 
 /* ---------- notes drawer (presenter) ---------- */
+.sal{border:1.5px solid var(--line);border-left:4px solid var(--teal);border-radius:10px;padding:8px 12px;margin:0 0 12px;background:#fff}
+.sal p{margin:3px 0}
+.sal b{display:inline-block;min-width:64px;margin-right:6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+.s2 .stack .layer.L-model{grid-template-columns:auto 1fr;gap:22px;padding:10px 20px}
+.s2 div.routing{top:764px}
+.s2 .stack .L-model .ex.mx{font-size:16px;line-height:1.35;white-space:nowrap}
+.s2 .L-model .ex.mx b{color:var(--ink);font-weight:700}
+.pv-link{font-size:13px;color:var(--muted)}
+.unlock{display:flex;align-items:center;gap:4px;margin-left:6px;opacity:.38;transition:opacity .2s}
+.unlock:hover,.unlock:focus-within{opacity:.9}
+.unlock .kk{font-size:14px;color:var(--muted);cursor:text}
+.unlock input{width:74px;height:24px;font:12px/1 inherit;padding:2px 6px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--ink)}
+.unlock input::placeholder{color:var(--muted);opacity:.8}
+.unlock #pv-lock{font-size:12px;padding:2px 8px}
+.unlock.shake{animation:pvshake .32s linear}
+@keyframes pvshake{0%,100%{transform:none}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+html.unlocked .unlock input,html.unlocked .unlock .kk{display:none}
+html.presenter .unlock{display:none}
+html:not(.unlocked):not(.presenter) #b-notes,html:not(.unlocked):not(.presenter) .nk{display:none}
+html:not(.unlocked):not(.presenter) #notes{display:none!important}
+@media print{html:not(.unlocked):not(.presenter) #notes,html:not(.unlocked):not(.presenter) #notes[hidden]{display:none!important}.unlock{display:none!important}}
+
+.pv-link a{color:var(--muted)}
+html.presenter{--pw:clamp(380px,34vw,620px)}
+html.presenter #notes,html.presenter #notes[hidden]{display:flex!important;width:var(--pw)}
+html.presenter body #viewport{right:var(--pw)}
+html.presenter #b-notes{display:none}
+@media (max-width:720px){html.presenter #notes,html.presenter #notes[hidden]{position:static;width:auto}html.presenter body #viewport{right:0}}
+
 #notes{position:fixed;top:var(--topH);bottom:var(--botH);right:0;width:440px;background:var(--surface);border-left:1px solid var(--line);z-index:25;display:flex;flex-direction:column;box-shadow:-10px 0 30px rgba(20,27,38,.06)}
 #notes[hidden]{display:none}
 .notes-head{padding:14px 18px 8px;border-bottom:1px solid var(--line)}
@@ -767,7 +796,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       </div>
       <div class="stack" data-b="2" role="list" aria-label="Layer stack, bottom to top">
         <div class="layer L-backend" role="listitem" style="--ld:0ms"><div><div class="ln">Backend</div><div class="ex">Anthropic, OpenAI, Bedrock, local</div></div><div class="dec">Where inference and data go</div></div>
-        <div class="layer L-model" role="listitem" style="--ld:180ms"><div><div class="ln">Model</div><div class="ex">Claude Opus, Sonnet, Haiku; GPT</div></div><div class="dec">Reasoning quality, speed, cost</div></div>
+        <div class="layer L-model" role="listitem" style="--ld:180ms"><div><div class="ln">Model</div><div class="ex mx"><b>Anthropic:</b> Claude Fable, Opus, Sonnet, Haiku<br><b>OpenAI:</b> GPT-6 Astra, GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Luna</div></div><div class="dec">Reasoning quality, speed, cost</div></div>
         <div class="layer L-harness" role="listitem" style="--ld:360ms"><div><div class="ln">Harness</div><div class="ex">Claude Code, Codex, Copilot agent</div></div><div class="dec">Tools, permissions, loop, memory</div></div>
         <div class="layer L-interface" role="listitem" style="--ld:540ms"><div><div class="ln">Interface</div><div class="ex">Terminal, VS Code, Desktop, voice</div></div><div class="dec">How you see and steer it</div></div>
         <div class="layer L-orch" role="listitem" style="--ld:720ms"><div><div class="ln">Orchestrator</div><div class="ex">Assistants that delegate work</div></div><div class="dec">Who delegates work and asks you</div></div>
@@ -785,7 +814,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       </div>
       <div class="routing" data-b="3" style="--d:200ms">
         <div class="rt"><b>Route by task</b>Routine → faster model · hard reasoning → stronger model</div>
-        <div class="rt"><b>Name families right</b>Opus · Sonnet · Haiku = Anthropic Claude · GPT = OpenAI</div>
+        <div class="rt"><b>Name families right</b>Fable · Opus · Sonnet · Haiku = Anthropic Claude · Astra · Sol · Terra · Luna = OpenAI GPT-6</div>
       </div>
     </section>
 
@@ -1054,6 +1083,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <button type="button" class="btn" id="b-print">Print <kbd>P</kbd></button>
     <button type="button" class="btn no-print" id="b-dl" data-download title="Save this whole deck as one HTML file that works without internet">⤓ Download for offline use</button>
   </div>
+  <span class="unlock no-print" id="pv-unlock"><label for="pv-code" class="kk" aria-hidden="true">⚿</label><input id="pv-code" type="password" inputmode="numeric" maxlength="8" autocomplete="off" spellcheck="false" placeholder="presenter" aria-label="Presenter code"><button type="button" id="pv-lock" class="mini" hidden title="Hide speaker notes">lock</button></span>
 </nav>
 <!-- ================= Presenter notes drawer (hidden until N) ================= -->
 <aside id="notes" data-tab="say" aria-labelledby="notes-title" hidden>
@@ -1072,6 +1102,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="1">
       <h3 class="np-title">Page 1 of 11 · 0–4 · Start with why</h3>
       <div class="np say">
+        <div class="sal"><p><b>Say</b>AI now does much of the how. Today is about the why, the what and the check.</p><p><b>Ask</b>Hands up: who spent last week mostly on the how?</p><p><b>Land</b>You own why and what; AI proposes the how.</p></div>
         <h4>0:00–1:30 · Opening line (read aloud)</h4><div data-clone="ref-opener"></div>
         <h4>1:30–2:45 · Golden circle + quote</h4><p>Let the rings draw, then let the quote land on its own. Then tell the Apple story:</p><div data-clone="ref-paraphrase"></div>
         <h4>2:45–4:00 · The flip</h4><div data-clone="ref-flip"></div><div data-clone="ref-8020"></div>
@@ -1088,18 +1119,20 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="2">
       <h3 class="np-title">Page 2 of 11 · 4–9 · Models &amp; inference</h3>
       <div class="np say">
+        <div class="sal"><p><b>Say</b>Claude Code is a tool that calls a model. It is not the model.</p><p><b>Ask</b>Does a desktop app mean a local model? (poll, then Reveal)</p><p><b>Land</b>The agent tool is not the model. The backend decides where your data goes.</p></div>
         <h4>4:00–5:30 · Agent tool ≠ model</h4><div data-clone="ref-seg-4-9-1"></div>
         <h4>5:30–7:30 · The stack</h4><p>Walk the five layers from the bottom. The backend decides where your data goes. The model decides quality, speed and cost. The harness is the tool loop. The interface is how you see and steer it. On top sit assistants that hand work to the others.</p>
         <h4>7:30–9:00 · Poll, then routing</h4><p>Poll: “Does a desktop app mean a local model?” Count hands for Yes and No, tap the counts in, then Reveal.</p><div data-clone="ref-seg-4-9-3"></div><div data-clone="ref-seg-4-9-2"></div>
       </div>
-      <div class="np ref"><h4>Model, harness, interface, backend</h4><div data-clone="ref-stack-table"></div></div>
-      <div class="np cav"><ul><li>A desktop app is an interface, not local inference.</li></ul></div>
-      <div class="np src"><p>No outside sources for this stage.</p></div>
+      <div class="np ref"><h4>Model, harness, interface, backend</h4><div data-clone="ref-stack-table"></div><h4>Model lineup (as of Nov 2026, recheck)</h4><div data-clone="ref-models-table"></div></div>
+      <div class="np cav"><ul><li>A desktop app is an interface, not local inference.</li><li>Model names are as of Nov 2026; recheck the two model pages before class.</li></ul></div>
+      <div class="np src"><ul><li data-clone="src-12"></li><li data-clone="src-13"></li></ul></div>
     </div>
 
     <div class="stage-notes" data-for="3">
       <h3 class="np-title">Page 3 of 11 · 9–15 · Backends &amp; GovCloud</h3>
       <div class="np say">
+        <div class="sal"><p><b>Say</b>A pricier plan buys limits and features, not a different place for your data.</p><p><b>Ask</b>Does $200 instead of $20 keep your prompts off OpenAI’s servers? (vote, then Reveal)</p><p><b>Land</b>Your plan doesn’t change where data goes. Only a local open-weights model is fully offline.</p></div>
         <h4>9:00–10:30 · Myth or fact (vote, then Reveal)</h4><p>Ask: does paying $200 instead of $20 a month for ChatGPT keep your prompts off OpenAI’s servers? Count Myth and Fact, then Reveal.</p><div data-clone="ref-seg-9-15-1"></div>
         <h4>10:30–12:30 · Four different questions</h4><div data-clone="ref-seg-9-15-2"></div>
         <h4>12:30–15:00 · Route map</h4><p>Click through the routes. The key lines: Bedrock runs Claude inside your AWS account and the region you choose. GovCloud is AWS’s US government partition, and model choice there can lag the commercial regions. Neither one is compliance by itself: authorization, approved models, settings and procedures still matter. Only a local open-weights model is fully offline.</p>
@@ -1115,6 +1148,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="4">
       <h3 class="np-title">Page 4 of 11 · 15–23 · Harness &amp; tools</h3>
       <div class="np say">
+        <div class="sal"><p><b>Say</b>A harness is the loop around the model: tools, permissions, memory, stop rules.</p><p><b>Ask</b>Which of these three do you use today, and what can it see?</p><p><b>Land</b>Same models; tools differ in what they see and do. Compare workflows, not leaderboards.</p></div>
         <h4>15:00–17:30 · Harness loop</h4><div data-clone="ref-seg-15-23-1"></div>
         <h4>17:30–19:30 · Doors and ways to steer</h4><p>The same agent shows up in a terminal, inside VS Code, and as a desktop app: same loop, same rules. You steer it with plain-language goals, a CLAUDE.md file of project conventions, slash commands, skills, plan mode and voice.</p>
         <h4>19:30–23:00 · Three example tools</h4><p>Walk the three cards. A desktop chat app sees only what you paste. An IDE assistant sees your workspace. A terminal agent can see the whole repo and run commands. The models are largely the same everywhere; Copilot, for example, offers Claude and GPT models. What differs is what each tool can see and do, so compare workflows, not leaderboards.</p><div data-clone="ref-seg-15-23-4"></div>
@@ -1127,6 +1161,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="5">
       <h3 class="np-title">Page 5 of 11 · 23–27 · Context</h3>
       <div class="np say">
+        <div class="sal"><p><b>Say</b>The agent only knows what you give it.</p><p><b>Ask</b>Which of the seven do you skip most?</p><p><b>Land</b>Output follows context. Every gap is a guess the agent makes for you.</p></div>
         <h4>23:00–25:00 · Seven things to give the agent</h4><p>Walk the seven items top to bottom. Every item you skip is a guess the agent makes for you.</p>
         <h4>25:00–27:00 · Which do you skip?</h4><p>Ask the room, no counting: which of these do you usually skip? Take two or three answers, then ask everyone to pick one to add on their next task.</p>
       </div>
@@ -1138,6 +1173,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="6">
       <h3 class="np-title">Page 6 of 11 · 27–32 · Planning &amp; ADR</h3>
       <div class="np say">
+        <div class="sal"><p><b>Say</b>Options and plans are cheap for AI. The decision is ours.</p><p><b>Ask</b>Where would you write down why we chose JSON over SQLite?</p><p><b>Land</b>Decide before building, and write the decision down.</p></div>
         <h4>27:00–28:30 · Planning stages</h4><div data-clone="ref-seg-23-32-2"></div><p>The decision step is ours. The AI is great at options and plans.</p>
         <h4>28:30–30:30 · ADR-001</h4><p>An ADR is a one-page decision record: what we decided, why, what we rejected, and what would make us revisit it. It also stops the agent from re-arguing settled decisions.</p>
         <h4>30:30–32:00 · Storage choice</h4><p>Click JSON, Markdown and SQLite in turn. All three are files on disk. Pick by the shape of the data and who reads or writes it.</p>
@@ -1150,6 +1186,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="7">
       <h3 class="np-title">Page 7 of 11 · 32–40 · Engineering demo (replay)</h3>
       <div class="np say">
+        <div class="sal"><p><b>7.1 Say</b>Watch it ask questions before it calculates. That is what a good engineer does too.</p><p><b>7.2 Ask</b>3, 7, 13 or 30 days to refill after a 3-day outage? Hands up.</p><p><b>7.3 Land</b>13.3 days. The AI computed it; an engineer decides if that is acceptable.</p></div>
         <h4>32:00–34:30 · Questions before numbers</h4><p>This is a recorded run, so it works with no internet or login. Press Next to play each line. The point: a good assistant asks questions before it calculates. The chips on the right light up as it asks.</p>
         <h4>34:30–36:30 · Prompt 2 + predict</h4><p>Prompt 2 gives it real numbers. At the pause line, ask the room: 3, 7, 13 or 30 days? Tap one count per raised hand.</p>
         <h4>36:30–40:00 · Reveal, sliders, human call</h4><p>Play the answer line by line: 120 Wh a day, a 720 Wh battery (60 Ah at 12 V), a 49 W panel so we choose 60 W, and 13.3 days to refill. Then move a slider live, say a bigger panel or more sun, and watch the number change. Close on the human call: is 13 days acceptable? The AI computed it; an engineer decides.</p>
@@ -1162,6 +1199,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="8">
       <h3 class="np-title">Page 8 of 11 · 40–44 · Data boundaries</h3>
       <div class="np say">
+        <div class="sal"><p><b>Say</b>Coded labels can travel. The key that decodes them cannot.</p><p><b>Ask</b>If I rename the battery =S1-G2, can I paste its controlled data into a public chat?</p><p><b>Land</b>Code names don’t make data safe to share. The key stays inside.</p></div>
         <h4>40:00–42:00 · Coded labels outside</h4><p>Coded labels like =S1-G1 let you discuss the shape of a problem outside a secure environment, for example with a public AI tool.</p>
         <h4>42:00–44:00 · The key stays inside</h4><p>Press “Try moving the key outside”: it snaps back. The key that maps codes to real items stays in the approved environment. And code names don’t make controlled data shareable: if the content itself is controlled, it stays inside, whatever the labels say.</p>
       </div>
@@ -1173,6 +1211,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="9">
       <h3 class="np-title">Page 9 of 11 · 44–53 · Prompt to pull request (replay)</h3>
       <div class="np say">
+        <div class="sal"><p><b>9.1 Say</b>One prompt: branch, tests, PR, and don’t merge. It plans first, in its own worktree.</p><p><b>9.2 Ask</b>Would you have spotted the watts vs watt-hours bug? The test did.</p><p><b>9.3 Land</b>AI does the loop; humans gate the merge.</p></div>
         <h4>44:00–46:30 · Plan + worktree</h4><p>Another recorded run, this time a coding agent in a terminal. It plans first, waits for a yes, then works in its own git worktree so parallel tasks don’t collide.</p>
         <h4>46:30–50:00 · Code, test, fix</h4><p>Play the coding steps. The first test run fails: the agent mixed watts and watt-hours and got 6.5 hours instead of 13.3 days. It finds the units bug, fixes it, and all three tests pass. That is why we always ask for tests.</p>
         <h4>50:00–53:00 · PR + human review</h4><p>Notice the reminder: agents tend to stop early, so ask explicitly for tests, the PR and a re-check. The PR says “Not merged”. Ask a volunteer to call out the three review checks while you tick them. Only then does Approve merge unlock. There is no bypass button.</p>
@@ -1185,6 +1224,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="10">
       <h3 class="np-title">Page 10 of 11 · 53–57 · Agents &amp; approvals</h3>
       <div class="np say">
+        <div class="sal"><p><b>Say</b>Assistants now act for you: they plan, delegate and use tools.</p><p><b>Ask</b>What can your agent touch without asking you first?</p><p><b>Land</b>Agents act; you keep the gates. More autonomy means clearer gates, not fewer.</p></div>
         <h4>53:00–55:00 · Tiers + approval rail</h4><p>Assistants that act for you sit on top of the same layers: they hand work to a coding agent, which calls a model on some backend. None of that changes the data rules from stages 2 and 3. The orange rail is the point: sends, spend, merges and irreversible steps always wait for a human.</p>
         <h4>55:00–57:00 · Four questions</h4><p>Read the four questions. Ask them of any agent tool before you trust it with real work. More autonomy means you need clearer gates, not fewer.</p>
       </div>
@@ -1196,6 +1236,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="11">
       <h3 class="np-title">Page 11 of 11 · 57–60 · Recap &amp; closing</h3>
       <div class="np say">
+        <div class="sal"><p><b>Say</b>Ten lines, one per page. Read them, don’t re-teach them.</p><p><b>Ask</b>Which one task will you hand to an agent on Monday?</p><p><b>Land</b>You own the why, the what and the check; let AI do the how, and never skip the review.</p></div>
         <h4>57:00–58:00 · Recap</h4><p>Read the recap chips in one breath, one line per stage.</p>
         <h4>58:00–60:00 · Take-home + Q&amp;A</h4><p>Read the take-home line aloud: “You own the why, the what and the check; let AI do the how, and never skip the review.” Then the three things to do on Monday. If there’s time, fill in the card with one real example from the room. Then open for questions.</p><div data-clone="ref-closing-body"></div>
       </div>
@@ -1220,7 +1261,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <span>Stages 7 and 9</span><span><kbd>→</kbd> <kbd>Space</kbd> or Next plays the next replay line, then moves on · <kbd>Shift</kbd>+<kbd>→</kbd> skips the rest of the replay beat</span>
       <span><kbd>Home</kbd> <kbd>End</kbd></span><span>First / last stage</span>
       <span><kbd>1</kbd>–<kbd>9</kbd>, <kbd>0</kbd></span><span>Jump to stage 1–9; 0 = stage 10</span>
-      <span><kbd>T</kbd> <kbd>N</kbd> <kbd>R</kbd> <kbd>P</kbd></span><span>Timeline · notes · reference · print</span>
+      <span><kbd>T</kbd> <kbd class="nk">N</kbd> <kbd>R</kbd> <kbd>P</kbd></span><span>Timeline<span class="nk"> · notes</span> · reference · print</span>
       <span><kbd>Esc</kbd></span><span>Close the open panel</span>
       <span>Touch</span><span>Swipe left / right, or tap the right / left third of the stage</span>
     </div>
@@ -1240,7 +1281,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <p class="sub">Instructor: Christian · Orientation for engineers · Not a certification course</p>
       <p class="sub">Exact 60-minute agenda · works offline from one file</p>
       <p>A one-hour orientation for engineers: start with why, separate model from harness from backend, see where inference really runs, then take one synthetic engineering problem from concept to checked calculation to a reviewed pull request.</p>
-      
+      <p class="pv-link">Presenter view with notes always visible: <a href="https://christianmackin.github.io/ai-master-class/presenter/">christianmackin.github.io/ai-master-class/presenter/</a></p>
     </section>
 
     <section class="ref-sec" id="ref-timeline">
@@ -1268,7 +1309,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <h4>4–9 Models, inference, local vs cloud</h4>
       <ol id="ref-seg-4-9">
         <li id="ref-seg-4-9-1">Claude Code is agentic tooling: it reads files, runs commands, edits code and calls a model. It is not itself a model.</li>
-        <li id="ref-seg-4-9-2">Models differ in capability, speed, cost and context window. Route routine work to faster models, hard reasoning to stronger ones. Name families correctly: Opus, Sonnet and Haiku are Anthropic's Claude models; GPT models are OpenAI's.</li>
+        <li id="ref-seg-4-9-2">Models differ in capability, speed, cost and context window. Route routine work to faster models, hard reasoning to stronger ones. Name families correctly: Fable, Opus, Sonnet and Haiku are Anthropic's Claude models (Fable is the new top tier, above Opus); Astra, Sol, Terra and Luna are OpenAI's GPT-6 models. As of Nov 2026, recheck.</li>
         <li id="ref-seg-4-9-3">Inference is the model call. Prompt plus selected context goes to whichever backend is configured. A desktop app is an interface; unless you run open-weights models on your own hardware, inference happens in someone's cloud.</li>
       </ol>
       <h4>9–15 Backends, plan myths, Bedrock vs GovCloud</h4>
@@ -1300,13 +1341,28 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <table id="ref-stack-table">
         <thead><tr><th>Layer</th><th>Example</th><th>What it decides</th></tr></thead>
         <tbody>
-          <tr><td>Model</td><td>Claude Opus, Sonnet, Haiku; GPT</td><td>Reasoning quality, speed, cost</td></tr>
+          <tr><td>Model</td><td>Anthropic: Claude Fable, Opus, Sonnet, Haiku · OpenAI: GPT-6 Astra, GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Luna (as of Nov 2026, recheck)</td><td>Reasoning quality, speed, cost</td></tr>
           <tr><td>Harness</td><td>Claude Code, Codex, Copilot agent</td><td>Tools, permissions, loop, memory</td></tr>
           <tr><td>Interface</td><td>Terminal, VS Code, Desktop, voice</td><td>How you see and steer it</td></tr>
           <tr><td>Backend</td><td>Anthropic, OpenAI, Bedrock, local</td><td>Where inference and data go</td></tr>
           <tr><td>Orchestrator</td><td>Assistants that delegate work</td><td>Who delegates work and asks you</td></tr>
         </tbody>
       </table>
+      <h4>Current model lineup (as of Nov 2026, recheck)</h4>
+      <table id="ref-models-table">
+        <thead><tr><th>Family</th><th>Model</th><th>Positioning (from the provider’s docs)</th></tr></thead>
+        <tbody>
+          <tr><td>Anthropic Claude</td><td>Claude Fable 5.2</td><td>New top tier, above Opus: demanding reasoning, long-horizon agentic work</td></tr>
+          <tr><td>Anthropic Claude</td><td>Claude Opus 5.5</td><td>Default for most work: long-running agentic coding</td></tr>
+          <tr><td>Anthropic Claude</td><td>Claude Sonnet 5.5</td><td>Balance of speed and intelligence</td></tr>
+          <tr><td>Anthropic Claude</td><td>Claude Haiku 5.5</td><td>Fastest; high-volume, latency-sensitive tasks</td></tr>
+          <tr><td>OpenAI GPT-6</td><td>GPT-6 Astra</td><td>Flagship for complex reasoning and coding</td></tr>
+          <tr><td>OpenAI GPT-6</td><td>GPT-6.1 Sol</td><td>Near-Astra performance at lower cost</td></tr>
+          <tr><td>OpenAI GPT-6</td><td>GPT-6.1 Terra</td><td>Fast, efficient; visual reasoning and computer use</td></tr>
+          <tr><td>OpenAI GPT-6</td><td>GPT-6 Luna</td><td>Most efficient; focused, high-volume tasks</td></tr>
+        </tbody>
+      </table>
+      <p class="sub">Model names change often; check the two model pages in Sources before class.</p>
     </section>
 
     <section class="ref-sec" id="ref-routing">
@@ -1342,7 +1398,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
           <tr><td>OpenAI dots</td><td>Always-on ChatGPT agent with its own cloud computer</td><td>Pro and Business Premium; not all regions</td></tr>
         </tbody>
       </table>
-      <p>Copilot is not model-limited: GitHub's docs list Claude Opus and Sonnet and GPT models, and a cloud agent that opens pull requests. Fair differences sit in the harness: how much repo and shell context it gathers, its permission model, local versus hosted execution, and how the PR loop is driven. Assume each tool runs its strongest officially listed model; compare workflows, not leaderboards.</p>
+      <p>Copilot is not model-limited: GitHub's docs list Claude and GPT models (which versions varies by plan; as of Nov 2026, recheck), and a cloud agent that opens pull requests. Fair differences sit in the harness: how much repo and shell context it gathers, its permission model, local versus hosted execution, and how the PR loop is driven. Assume each tool runs its strongest officially listed model; compare workflows, not leaderboards.</p>
       </div>
     </section>
 
@@ -1505,7 +1561,7 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
 
     <section class="ref-sec" id="ref-sources">
       <h3>Sources and pre-class rechecks</h3>
-      <p class="sub">11 links · volatile facts</p>
+      <p class="sub">13 links · volatile facts</p>
       <ul>
         <li id="src-1"><a href="https://code.claude.com/docs/en/amazon-bedrock">Claude Code on Amazon Bedrock</a> — code.claude.com</li>
         <li id="src-2"><a href="https://code.claude.com/docs/en/data-usage">Claude Code data usage and telemetry</a> — code.claude.com</li>
@@ -1518,8 +1574,10 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
         <li id="src-9"><a href="https://docs.github.com/en/copilot/concepts/agent-capabilities/about-agents/about-third-party-coding-agents">Third-party coding agents on GitHub</a> — docs.github.com</li>
         <li id="src-10"><a href="https://survey.stackoverflow.co/2026/technology/data/dev-ide">Stack Overflow 2026 survey: Dev IDEs</a> — survey.stackoverflow.co</li>
         <li id="src-11"><a href="https://www.ted.com/talks/simon_sinek_how_great_leaders_inspire_action">Simon Sinek: How great leaders inspire action</a> — ted.com</li>
+        <li id="src-12"><a href="https://platform.claude.com/docs/en/models/overview">Claude models overview</a> — platform.claude.com</li>
+        <li id="src-13"><a href="https://developers.openai.com/api/docs/models">OpenAI API models</a> — developers.openai.com</li>
       </ul>
-      <p>Recheck before class: GovCloud Claude model availability, Claude Code defaults and telemetry, ChatGPT plan prices, Copilot model lists, and dots availability. These change often.</p>
+      <p>Recheck before class: the Claude and OpenAI model lineups, GovCloud Claude model availability, Claude Code defaults and telemetry, ChatGPT plan prices, Copilot model lists, and dots availability. These change often.</p>
       <h4>Caveats</h4>
       <ul>
         <li><strong>Synthetic-only</strong> demo and ADR; nothing about a real project is revealed.</li>
@@ -1580,7 +1638,7 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
     {win:"57–60",min:3,title:"Recap & closing",purpose:"Take-home + Q&A.",beats:[["57:00–58:00","Recap"],["58:00–60:00","Take-home + Q&A"]]}
   ];
   var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
-  var html=document.documentElement;
+  var html=document.documentElement, PRES=html.classList.contains("presenter");
   var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if(/[?&]static/.test(location.search)){html.classList.add("static");reduce=true;}
   var stages=$$(".stage"), N=stages.length, cur={s:0,b:0}, timers=[];
@@ -1737,7 +1795,7 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
   $("#s9-reset").addEventListener("click",reset9);
   $$("[data-rp-all]").forEach(function(b){b.addEventListener("click",function(){var R=b.getAttribute("data-rp-all")==="s7"?R7:R9;R.render(R.end(cur.b+1));})});
   /* download a clean, self-contained copy (works on GitHub Pages and from file://) */
-  function downloadDeck(){try{var blob=new Blob([SNAP],{type:"text/html;charset=utf-8"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="ai-master-class.html";a.style.display="none";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},4000);}catch(e){alert("Download didn’t start. Use your browser’s Save Page As instead.");}}
+  function downloadDeck(){try{var blob=new Blob([SNAP],{type:"text/html;charset=utf-8"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=PRES?"ai-master-class-presenter.html":"ai-master-class.html";a.style.display="none";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},4000);}catch(e){alert("Download didn’t start. Use your browser’s Save Page As instead.");}}
   $$("[data-download]").forEach(function(b){b.addEventListener("click",downloadDeck)});
   /* S11 recap + local-only takeaway */
   STAGES.slice(0,10).forEach(function(s,i){$("#s11-recap").insertAdjacentHTML("beforeend","<span style='--rd:"+(i*80)+"ms'><i>"+(i+1)+"</i>"+esc(s.purpose)+"</span>")});
@@ -1832,8 +1890,23 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
 
   /* ---- notes drawer + tabs ---- */
   var notes=$("#notes"), bNotes=$("#b-notes");
-  function toggleNotes(force){var open=force!==undefined?force:notes.hidden; notes.hidden=!open; document.body.classList.toggle("notes-open",open); bNotes.setAttribute("aria-expanded",String(open)); setTimeout(fit,320); fit(); if(open) $('[role="tab"][aria-selected="true"]').focus({preventScroll:true}); else if(notes.contains(document.activeElement)) bNotes.focus();}
+  function toggleNotes(force,quiet){var open=PRES?true:(force!==undefined?force:notes.hidden); if(!PRES&&!html.classList.contains("unlocked")) open=false; notes.hidden=!open; document.body.classList.toggle("notes-open",open); bNotes.setAttribute("aria-expanded",String(open)); setTimeout(fit,320); fit(); if(quiet) return; if(open) $('[role="tab"][aria-selected="true"]').focus({preventScroll:true}); else if(notes.contains(document.activeElement)) bNotes.focus();}
   bNotes.addEventListener("click",function(){toggleNotes()});
+  if(PRES) setTimeout(function(){toggleNotes(true,true)},0);
+  /* audience page: discreet presenter unlock; state lives in sessionStorage only (downloaded copy starts locked) */
+  (function(){
+    if(PRES) return;
+    var box=$("#pv-unlock"), code=$("#pv-code"), lockB=$("#pv-lock"), KEY="amc-notes-unlocked";
+    function ss(fn){try{return fn(window.sessionStorage)}catch(e){return null}}
+    function unlock(quiet){html.classList.add("unlocked"); lockB.hidden=false; code.value=""; ss(function(s){s.setItem(KEY,"1")}); toggleNotes(true,quiet); if(!quiet) lockB.focus({preventScroll:true});}
+    function lock(){toggleNotes(false,true); html.classList.remove("unlocked"); lockB.hidden=true; ss(function(s){s.removeItem(KEY)}); code.value=""; code.blur(); $("#next").focus({preventScroll:true});}
+    function shake(){box.classList.remove("shake"); void box.offsetWidth; box.classList.add("shake"); setTimeout(function(){code.value="";box.classList.remove("shake")},340);}
+    code.addEventListener("input",function(){var v=code.value.trim(); if(v==="2026") unlock(); else if(v.length>=4) shake();});
+    code.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault(); if(code.value.trim()==="2026") unlock(); else shake();} else if(e.key==="Escape"){code.value="";code.blur();}});
+    lockB.addEventListener("click",lock);
+    if(ss(function(s){return s.getItem(KEY)})==="1") setTimeout(function(){unlock(true)},0);
+  })();
+
   var tabs=$$('[role="tab"]');
   function selectTab(t){tabs.forEach(function(x){var on=x===t;x.setAttribute("aria-selected",String(on));x.tabIndex=on?0:-1}); notes.setAttribute("data-tab",t.getAttribute("data-tab")); $("#notes-panel").setAttribute("aria-labelledby",t.id); t.focus({preventScroll:true});}
   tabs.forEach(function(t,i){t.addEventListener("click",function(){selectTab(t)}); t.addEventListener("keydown",function(e){var j=null; if(e.key==="ArrowRight")j=(i+1)%tabs.length; if(e.key==="ArrowLeft")j=(i-1+tabs.length)%tabs.length; if(e.key==="Home")j=0; if(e.key==="End")j=tabs.length-1; if(j!==null){e.preventDefault();e.stopPropagation();selectTab(tabs[j])}})});
@@ -1874,7 +1947,7 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
       case "Home": go(0,0); break;
       case "End": go(N-1,0); break;
       case "t": case "T": openDialog("tl-dialog",$("#b-tl")); break;
-      case "n": case "N": toggleNotes(); break;
+      case "n": case "N": if(PRES||html.classList.contains("unlocked")) toggleNotes(); else h=false; break;
       case "r": case "R": openDialog("ref",$("#b-ref")); break;
       case "p": case "P": doPrint(); break;
       case "Escape": if(!notes.hidden) toggleNotes(false); else h=false; break;
