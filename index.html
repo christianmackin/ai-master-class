@@ -521,6 +521,126 @@ pre code{background:transparent;padding:0}
 .s11 .qa p{font-size:20px;line-height:1.4;color:#DCE3EC}
 .s11 .qa .crit{font-size:17px;color:#8FD3EE;font-weight:700}
 
+/* ========== v3: trimmed stages + offline replays ========== */
+.s1 .goalnote{font-size:17px;color:var(--muted);font-weight:600;margin:0}
+/* S4 three example tools */
+.s4 .tools{top:430px}
+.s4 .tri{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.s4 .tc{background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px 14px;font-size:15.5px;line-height:1.35;opacity:0;transform:translateY(12px);transition:opacity .4s var(--ease),transform .4s var(--ease)}
+.s4 .tools.on .tc{opacity:1;transform:none}
+.s4 .tools.on .tc:nth-child(2){transition-delay:.12s}.s4 .tools.on .tc:nth-child(3){transition-delay:.24s}
+.s4 .tc small{display:block;font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
+.s4 .tc b.nm{display:block;font-size:19px;margin:2px 0 8px;line-height:1.2}
+.s4 .tc p{margin:4px 0}
+.s4 .tc .w{color:var(--warn);font-weight:700}
+.s4 .tmsg{margin:14px 0 0;font-size:19px;line-height:1.38;background:var(--amber-soft);border:2px solid var(--amber);border-radius:14px;padding:12px 18px;color:#5b3300}
+.s4 .tmsg b{color:var(--ink)}
+/* S5 rhetorical prompt */
+.s5 .skip .lead{min-height:0;margin:12px 0 0}
+/* replay engine */
+.rp{display:flex;flex-direction:column;padding:12px 16px 14px}
+.rp-head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.rp-head .lbl-s{margin:0}
+.rp-hint{margin-left:auto;font-size:12.5px;color:var(--muted);font-weight:600;white-space:nowrap}
+.rp-hint kbd{font-size:11px}
+.rp-head .mini{font-size:13px;padding:3px 10px}
+.rp-log{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;gap:8px;padding-right:4px}
+.rp-log .ln{flex:none;font-size:16px;line-height:1.42;border-radius:12px;padding:7px 12px;white-space:pre-wrap;overflow-wrap:anywhere;animation:lnIn .25s var(--ease) both}
+@keyframes lnIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.rp-log .user{align-self:flex-end;max-width:88%;background:var(--ink);color:#fff}
+.rp-log .user::before{content:"You";display:block;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
+.rp-log .ai{align-self:flex-start;max-width:94%;background:var(--teal-soft);color:#0b3a4d;padding:5px 12px}
+.rp-log .ai.key{font-weight:800;background:#CDEAF6;font-size:18px}
+.rp-log .note{align-self:center;background:var(--amber-soft);color:var(--amber-ink);font-weight:800;border:2px dashed var(--amber)}
+.term{background:#17202C;border-color:#17202C}
+.term .lbl-s{color:#8FD3EE}.term .rp-hint{color:#9FB0C4}
+.term .rp-hint kbd{background:#24303F;color:#DCE3EC;border-color:#3A4758}
+.term .rp-head .mini{background:#24303F;color:#DCE3EC;border-color:#3A4758}
+.term .rp-log{gap:3px}
+.term .rp-log .ln{font-family:var(--mono);font-size:14.5px;line-height:1.45;color:#DCE3EC;background:transparent;padding:2px 4px;border-radius:4px;max-width:none;align-self:stretch}
+.term .rp-log .user{color:#FFD9A0;margin-top:6px}
+.term .rp-log .user::before{content:"you › ";display:inline;font-size:inherit;letter-spacing:0;text-transform:none;opacity:1;font-weight:800}
+.term .rp-log .ai{color:#CFE9F5}
+.term .rp-log .ai::before{content:"● ";color:#8FD3EE}
+.term .rp-log .cmd{color:#fff;font-weight:700;margin-top:4px}
+.term .rp-log .cmd::before{content:"$ ";color:#7EE2B8}
+.term .rp-log .out{color:#9FB0C4}
+.term .rp-log .tool{color:#E2D4FF}
+.term .rp-log .bad{color:#FF9B85;font-weight:700}
+.term .rp-log .good{color:#7EE2B8;font-weight:800}
+.term .rp-log .pr{background:#fff;color:var(--ink);font-family:var(--font);font-size:15.5px;border-radius:12px;padding:10px 14px;margin-top:6px;white-space:normal;border-left:6px solid var(--amber)}
+.term .rp-log .pr span{font-weight:700;color:var(--muted)}
+.term .rp-log .pr .nm{color:var(--warn)}
+/* S7 layout */
+.s7 .s7rp{left:80px;top:176px;width:800px;height:692px}
+.s7 .s7q{left:900px;top:176px;width:620px;padding:14px 18px}
+.s7 .s7q .eq{gap:8px}
+.s7 .s7q .eq span{font-size:16px;padding:5px 12px;background:#fff;border:1.5px solid var(--line);color:var(--muted);transition:background .3s,border-color .3s,color .3s}
+.s7 .s7q .eq span.hit{background:var(--teal-soft);border-color:var(--teal);color:#075a78}
+.s7 .s7q .eq span.hit::before{content:"✓ "}
+.s7 .s7pred{left:900px;top:352px;width:620px;padding:14px 18px;transition:opacity .38s var(--ease),transform .38s var(--ease),top .45s var(--ease),visibility 0s}
+.s7 .pq{font-size:20px;font-weight:700;margin:0 0 4px}
+.s7[data-at="3"] .s7q{opacity:0;visibility:hidden}
+.s7[data-at="3"] .s7pred{top:176px}
+.s7 .s7calc{left:900px;top:340px;width:620px;height:528px;padding:12px 16px}
+.s7:not(.rpdone) .s7calc{opacity:0!important;visibility:hidden!important;transform:translateY(18px)!important}
+.s7 .calc-grid{display:grid;grid-template-columns:320px 1fr;gap:14px}
+.s7 .s7calc .inp{grid-template-columns:116px 1fr 60px;font-size:13.5px;gap:3px 8px}
+.s7 .s7calc .inp input[type=number]{width:60px;font-size:13px}
+.s7 .s7calc .big{font-size:62px}
+.s7 .s7calc .big.nos{font-size:30px}
+.s7 .s7calc .human{font-size:14px;line-height:1.3}
+.s7 .s7calc .chain{font-size:13px;line-height:1.35;margin-top:6px}
+.s7 .s7calc .chain div{padding:2px 0}
+.s7 .s7calc .checks{font-size:12.5px;line-height:1.35;margin-top:4px}
+.s7 .s7calc .ctl .mini{font-size:13px;padding:4px 10px}
+.s7 .s7calc .val{min-height:0}
+/* S9 layout */
+.s9 .s9rp{left:80px;top:172px;width:860px;height:696px}
+.s9 .git{left:960px;top:172px;width:560px;height:150px}
+.s9 .pipe{position:absolute;left:960px;top:334px;width:560px;display:flex;flex-direction:column;gap:7px}
+.s9 .pipe .step{height:auto;padding:7px 12px;font-size:14.5px;display:grid;grid-template-columns:36px 1fr auto;align-items:center;column-gap:6px}
+.s9 .pipe .step p{grid-column:2/4;margin:0;font-size:14px;color:var(--muted)}
+.s9 .pipe .step .st{position:static;font-size:12.5px;text-align:right;white-space:nowrap}
+.s9 .pipe .step b.t{font-size:17px}
+.s9 .pipe .step .n{width:28px;height:28px;margin:0}
+.s9 .pipe .cks{grid-column:2/4;margin-top:4px}
+.s9 .pipe .cks label{display:inline-flex;gap:5px;align-items:center;margin:2px 14px 2px 0;font-size:14.5px;font-weight:700}
+.s9 .pipe .cks input:disabled+*{opacity:.5}
+.s9 .gatebar{left:960px;right:auto;width:560px;top:806px;gap:10px;flex-wrap:wrap}
+.s9 .mergeb{font-size:16px;padding:8px 16px}
+.s9 .gmsg{font-size:14.5px}
+/* S10 */
+.s10 .qlist{margin:6px 0 0;padding-left:24px;font-size:21px;line-height:1.35}
+.s10 .qlist li{margin:12px 0;font-weight:700}
+.s10 .tp{top:700px;font-size:22px}
+/* S11 */
+.s11 .card11{width:900px;top:300px}
+.s11 .card11 .crit{margin:10px 0 0;font-size:16px;color:var(--teal);font-weight:700}
+.s11 .take{left:1004px;top:300px;width:516px;height:570px;padding:22px 26px;background:var(--ink);color:#fff;border-color:var(--ink)}
+.s11 .take .lbl-s{color:#8FD3EE}
+.s11 .take .msg{font-size:27px;font-weight:800;line-height:1.22;margin:0 0 16px;letter-spacing:-.01em}
+.s11 .take h4{margin:0 0 4px;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:#FFC779}
+.s11 .take ol{margin:0;padding-left:22px;font-size:16.5px;line-height:1.38;color:#DCE3EC}
+.s11 .take li{margin:6px 0}
+.s11 .take .qa-row{position:absolute;left:26px;right:26px;bottom:18px;display:flex;align-items:center;gap:12px}
+.s11 .take .qa-row b{font-size:44px;letter-spacing:-.03em;margin-right:auto}
+.s11 .take .dlb{background:transparent;color:#C9D2DE;border-color:#3A4758;font-size:13px;padding:4px 12px}
+.s11 .take .dlb:hover{color:#fff;border-color:#8FD3EE}
+#b-dl{color:var(--muted)}
+.s4 .doors{height:auto}
+.s4 .tools{top:360px}
+.s4 .tc{font-size:16.5px}
+.s4 .tmsg{font-size:20px}
+.s7 .s7rp{top:186px;height:682px}
+.s7 .s7q,.s7[data-at="3"] .s7pred{top:186px}
+.s7 .s7calc{top:346px;height:522px}
+.s11 .recap span{font-size:14.5px;padding:5px 12px}
+.s11 .card11{top:340px}
+.s11 .take{top:340px;height:530px}
+@media (max-width:720px){.rp-log{max-height:none;overflow:visible}.s7 .s7calc,.s7 .s7q,.s7 .s7pred,.s9 .pipe,.s9 .gatebar,.s11 .take{margin:12px 0;height:auto}.s11 .take .qa-row{margin-top:12px}.rp-hint{display:none}}
+@media print{.rp-log{overflow:visible}.s7 .s7calc{opacity:1!important;visibility:visible!important;transform:none!important}}
+
 /* ---------- small screens: stack, no scaling ---------- */
 @media (max-width:720px){
   body{overflow:auto}
@@ -599,17 +719,17 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <div class="kicker"><span class="num">01</span> Start with why · the AI flip <span class="win">0–4 min</span></div>
       <div class="left">
         <h2 class="stage-h hero-title" id="s1-h" tabindex="-1"><span class="w" style="--i:0">Turn</span> <span class="w" style="--i:1">an</span> <span class="w" style="--i:2">engineering</span> <span class="w" style="--i:3">goal</span> <span class="w" style="--i:4">into</span> <span class="w" style="--i:5">a</span> <em class="w" style="--i:6">checked</em> <em class="w" style="--i:7">result.</em></h2>
-        <p class="meta" data-b="1" style="--d:500ms"><b>Christian</b> · Orientation for engineers · 60 minutes &nbsp;<span class="pill warn">Not a certification course</span></p>
+        <p class="meta" data-b="1" style="--d:500ms"><b>Christian</b> · Orientation for engineers · 60 minutes</p>
         <p class="lede" data-b="1" style="--d:750ms">Define what matters. Choose the tools and <span class="k">data boundaries</span>. Give it context. Delegate the work — <span class="h">keep human review and accountability.</span></p>
         <div class="flip" data-b="3">
           <h3>The flip: <span class="ai">AI proposes the how.</span></h3>
           <p>The how used to consume us — syntax, boilerplate, wiring, test scaffolding. Our job moves inward: <b style="color:var(--amber-ink)">why, what, and how we’ll know it’s right.</b></p>
           <div class="bar" role="img" aria-label="Target split: roughly 80% AI effort, 20% human effort">
-            <div class="ai">AI ≈ 80% · drafts, runs, proposes</div>
-            <div class="hu">Human<br>≈ 20%</div>
+            <div class="ai">AI does most of the doing · ≈ 80%</div>
+            <div class="hu">You decide<br>≈ 20%</div>
           </div>
-          <p style="font-size:19px">Human 20%: <b style="color:var(--ink)">strategy · risk · outcome review · exceptions</b></p>
-          <p class="caveat">Workflow target, not a measured number</p>
+          <p style="font-size:19px">Your 20%: <b style="color:var(--ink)">strategy · risk · outcome review · exceptions</b></p>
+          <p class="goalnote">A goal, not a measurement</p>
         </div>
       </div>
       <div class="circle-wrap" data-b="2">
@@ -648,10 +768,10 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
         <div class="layer L-model" role="listitem" style="--ld:180ms"><div><div class="ln">Model</div><div class="ex">Claude Opus, Sonnet, Haiku; GPT</div></div><div class="dec">Reasoning quality, speed, cost</div></div>
         <div class="layer L-harness" role="listitem" style="--ld:360ms"><div><div class="ln">Harness</div><div class="ex">Claude Code, Codex, Copilot agent</div></div><div class="dec">Tools, permissions, loop, memory</div></div>
         <div class="layer L-interface" role="listitem" style="--ld:540ms"><div><div class="ln">Interface</div><div class="ex">Terminal, VS Code, Desktop, voice</div></div><div class="dec">How you see and steer it</div></div>
-        <div class="layer L-orch" role="listitem" style="--ld:720ms"><div><div class="ln">Orchestrator</div><div class="ex">Grok Bot, OpenAI dots</div></div><div class="dec">Who delegates work and asks you</div></div>
+        <div class="layer L-orch" role="listitem" style="--ld:720ms"><div><div class="ln">Orchestrator</div><div class="ex">Assistants that delegate work</div></div><div class="dec">Who delegates work and asks you</div></div>
       </div>
       <div class="poll" data-b="3">
-        <span class="audience" style="font-size:16px;padding:6px 14px"><span class="tag">Poll</span> hands up, then tap the count</span>
+        <span class="audience" style="font-size:16px;padding:6px 14px"><span class="tag">Poll</span> hands up</span>
         <p class="q">A desktop app means a local model?</p>
         <div class="tally">
           <button type="button" class="vote" data-vote="s2:yes" aria-label="Add one Yes vote">Yes <output data-count="s2:yes" aria-live="polite">0</output></button>
@@ -659,7 +779,6 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
           <button type="button" class="mini go" data-reveal="s2-ans" aria-expanded="false" aria-controls="s2-ans">Reveal</button>
           <button type="button" class="mini" data-reset="s2">Reset</button>
         </div>
-        <p class="local-note">Presenter count · local only · starts at 0 · nothing saved or sent</p>
         <div class="ans" id="s2-ans" hidden><b>No.</b> A desktop app is an interface. Unless you run open-weights models on your own hardware, inference happens in someone’s cloud.</div>
       </div>
       <div class="routing" data-b="3" style="--d:200ms">
@@ -676,14 +795,13 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
         <div class="card">
           <div class="face front">
             <span class="tag">Myth or fact?</span>
-            <p class="claim">Paying <span class="money">$200</span> rather than <span class="money">$20</span> for ChatGPT keeps inference off the provider.</p>
+            <p class="claim">Paying <span class="money">$200</span> rather than <span class="money">$20</span> a month for ChatGPT keeps your prompts off OpenAI’s servers.</p>
             <div class="myth-ctl">
               <button type="button" class="vote" data-vote="s3:myth" aria-label="Add one Myth vote">Myth <output data-count="s3:myth" aria-live="polite">0</output></button>
               <button type="button" class="vote" data-vote="s3:fact" aria-label="Add one Fact vote">Fact <output data-count="s3:fact" aria-live="polite">0</output></button>
               <button type="button" class="mini go" id="s3-flip" aria-controls="s3-myth" aria-pressed="false">Reveal</button>
               <button type="button" class="mini" data-reset="s3">Reset</button>
             </div>
-            <p class="local-note" style="margin:0">Presenter count · local only · starts at 0 · nothing saved or sent</p>
           </div>
           <div class="face back" aria-hidden="true">
             <span class="tag">Reveal</span>
@@ -721,29 +839,28 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
         </svg>
         <div class="src"><small>You send</small>Prompt + selected context</div>
         <ul class="rlist" aria-label="Where inference runs: pick a route">
-          <li><button type="button" class="route" data-lane="0" aria-pressed="false"><span class="rn">ChatGPT Plus $20 / Pro $100–500</span><span class="at">OpenAI cloud</span></button>
-            <div class="rd" hidden><div class="dv">OpenAI cloud</div><div class="dk">Training opt-out available; still processed by OpenAI</div><div class="dx">Prices as of 8 Nov 2026 from OpenAI's help center; recheck before class.</div></div></li>
+          <li><button type="button" class="route" data-lane="0" aria-pressed="false"><span class="rn">ChatGPT Plus / Pro ($20 / $200 a month)</span><span class="at">OpenAI cloud</span></button>
+            <div class="rd" hidden><div class="dv">OpenAI cloud</div><div class="dk">Training opt-out available; still processed by OpenAI</div><div class="dx">Example plan prices; they change often.</div></div></li>
           <li><button type="button" class="route" data-lane="1" aria-pressed="false"><span class="rn">ChatGPT Business / Enterprise</span><span class="at">OpenAI cloud</span></button>
             <div class="rd" hidden><div class="dv">OpenAI cloud</div><div class="dk">Not used for training by default; admin controls</div></div></li>
           <li><button type="button" class="route" data-lane="2" aria-pressed="false"><span class="rn">Claude Code, Anthropic API</span><span class="at">Anthropic cloud</span></button>
             <div class="rd" hidden><div class="dv">Anthropic cloud</div><div class="dk">Commercial terms: not trained on; 30-day standard retention</div></div></li>
           <li><button type="button" class="route aws" data-lane="3" aria-pressed="false"><span class="rn">Claude Code via Bedrock</span><span class="at">AWS region you set</span></button>
-            <div class="rd" hidden><div class="dv">AWS region you set</div><div class="dk">Cloud-hosted weights in AWS; some Anthropic checks remain</div><div class="dx"><code>CLAUDE_CODE_USE_BEDROCK=1</code> · your AWS credentials and IAM. A session survey prompt and a WebFetch hostname check to Anthropic still run unless disabled (<code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code>, <code>skipWebFetchPreflight</code>).</div></div></li>
+            <div class="rd" hidden><div class="dv">AWS region you set</div><div class="dk">Cloud-hosted weights in AWS; some Anthropic checks remain</div><div class="dx">Runs in your AWS account and region. Your admins configure it.</div></div></li>
           <li><button type="button" class="route gov" data-lane="4" aria-pressed="false"><span class="rn">Bedrock in GovCloud</span><span class="at">us-gov region</span></button>
-            <div class="rd" hidden><div class="dv">us-gov region</div><div class="dk">Partition matters; compliance is not automatic</div><div class="dx"><code>us-gov.</code> inference-profile prefix; model availability can lag commercial.</div></div></li>
+            <div class="rd" hidden><div class="dv">us-gov region</div><div class="dk">Partition matters; compliance is not automatic</div><div class="dx">AWS’s US government regions. Model choice can lag the commercial regions.</div></div></li>
           <li><button type="button" class="route local" data-lane="5" aria-pressed="false"><span class="rn">Local open-weights model</span><span class="at">Your hardware</span></button>
             <div class="rd" hidden><div class="dv">Your hardware</div><div class="dk">Only fully offline route; usually less capable</div></div></li>
         </ul>
-        <div class="detail" aria-live="polite" id="s3-detail"><span class="dl">Model runs at</span><p class="hint">Click a route — or ask the room which one they use today.</p></div>
+        <div class="detail" aria-live="polite" id="s3-detail"><span class="dl">Model runs at</span><p class="hint">Six common routes. Each one answers: where does the model run?</p></div>
       </div>
       <div class="cav" data-b="3" style="--d:300ms">
         <span class="caveat">GovCloud alone is not CUI, ITAR or CMMC compliance</span>
         <span class="caveat">An app or subscription is not local inference</span>
-        <span class="caveat">Prices as of 8 Nov 2026 — recheck</span>
       </div>
     </section>
 
-    <!-- ================= STAGE 4 · 15–23 · harness hub + tool cards ================= -->
+    <!-- ================= STAGE 4 · 15–23 · harness hub + three example tools ================= -->
     <section class="stage sx s4" id="s4" data-n="4" aria-roledescription="slide" aria-labelledby="s4-h" hidden>
       <div class="kicker"><span class="num">04</span> Harness &amp; tools <span class="win">15–23 min</span></div>
       <h2 class="stage-h" id="s4-h" tabindex="-1">Same agent, <span class="t">several doors.</span></h2>
@@ -759,14 +876,17 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
         <p class="hub-cap">A <b>harness</b> is the loop around the model.</p>
       </div>
       <div class="box doors" data-b="2">
-        <span class="lbl-s">Same harness · different doors</span>
-        <div class="door-row"><div class="door">Terminal</div><span class="same">=</span><div class="door">VS Code extension</div><span class="same">=</span><div class="door">Claude Code Desktop</div></div>
-        <div class="talk" aria-label="New ways to talk to it"><span>Plain-language goals</span><span>CLAUDE.md</span><span>Slash commands</span><span>Skills</span><span>Plan mode</span><span>Voice</span></div>
+        <span class="lbl-s">One agent · several doors</span>
+        <div class="door-row"><div class="door">Terminal</div><span class="same">=</span><div class="door">VS Code extension</div><span class="same">=</span><div class="door">Desktop app</div></div>
+        <div class="talk" aria-label="Ways to steer it"><span>Plain-language goals</span><span>CLAUDE.md</span><span>Slash commands</span><span>Skills</span><span>Plan mode</span><span>Voice</span></div>
       </div>
-      <div class="tools ia" data-b="3">
-        <div class="tgrid" id="s4-grid" role="group" aria-label="Seven tools: tap to pick 2–3 for discussion"></div>
-        <div class="tdetail" id="s4-detail" aria-live="polite"><span class="lbl-s am">Room picks 2–3</span>Tap a card to show what it is and what to watch for. Compare harness, context and permissions, not just model names.</div>
-        <div class="tfoot"><span class="audience" style="font-size:15px;padding:4px 12px"><span class="tag">Pick</span> <output id="s4-picked">0</output>&nbsp;of 7 picked</span><button type="button" class="mini" id="s4-reset">Reset picks</button><span>Copilot is not model-limited: <b>fair differences sit in the harness.</b> Compare workflows, not leaderboards.</span></div>
+      <div class="tools" data-b="3">
+        <div class="tri">
+          <div class="tc"><small>Terminal agent</small><b class="nm">e.g. Claude Code, Codex CLI</b><p><b>Sees:</b> the whole repo and a shell</p><p><b>Does:</b> edits files, runs tests, commits</p><p class="w">Watch: what you allow it to run</p></div>
+          <div class="tc"><small>IDE assistant</small><b class="nm">e.g. GitHub Copilot, Claude Code in VS Code</b><p><b>Sees:</b> your open workspace</p><p><b>Does:</b> suggests and edits; Copilot’s agent can open PRs</p><p class="w">Watch: model menu varies by plan</p></div>
+          <div class="tc"><small>Desktop chat app</small><b class="nm">e.g. Claude or ChatGPT desktop</b><p><b>Sees:</b> what you paste or attach</p><p><b>Does:</b> answers and drafts; some run agent tasks</p><p class="w">Watch: a desktop app is not a local model</p></div>
+        </div>
+        <p class="tmsg"><b>Same models everywhere. The difference is what the tool can see and do.</b> Copilot isn’t model-limited either: it offers Claude and GPT models. Compare workflows, not leaderboards.</p>
       </div>
     </section>
 
@@ -777,10 +897,8 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <div class="window ia" data-b="1" id="s5-window" role="list" aria-label="Context menu: seven things to give the agent"><span class="wtitle">What you give the agent</span></div>
       <div class="arrow" data-b="1" style="--d:900ms" aria-hidden="true"></div>
       <div class="box out" data-b="1" style="--d:1000ms"><span class="lbl-s">Output</span><h3>Better in, better out.</h3><p>Seven items, one window. Each one you skip is a guess the agent makes for you.</p></div>
-      <div class="box skip" data-b="2"><span class="audience" style="font-size:15px;padding:4px 12px"><span class="tag">Vote</span> Which do you skip most?</span>
-        <p class="lead" id="s5-lead" aria-live="polite">Tap a band once per raised hand.</p>
-        <button type="button" class="mini" data-reset="s5">Reset</button>
-        <p class="local-note">Presenter count · local only · starts at 0 · nothing saved or sent</p></div>
+      <div class="box skip" data-b="2"><span class="audience" style="font-size:15px;padding:4px 12px"><span class="tag">Ask yourself</span> Which do you skip most?</span>
+        <p class="lead">Pick one to add on your next task.</p></div>
     </section>
 
     <!-- ================= STAGE 6 · 27–32 · stage strip + ADR + storage tree ================= -->
@@ -799,42 +917,48 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <div class="tree ia" data-b="3">
         <div class="root">What shape is the data — and who reads or writes it?</div>
         <div class="branches" id="s6-fmts" role="group" aria-label="Storage formats"></div>
-        <div class="leaf" id="s6-leaf" aria-live="polite"><span class="lbl-s">Click a branch</span>ADR-001 picks JSON for numbers and Markdown for rationale.</div>
-        <p class="disk"><b>All three are files on disk.</b> Not file versus database: shape of the data, and who reads or writes it.</p>
+        <div class="leaf" id="s6-leaf" aria-live="polite"><span class="lbl-s">Pick by data shape</span>ADR-001 picks JSON for numbers and Markdown for rationale.</div>
+        <p class="disk"><b>All three are files on disk.</b> Pick storage by data shape and who uses it.</p>
       </div>
     </section>
 
-    <!-- ================= STAGE 7 · 32–40 · predict + synthetic dashboard ================= -->
+    <!-- ================= STAGE 7 · 32–40 · offline replay + predict + calculator ================= -->
     <section class="stage sx s7" id="s7" data-n="7" aria-roledescription="slide" aria-labelledby="s7-h" hidden>
-      <div class="kicker"><span class="num">07</span> Live engineering demo <span class="win">32–40 min</span></div>
-      <h2 class="stage-h" id="s7-h" tabindex="-1" style="font-size:46px;margin-top:10px">Off-grid weather station: <span class="t">how long to refill?</span> <span class="sim" style="vertical-align:middle">Synthetic — no real project, data or accounts</span></h2>
-      <div class="box p1" data-b="1"><span class="lbl-s">Prompt 1 · general form</span><div class="prompt-text" data-clone="ref-prompt-1" data-inner></div>
-        <div class="eq" aria-label="Expected questions from the AI"><b style="font-size:14px">Expect it to ask:</b><span>load profile</span><span>sun hours</span><span>days of autonomy</span><span>battery chemistry &amp; depth of discharge</span><span>temperature</span><span>system losses</span></div></div>
-      <div class="box p2 ia" data-b="2"><span class="lbl-s">Prompt 2 · declared numbers</span><div class="prompt-text" data-clone="ref-prompt-2" data-inner></div>
-        <div class="pred"><span class="tag">PREDICT</span><span style="font-size:15px;font-weight:700">Refill takes…</span>
+      <div class="kicker"><span class="num">07</span> Engineering demo · replay <span class="win">32–40 min</span></div>
+      <h2 class="stage-h" id="s7-h" tabindex="-1" style="font-size:46px;margin-top:10px">Off-grid weather station: <span class="t">how long to refill?</span> <span class="sim" style="vertical-align:middle">Recorded run · synthetic example · not a certified design</span></h2>
+      <div class="box rp s7rp" data-b="1">
+        <div class="rp-head"><span class="lbl-s">Replay · AI chat</span><span class="rp-hint"><kbd>Next</kbd> <kbd>→</kbd> <kbd>Space</kbd> plays the next line</span><button type="button" class="mini" data-rp-all="s7">Show all</button></div>
+        <div class="rp-log" id="s7-log" aria-live="polite"></div>
+      </div>
+      <div class="box s7q" data-b="1"><span class="lbl-s">A good assistant asks first</span>
+        <div class="eq" id="s7-eq" aria-label="Questions the AI should ask"><span data-q="1">load profile</span><span data-q="2">sun hours</span><span data-q="3">days of autonomy</span><span data-q="4">battery chemistry &amp; depth of discharge</span><span data-q="5">temperature</span><span data-q="6">system losses</span></div></div>
+      <div class="box s7pred ia" data-b="2"><span class="lbl-s am">Predict · hands up</span><p class="pq">How many days to refill after a 3-day outage?</p>
+        <div class="pred">
           <button type="button" class="vote" data-vote="s7:3">3 d <output data-count="s7:3">0</output></button>
           <button type="button" class="vote" data-vote="s7:7">7 d <output data-count="s7:7">0</output></button>
           <button type="button" class="vote" data-vote="s7:13">13 d <output data-count="s7:13">0</output></button>
           <button type="button" class="vote" data-vote="s7:30">30 d <output data-count="s7:30">0</output></button>
           <button type="button" class="mini" data-reset="s7">Reset</button></div></div>
-      <div class="dash ia" data-b="3" id="s7-dash">
-        <div><span class="lbl-s">Inputs · in-page arithmetic, not an AI run</span>
-          <div class="inp" id="s7-inp"></div>
-          <div class="ctl"><button type="button" class="mini go" id="s7-reset">Reset to declared values</button></div>
-          <p class="val" id="s7-val" role="alert"></p></div>
-        <div><span class="lbl-s">Steps with units</span><div class="chain" id="s7-chain" aria-live="polite"></div><div class="checks" id="s7-checks"></div></div>
-        <div><span class="lbl-s am">Reveal · refill after the outage</span><div class="big" id="s7-big" aria-live="polite">13.3 <small>days</small></div>
-          <div class="human" id="s7-human"></div></div>
+      <div class="box s7calc ia" data-b="3" id="s7-dash">
+        <div class="calc-grid">
+          <div><span class="lbl-s">Check the AI’s math yourself</span>
+            <div class="inp" id="s7-inp"></div>
+            <div class="ctl"><button type="button" class="mini go" id="s7-reset">Reset to declared values</button></div>
+            <p class="val" id="s7-val" role="alert"></p></div>
+          <div><span class="lbl-s am">Refill after the outage</span><div class="big" id="s7-big" aria-live="polite">13.3 <small>days</small></div>
+            <div class="human" id="s7-human"></div></div>
+        </div>
+        <div class="chain" id="s7-chain" aria-live="polite"></div><div class="checks" id="s7-checks"></div>
       </div>
     </section>
 
     <!-- ================= STAGE 8 · 40–44 · boundary wall split ================= -->
     <section class="stage sx s8" id="s8" data-n="8" aria-roledescription="slide" aria-labelledby="s8-h" hidden>
-      <div class="kicker"><span class="num">08</span> Crosswalk boundaries <span class="win">40–44 min</span></div>
-      <h2 class="stage-h" id="s8-h" tabindex="-1" style="font-size:54px">Coded names are <span class="a">not declassification.</span></h2>
+      <div class="kicker"><span class="num">08</span> Data boundaries <span class="win">40–44 min</span></div>
+      <h2 class="stage-h" id="s8-h" tabindex="-1" style="font-size:54px">Code names don’t make data <span class="a">safe to share.</span></h2>
       <div class="zone outz" data-b="1"><h3>Outside</h3><p class="sub">Discuss generalized, coded problems here.</p>
         <div class="codes" id="s8-codes"></div>
-        <p class="iec">Labels are IEC 81346-inspired, for illustration only.</p></div>
+</div>
       <div class="wall" data-b="1" style="--d:200ms" aria-hidden="true"><span class="lk">🔒</span>Approved<br>boundary</div>
       <div class="zone inz ia" data-b="2"><h3>Approved secure environment</h3><p class="sub">The mapping key lives here, and only here.</p>
         <div class="key" id="s8-key"><span class="lbl-s am">Mapping key</span><table><tbody id="s8-keyrows"></tbody></table></div>
@@ -843,55 +967,50 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <p class="stamp" data-b="2" style="--d:300ms">Controlled payload stays inside, whatever the labels. Anonymization never authorizes moving it out.</p>
     </section>
 
-    <!-- ================= STAGE 9 · 44–53 · PR pipeline + human gate ================= -->
+    <!-- ================= STAGE 9 · 44–53 · offline terminal replay + human gate ================= -->
     <section class="stage sx s9" id="s9" data-n="9" aria-roledescription="slide" aria-labelledby="s9-h" hidden>
-      <div class="kicker"><span class="num">09</span> GitHub to PR <span class="win">44–53 min</span></div>
-      <h2 class="stage-h" id="s9-h" tabindex="-1" style="font-size:54px">AI does the loop. <span class="a">Humans gate.</span> <span class="sim" style="vertical-align:middle">Simulated · throwaway sandbox</span></h2>
-      <div class="box p3" data-b="1"><span class="lbl-s">Prompt 3 · run in a git worktree</span><div class="prompt-text" data-clone="ref-prompt-3" data-inner></div>
-        <p style="margin:8px 0 0;font-size:15px"><code>git worktree add ../station-budget -b feat/power-budget</code></p></div>
-      <div class="git" data-b="1" style="--d:200ms"><svg viewBox="0 0 670 250" role="img" aria-label="Branch diagram: feat/power-budget branches off main into a worktree, opens a pull request, merges back only when authorized">
+      <div class="kicker"><span class="num">09</span> Prompt to pull request · replay <span class="win">44–53 min</span></div>
+      <h2 class="stage-h" id="s9-h" tabindex="-1" style="font-size:54px">AI does the loop. <span class="a">Humans gate.</span> <span class="sim" style="vertical-align:middle">Recorded run · synthetic example</span></h2>
+      <div class="box rp term s9rp" data-b="1">
+        <div class="rp-head"><span class="lbl-s">Replay · coding agent in a terminal</span><span class="rp-hint"><kbd>Next</kbd> <kbd>→</kbd> <kbd>Space</kbd> plays the next line</span><button type="button" class="mini" data-rp-all="s9">Show all</button></div>
+        <div class="rp-log" id="s9-log" aria-live="polite"></div>
+      </div>
+      <div class="git" data-b="1" style="--d:200ms"><svg viewBox="0 0 670 250" role="img" aria-label="Branch diagram: feat/power-budget branches off main into a worktree, opens a pull request, merges back only when approved">
         <path class="ln main" d="M30 190 H640"/><path class="ln feat" d="M110 190 C160 190 160 80 210 80 H470"/><path class="ln merge" d="M470 80 C520 80 520 190 570 190"/>
         <circle cx="110" cy="190" r="11" fill="#9AA6B8"/><circle cx="260" cy="80" r="11" fill="#0D7EA8"/><circle cx="350" cy="80" r="11" fill="#0D7EA8"/><circle cx="470" cy="80" r="14" fill="#fff" stroke="#0D7EA8" stroke-width="5"/><circle cx="570" cy="190" r="13" fill="#E8890C"/>
-        <text x="30" y="225">main</text><text x="210" y="50">feat/power-budget · worktree</text><text x="440" y="118">PR</text><text x="640" y="225" text-anchor="end">merge only when authorized</text></svg></div>
-      <div class="steps">
-        <div class="ai-steps" data-b="2">
-          <div class="step" id="s9-st1"><span class="n">1</span><b class="t">Worktree per task</b><p>Keeps parallel agents isolated.</p><span class="st">waiting</span></div>
-          <div class="step" id="s9-st2"><span class="n">2</span><b class="t">AI implements</b><p>Code, tests, commit, PR description.</p><span class="st">waiting</span></div>
-          <div class="step" id="s9-st3"><span class="n">3</span><b class="t">Remind to finish</b><p>Agents stop early: ask explicitly for tests, PR, and checks.</p><span class="st">waiting</span></div>
-        </div>
-        <div class="gate" data-b="3">
-          <div class="step h rv ia"><span class="n">4</span><b class="t">Human reviews</b><p style="margin:4px 0">Strategy, outcome, exceptions; not every line. Volunteer reviewer:</p>
-            <label><input type="checkbox" class="s9-ck"> Strategy fits the why</label><label><input type="checkbox" class="s9-ck"> Outcome meets criteria</label><label><input type="checkbox" class="s9-ck"> Exception call made</label></div>
-          <div class="step h" id="s9-st5"><span class="n">5</span><b class="t">Merge only when authorized</b><p>Required checks and branch protection pass; never bypass approvals.</p><span class="st" id="s9-st5s">locked</span></div>
-        </div>
+        <text x="30" y="225">main</text><text x="210" y="50">feat/power-budget · worktree</text><text x="440" y="118">PR</text><text x="640" y="225" text-anchor="end">merge only when approved</text></svg></div>
+      <div class="pipe" data-b="1" style="--d:300ms">
+        <div class="step" id="s9-st1"><span class="n">1</span><b class="t">Worktree per task</b><span class="st">waiting</span><p>Keeps parallel agents isolated.</p></div>
+        <div class="step" id="s9-st2"><span class="n">2</span><b class="t">AI implements</b><span class="st">waiting</span><p>Code, tests, fix, commit.</p></div>
+        <div class="step" id="s9-st3"><span class="n">3</span><b class="t">Remind to finish</b><span class="st">waiting</span><p>Agents stop early: ask for tests, PR and a re-check.</p></div>
+        <div class="step h rv ia" id="s9-st4"><span class="n">4</span><b class="t">Human reviews</b><span class="st" id="s9-st4s">after the PR</span><p>Strategy, outcome, exceptions; not every line.</p>
+          <div class="cks"><label><input type="checkbox" class="s9-ck" disabled> Strategy fits the why</label><label><input type="checkbox" class="s9-ck" disabled> Outcome meets criteria</label><label><input type="checkbox" class="s9-ck" disabled> Exception call made</label></div></div>
+        <div class="step h" id="s9-st5"><span class="n">5</span><b class="t">Merge only when approved</b><span class="st" id="s9-st5s">locked</span><p>Required checks pass; never bypass approvals.</p></div>
       </div>
-      <div class="gatebar ia" data-b="2" style="top:722px">
-        <button type="button" class="mini go" id="s9-run">Run the AI loop (simulated)</button>
-        <button type="button" class="mergeb" id="s9-merge" disabled>Authorize merge (presenter)</button>
+      <div class="gatebar ia" data-b="3">
+        <button type="button" class="mergeb" id="s9-merge" disabled>Approve merge (simulated)</button>
         <button type="button" class="mini" id="s9-reset">Reset</button>
         <span class="gmsg" id="s9-msg" aria-live="polite">Nothing here touches a real repo.</span>
       </div>
-      <div class="cavrow"><span class="caveat">Merge when authorized · never bypass</span><span class="caveat">Fallback: a prepared PR screenshot</span></div>
     </section>
 
-    <!-- ================= STAGE 10 · 53–57 · conductor tiers + toggle ================= -->
+    <!-- ================= STAGE 10 · 53–57 · agents that act + human gates ================= -->
     <section class="stage sx s10" id="s10" data-n="10" aria-roledescription="slide" aria-labelledby="s10-h" hidden>
-      <div class="kicker"><span class="num">10</span> Conductors <span class="win">53–57 min</span></div>
-      <h2 class="stage-h" id="s10-h" tabindex="-1" style="font-size:56px">One voice-first orchestrator, <span class="a">gated.</span></h2>
+      <div class="kicker"><span class="num">10</span> Agents &amp; approvals <span class="win">53–57 min</span></div>
+      <h2 class="stage-h" id="s10-h" tabindex="-1" style="font-size:50px">Agents that act for you — <span class="a">and the gates you keep.</span></h2>
       <div class="tiers" data-b="1">
-        <div class="tier" style="--td:0ms"><small>You</small><b>Talk to it</b>Voice, chat, a goal in plain language</div>
-        <div class="tier o" style="--td:150ms"><small>Orchestrator · conductor</small><b id="s10-orch">Grok Bot (our setup)</b>Delegates work and asks you</div>
-        <div class="tier h" style="--td:300ms"><small>Does work via · harness</small><b id="s10-harn">Claude Code, over a configured, approved route</b>Tools, permissions, loop</div>
-        <div class="tier m" style="--td:450ms"><small>Model + backend</small><b>Same rules as stages 2–3</b>Neither conductor changes where inference runs</div>
+        <div class="tier" style="--td:0ms"><small>You</small><b>Set the goal</b>Voice or chat, in plain language</div>
+        <div class="tier o" style="--td:150ms"><small>Assistant · orchestrator</small><b>Plans and delegates</b>Hands work to other tools and asks you when unsure</div>
+        <div class="tier h" style="--td:300ms"><small>Coding agent · harness</small><b>Reads, edits, runs tests</b>Inside the permissions you set</div>
+        <div class="tier m" style="--td:450ms"><small>Model + backend</small><b>Same rules as stages 2–3</b>The backend decides where your data goes</div>
       </div>
-      <div class="rail" data-b="1" style="--d:600ms"><h3>Human approval</h3><ul style="padding-left:18px;margin:0"><li>Sends</li><li>Spend</li><li>Merges</li><li>Irreversible steps</li></ul><p style="margin-top:16px">Neither conductor replaces human gates.</p></div>
-      <div class="box cmp ia" data-b="2"><span class="lbl-s">Toggle compare</span>
-        <div class="seg" role="group" aria-label="Choose a conductor"><button type="button" data-cond="1" aria-pressed="true">Grok Bot</button><button type="button" data-cond="2" aria-pressed="false">OpenAI dots</button></div>
-        <div id="s10-rows" aria-live="polite"></div></div>
-      <p class="tp" data-b="2" style="--d:200ms">Grok Bot reaching Claude Code is <b>a route we configured and approved</b>, not a built-in connector every installation has. Co-teaching happens in chat; no live meeting integration is assumed.</p>
+      <div class="rail" data-b="1" style="--d:600ms"><h3>Human approval</h3><ul style="padding-left:18px;margin:0"><li>Sends</li><li>Spend</li><li>Merges</li><li>Irreversible steps</li></ul><p style="margin-top:16px">No agent replaces these gates.</p></div>
+      <div class="box cmp" data-b="2"><span class="lbl-s">Ask any agent tool</span>
+        <ol class="qlist"><li>What can it touch? Files, repos, email, money?</li><li>What does it do without asking me?</li><li>Where does the model run?</li><li>Can I see and undo what it did?</li></ol></div>
+      <p class="tp" data-b="2" style="--d:200ms">More autonomy means you need <b>clearer gates</b>, not fewer.</p>
     </section>
 
-    <!-- ================= STAGE 11 · 57–60 · action card + recap ribbon ================= -->
+    <!-- ================= STAGE 11 · 57–60 · action card + take-home ================= -->
     <section class="stage sx s11" id="s11" data-n="11" aria-roledescription="slide" aria-labelledby="s11-h" hidden>
       <div class="kicker"><span class="num">11</span> Recap &amp; closing <span class="win">57–60 min</span></div>
       <h2 class="stage-h" id="s11-h" tabindex="-1" style="font-size:72px">Your <span class="t">move.</span></h2>
@@ -904,9 +1023,13 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
           <label for="s11-c2">Criterion 2</label><input id="s11-c2" class="s11-c" type="text" autocomplete="off">
           <label for="s11-c3">Criterion 3</label><input id="s11-c3" class="s11-c" type="text" autocomplete="off">
         </div>
-        <div class="howline"><span class="pill teal">The how → Claude Code</span><span class="pill amber">You review outcome + exceptions</span><button type="button" class="mini" id="s11-clear">Clear</button></div>
-        <p class="local-note" style="margin:8px 0 0">Typed answers stay on this page only · not saved or sent</p></div>
-      <div class="box qa" data-b="2" style="--d:250ms"><h3>Q&amp;A</h3><p>Why and what are yours. The how is delegated. Review the outcome.</p><p class="crit" id="s11-count" aria-live="polite">0 of 3 acceptance criteria written</p></div>
+        <div class="howline"><span class="pill teal">The how → your AI agent</span><span class="pill amber">You review outcome + exceptions</span><button type="button" class="mini" id="s11-clear">Clear</button></div>
+        <p class="crit" id="s11-count" aria-live="polite">0 of 3 acceptance criteria written</p></div>
+      <div class="box take" data-b="2" style="--d:250ms"><span class="lbl-s">Take-home</span>
+        <p class="msg">You own the why, the what and the check; let AI do the how, and never skip the review.</p>
+        <h4>Do this Monday</h4>
+        <ol><li>Pick one task you did by hand last week. Write its why, its what and 3 acceptance criteria.</li><li>Give an agent that brief plus the relevant files. Ask it to plan before it codes.</li><li>Have it write tests and a PR description, then review the outcome yourself. Never paste controlled data.</li></ol>
+        <div class="qa-row"><b>Q&amp;A</b><button type="button" class="mini dlb no-print" data-download>⤓ Download for offline use</button></div></div>
     </section>
 
     <button type="button" class="edge l" id="edge-l" tabindex="-1" aria-hidden="true">‹</button>
@@ -926,6 +1049,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <button type="button" class="btn" id="b-notes" aria-expanded="false" aria-controls="notes">Notes <kbd>N</kbd></button>
     <button type="button" class="btn" id="b-ref" aria-haspopup="dialog" aria-expanded="false" aria-controls="ref">Reference <kbd>R</kbd></button>
     <button type="button" class="btn" id="b-print">Print <kbd>P</kbd></button>
+    <button type="button" class="btn no-print" id="b-dl" data-download title="Save this whole deck as one HTML file that works without internet">⤓ Download for offline use</button>
   </div>
 </nav>
 <!-- ================= Presenter notes drawer (hidden until N) ================= -->
@@ -943,18 +1067,17 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
   <div id="notes-panel" role="tabpanel" aria-labelledby="tab-say" tabindex="0">
 
     <div class="stage-notes" data-for="1">
-      <h3 class="np-title">Stage 1 · 0–4 · Start With Why + AI flip</h3>
+      <h3 class="np-title">Stage 1 · 0–4 · Start with why</h3>
       <div class="np say">
-        <h4>0:00–1:30 · Hero — read aloud first</h4><div data-clone="ref-opener"></div>
-        <h4>1:30–2:45 · Golden circle + quote</h4><p>Let the rings draw, then let the quote land (it is on stage once; do not repeat it here). Then the speaker script — original paraphrase, not Sinek’s wording:</p><div data-clone="ref-paraphrase"></div>
-        <h4>2:45–4:00 · The flip + 80/20</h4><div data-clone="ref-flip"></div><div data-clone="ref-8020"></div>
-        <h4>Audience moment</h4><p>Hands up: who spent last week mostly on the how?</p>
+        <h4>0:00–1:30 · Opening line (read aloud)</h4><div data-clone="ref-opener"></div>
+        <h4>1:30–2:45 · Golden circle + quote</h4><p>Let the rings draw, then let the quote land on its own. Then tell the Apple story:</p><div data-clone="ref-paraphrase"></div>
+        <h4>2:45–4:00 · The flip</h4><div data-clone="ref-flip"></div><div data-clone="ref-8020"></div>
+        <h4>Ask the room</h4><p>Hands up: who spent last week mostly on the how? Look around. That’s the time we’re going to win back.</p>
       </div>
-      <div class="np ref"><h4>80/20 responsibility split</h4><div data-clone="ref-split-table"></div><div data-clone="ref-split-p"></div></div>
+      <div class="np ref"><h4>80/20 split</h4><div data-clone="ref-split-table"></div><div data-clone="ref-split-p"></div></div>
       <div class="np cav"><ul>
-        <li>80/20 is a workflow target, not a measured or universal number.</li>
-        <li>Not a certification course.</li>
-        <li>The Apple story is an original paraphrase, not Sinek’s wording; only one direct quote is used (53 characters).</li>
+        <li>80/20 is a goal, not a measurement.</li>
+        <li>The quote is Sinek’s; the Apple story is in my own words.</li>
       </ul></div>
       <div class="np src"><ul><li data-clone="src-11"></li></ul></div>
     </div>
@@ -963,29 +1086,25 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <h3 class="np-title">Stage 2 · 4–9 · Models &amp; inference</h3>
       <div class="np say">
         <h4>4:00–5:30 · Agent tool ≠ model</h4><div data-clone="ref-seg-4-9-1"></div>
-        <h4>5:30–7:30 · Build the stack</h4><p>Walk the five layers bottom-up; the table is under Reference.</p>
-        <h4>7:30–9:00 · Poll, reveal, routing</h4><div data-clone="ref-seg-4-9-3"></div><div data-clone="ref-seg-4-9-2"></div>
-        <p>Poll: count hands for Yes / No and tap the counts in; then Reveal.</p>
+        <h4>5:30–7:30 · The stack</h4><p>Walk the five layers from the bottom. The backend decides where your data goes. The model decides quality, speed and cost. The harness is the tool loop. The interface is how you see and steer it. On top sit assistants that hand work to the others.</p>
+        <h4>7:30–9:00 · Poll, then routing</h4><p>Poll: “Does a desktop app mean a local model?” Count hands for Yes and No, tap the counts in, then Reveal.</p><div data-clone="ref-seg-4-9-3"></div><div data-clone="ref-seg-4-9-2"></div>
       </div>
       <div class="np ref"><h4>Model, harness, interface, backend</h4><div data-clone="ref-stack-table"></div></div>
-      <div class="np cav"><ul>
-        <li>A desktop app is an interface, not local inference.</li>
-        <li>Poll counts are presenter input only: they start at 0, stay on this page, and are never saved or sent.</li>
-      </ul></div>
-      <div class="np src"><p>The source plan cites no external link for this segment. All 11 sources are in Reference → Sources.</p></div>
+      <div class="np cav"><ul><li>A desktop app is an interface, not local inference.</li></ul></div>
+      <div class="np src"><p>No outside sources for this stage.</p></div>
     </div>
 
     <div class="stage-notes" data-for="3">
       <h3 class="np-title">Stage 3 · 9–15 · Backends &amp; GovCloud</h3>
       <div class="np say">
-        <h4>9:00–10:30 · Myth card (vote, then Reveal)</h4><div data-clone="ref-seg-9-15-1"></div>
-        <h4>10:30–12:30 · Four questions</h4><div data-clone="ref-seg-9-15-2"></div>
-        <h4>12:30–15:00 · Route map (click a route)</h4><div data-clone="ref-seg-9-15-3"></div><div data-clone="ref-seg-9-15-4"></div><div data-clone="ref-seg-9-15-5"></div>
+        <h4>9:00–10:30 · Myth or fact (vote, then Reveal)</h4><p>Ask: does paying $200 instead of $20 a month for ChatGPT keep your prompts off OpenAI’s servers? Count Myth and Fact, then Reveal.</p><div data-clone="ref-seg-9-15-1"></div>
+        <h4>10:30–12:30 · Four different questions</h4><div data-clone="ref-seg-9-15-2"></div>
+        <h4>12:30–15:00 · Route map</h4><p>Click through the routes. The key lines: Bedrock runs Claude inside your AWS account and the region you choose. GovCloud is AWS’s US government partition, and model choice there can lag the commercial regions. Neither one is compliance by itself: authorization, approved models, settings and procedures still matter. Only a local open-weights model is fully offline.</p>
       </div>
-      <div class="np ref"><h4>Where inference runs</h4><div data-clone="ref-routing-table"></div><div data-clone="ref-routing-price"></div></div>
+      <div class="np ref"><h4>Where inference runs</h4><div data-clone="ref-routing-table"></div><div data-clone="ref-routing-price"></div><h4>Bedrock and GovCloud details</h4><div data-clone="ref-seg-9-15-3"></div><div data-clone="ref-seg-9-15-4"></div><div data-clone="ref-seg-9-15-5"></div></div>
       <div class="np cav"><div data-clone="ref-routing-warn"></div><ul>
         <li>GovCloud alone is not CUI, ITAR or CMMC compliance.</li>
-        <li>Prices as of 8 Nov 2026; recheck before class.</li>
+        <li>Plan prices change often; check current pricing before class.</li>
       </ul></div>
       <div class="np src"><ul><li data-clone="src-1"></li><li data-clone="src-2"></li><li data-clone="src-3"></li><li data-clone="src-4"></li><li data-clone="src-5"></li></ul></div>
     </div>
@@ -994,95 +1113,92 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <h3 class="np-title">Stage 4 · 15–23 · Harness &amp; tools</h3>
       <div class="np say">
         <h4>15:00–17:30 · Harness loop</h4><div data-clone="ref-seg-15-23-1"></div>
-        <h4>17:30–19:30 · Doors + ways to talk</h4><div data-clone="ref-seg-15-23-2"></div><div data-clone="ref-seg-15-23-3"></div>
-        <h4>19:30–23:00 · Seven tools (room picks 2–3) + VS Code</h4><div data-clone="ref-seg-15-23-4"></div>
-        <p>Ask the room to pick two or three cards; tap them to show what each is and what to watch for. Highlight two or three rows only; the full table is under Reference.</p>
+        <h4>17:30–19:30 · Doors and ways to steer</h4><p>The same agent shows up in a terminal, inside VS Code, and as a desktop app: same loop, same rules. You steer it with plain-language goals, a CLAUDE.md file of project conventions, slash commands, skills, plan mode and voice.</p>
+        <h4>19:30–23:00 · Three example tools</h4><p>Walk the three cards. A desktop chat app sees only what you paste. An IDE assistant sees your workspace. A terminal agent can see the whole repo and run commands. The models are largely the same everywhere; Copilot, for example, offers Claude and GPT models. What differs is what each tool can see and do, so compare workflows, not leaderboards.</p><div data-clone="ref-seg-15-23-4"></div>
       </div>
-      <div class="np ref"><h4>Tool comparison (7 tools)</h4><div data-clone="ref-tools-body"></div></div>
-      <div class="np cav"><ul><li>VS Code losing ground is the owner's hypothesis; 70.9% regular use is the Stack Overflow 2026 survey figure cited in the source plan; recheck.</li><li>Copilot is not model-limited; compare workflows, not leaderboards. Assume each tool runs its strongest officially listed model.</li><li>Grok Bot + Claude Code requires a configured, approved route.</li><li>dots: Pro and Business Premium; not all regions.</li><li>Picks are presenter input only; nothing is saved or sent.</li></ul></div>
-      <div class="np src"><ul><li data-clone="src-6"></li><li data-clone="src-7"></li><li data-clone="src-8"></li><li data-clone="src-9"></li><li data-clone="src-10"></li></ul></div>
+      <div class="np ref"><h4>Detailed tool comparison</h4><div data-clone="ref-tools-body"></div></div>
+      <div class="np cav"><ul><li>Model menus vary by product and plan; check before class.</li><li>Copilot is not model-limited; fair differences sit in the harness.</li></ul></div>
+      <div class="np src"><ul><li data-clone="src-6"></li><li data-clone="src-8"></li><li data-clone="src-9"></li><li data-clone="src-10"></li></ul></div>
     </div>
 
     <div class="stage-notes" data-for="5">
       <h3 class="np-title">Stage 5 · 23–27 · Context</h3>
       <div class="np say">
-        <h4>23:00–25:00 · Seven bands</h4><div data-clone="ref-seg-23-32-1"></div><p>Walk the seven bands top to bottom.</p>
-        <h4>25:00–27:00 · Skip-most vote</h4><p>Hands up per item; tap the band once per raised hand. The leader shows on the right.</p>
+        <h4>23:00–25:00 · Seven things to give the agent</h4><p>Walk the seven items top to bottom. Every item you skip is a guess the agent makes for you.</p>
+        <h4>25:00–27:00 · Which do you skip?</h4><p>Ask the room, no counting: which of these do you usually skip? Take two or three answers, then ask everyone to pick one to add on their next task.</p>
       </div>
-      <div class="np ref"><h4>Context menu</h4><div data-clone="ref-context-body"></div></div>
-      <div class="np cav"><ul><li>Votes are local presenter counts that start at 0; never saved or sent.</li></ul></div>
-      <div class="np src"><p>The source plan cites no external link for this segment. All 11 sources are in Reference → Sources.</p></div>
+      <div class="np ref"><h4>Context checklist</h4><div data-clone="ref-context-body"></div></div>
+      <div class="np cav"><ul><li>More context isn’t always better: give what is relevant to the task.</li></ul></div>
+      <div class="np src"><p>No outside sources for this stage.</p></div>
     </div>
 
     <div class="stage-notes" data-for="6">
       <h3 class="np-title">Stage 6 · 27–32 · Planning &amp; ADR</h3>
       <div class="np say">
-        <h4>27:00–28:30 · Planning stages</h4><div data-clone="ref-seg-23-32-2"></div>
-        <h4>28:30–30:30 · ADR-001</h4><div data-clone="ref-seg-23-32-3"></div>
-        <h4>30:30–32:00 · Storage tree (click a branch)</h4><p>Ask a volunteer to pick a branch, then read its best-for and watch-out.</p>
+        <h4>27:00–28:30 · Planning stages</h4><div data-clone="ref-seg-23-32-2"></div><p>The decision step is ours. The AI is great at options and plans.</p>
+        <h4>28:30–30:30 · ADR-001</h4><p>An ADR is a one-page decision record: what we decided, why, what we rejected, and what would make us revisit it. It also stops the agent from re-arguing settled decisions.</p>
+        <h4>30:30–32:00 · Storage choice</h4><p>Click JSON, Markdown and SQLite in turn. All three are files on disk. Pick by the shape of the data and who reads or writes it.</p>
       </div>
       <div class="np ref"><h4>Example one-page ADR</h4><div data-clone="ref-adr-body"></div><h4>Storage choice</h4><div data-clone="ref-storage-body"></div></div>
-      <div class="np cav"><ul><li>ADR-001 is a synthetic example.</li></ul></div>
-      <div class="np src"><p>The source plan cites no external link for this segment. All 11 sources are in Reference → Sources.</p></div>
+      <div class="np cav"><ul><li>ADR-001 is a made-up example.</li></ul></div>
+      <div class="np src"><p>No outside sources for this stage.</p></div>
     </div>
 
     <div class="stage-notes" data-for="7">
-      <h3 class="np-title">Stage 7 · 32–40 · Live engineering demo</h3>
+      <h3 class="np-title">Stage 7 · 32–40 · Engineering demo (replay)</h3>
       <div class="np say">
-        <h4>32:00–34:30 · Prompt 1 + expected questions</h4><p>Run prompt 1 in the agent; compare its questions to the chips on stage.</p>
-        <h4>34:30–36:30 · Prompt 2 + PREDICT</h4><p>Before revealing, ask the room: 3, 7, 13 or 30 days? Tap one count per hand.</p>
-        <h4>36:30–40:00 · Reveal, sliders, human call</h4><p>Reveal 13.3 days, then move a slider (bigger panel, more sun) to show the arithmetic. Close on the human exception decision.</p>
-        <h4>Full demo kit (verbatim)</h4><div data-clone="ref-demo-body"></div>
+        <h4>32:00–34:30 · Questions before numbers</h4><p>This is a recorded run, so it works with no internet or login. Press Next to play each line. The point: a good assistant asks questions before it calculates. The chips on the right light up as it asks.</p>
+        <h4>34:30–36:30 · Prompt 2 + predict</h4><p>Prompt 2 gives it real numbers. At the pause line, ask the room: 3, 7, 13 or 30 days? Tap one count per raised hand.</p>
+        <h4>36:30–40:00 · Reveal, sliders, human call</h4><p>Play the answer line by line: 120 Wh a day, a 720 Wh battery (60 Ah at 12 V), a 49 W panel so we choose 60 W, and 13.3 days to refill. Then move a slider live, say a bigger panel or more sun, and watch the number change. Close on the human call: is 13 days acceptable? The AI computed it; an engineer decides.</p>
       </div>
-      <div class="np ref"><h4>Slider formulas (same as the prepared calculation)</h4><ul><li>Daily energy = load × 24 h</li><li>Usable energy = daily × days of autonomy; battery = usable ÷ depth of discharge; Ah = Wh ÷ V</li><li>Panel required = daily ÷ (sun hours × efficiency); the chosen panel is the engineer's pick (60 W declared)</li><li>Surplus = chosen panel × sun hours × efficiency − daily</li><li>Refill = usable ÷ surplus; no surplus means it cannot refill</li></ul></div>
-      <div class="np cav"><ul><li>Synthetic-only example. Sliders are in-page arithmetic, not an AI run.</li><li>Limitations: synthetic averages, no temperature derating, no seasonal sun data. A real design needs qualified engineering validation and the applicable codes.</li><li>Fallback: prepared calculation and expected question list.</li><li>Prediction counts start at 0 and stay local.</li></ul></div>
-      <div class="np src"><p>The source plan cites no external link for this segment. All 11 sources are in Reference → Sources.</p></div>
+      <div class="np ref"><h4>Demo kit</h4><div data-clone="ref-demo-body"></div><h4>Slider formulas</h4><ul><li>Daily energy = load × 24 h</li><li>Usable energy = daily × days of autonomy; battery = usable ÷ depth of discharge; Ah = Wh ÷ V</li><li>Panel required = daily ÷ (sun hours × efficiency); the chosen panel is the engineer’s pick (60 W)</li><li>Surplus = chosen panel × sun hours × efficiency − daily</li><li>Refill = usable ÷ surplus; no surplus means it never refills</li></ul></div>
+      <div class="np cav"><ul><li>Synthetic example, not a certified design: no temperature derating, no seasonal sun data.</li><li>The replay is scripted, not a live AI run. The sliders are plain arithmetic in the page.</li></ul></div>
+      <div class="np src"><p>No outside sources for this stage.</p></div>
     </div>
 
     <div class="stage-notes" data-for="8">
-      <h3 class="np-title">Stage 8 · 40–44 · Crosswalk boundaries</h3>
+      <h3 class="np-title">Stage 8 · 40–44 · Data boundaries</h3>
       <div class="np say">
-        <h4>40:00–42:00 · Coded labels outside</h4><p>Discuss generalized, coded problems outside the boundary.</p>
-        <h4>42:00–44:00 · Key inside the boundary</h4><p>Press “Try moving the key outside”: it snaps back. Then read the callout under Reference.</p>
+        <h4>40:00–42:00 · Coded labels outside</h4><p>Coded labels like =S1-G1 let you discuss the shape of a problem outside a secure environment, for example with a public AI tool.</p>
+        <h4>42:00–44:00 · The key stays inside</h4><p>Press “Try moving the key outside”: it snaps back. The key that maps codes to real items stays in the approved environment. And code names don’t make controlled data shareable: if the content itself is controlled, it stays inside, whatever the labels say.</p>
       </div>
-      <div class="np ref"><h4>Crosswalk</h4><div data-clone="ref-crosswalk-body"></div></div>
-      <div class="np cav"><ul><li>Coded names are not declassification and not decontrol.</li><li>IEC 81346-inspired labels are for illustration only.</li></ul></div>
-      <div class="np src"><p>The source plan cites no external link for this segment. All 11 sources are in Reference → Sources.</p></div>
+      <div class="np ref"><h4>Coded labels</h4><div data-clone="ref-crosswalk-body"></div></div>
+      <div class="np cav"><ul><li>Coded names are not declassification and not decontrol.</li><li>When in doubt, ask your security or export-control lead before using any AI tool.</li></ul></div>
+      <div class="np src"><p>No outside sources for this stage.</p></div>
     </div>
 
     <div class="stage-notes" data-for="9">
-      <h3 class="np-title">Stage 9 · 44–53 · GitHub to PR</h3>
+      <h3 class="np-title">Stage 9 · 44–53 · Prompt to pull request (replay)</h3>
       <div class="np say">
-        <h4>44:00–46:30 · Prompt 3 + worktree</h4><p>Run prompt 3 in a git worktree on the throwaway sandbox repo.</p>
-        <h4>46:30–50:00 · Steps 1–3 (AI loop)</h4><p>“Run the AI loop (simulated)” marks steps 1–3 while the real agent works.</p>
-        <h4>50:00–53:00 · Human review + authorized merge</h4><p>The volunteer reviewer ticks the three checks; only then can the presenter authorize the merge. There is no bypass control.</p>
-        <h4>Close-the-loop kit (verbatim)</h4><div data-clone="ref-github-body"></div>
+        <h4>44:00–46:30 · Plan + worktree</h4><p>Another recorded run, this time a coding agent in a terminal. It plans first, waits for a yes, then works in its own git worktree so parallel tasks don’t collide.</p>
+        <h4>46:30–50:00 · Code, test, fix</h4><p>Play the coding steps. The first test run fails: the agent mixed watts and watt-hours and got 6.5 hours instead of 13.3 days. It finds the units bug, fixes it, and all three tests pass. That is why we always ask for tests.</p>
+        <h4>50:00–53:00 · PR + human review</h4><p>Notice the reminder: agents tend to stop early, so ask explicitly for tests, the PR and a re-check. The PR says “Not merged”. Ask a volunteer to call out the three review checks while you tick them. Only then does Approve merge unlock. There is no bypass button.</p>
       </div>
-      <div class="np ref"><h4>Co-teaching roles</h4><div data-clone="ref-roles"></div></div>
-      <div class="np cav"><ul><li>Throwaway sandbox repo; the on-page pipeline is simulated and touches nothing.</li><li>Merge only when authorized; never bypass approvals.</li><li>Do not execute against real repos, AWS accounts, messages, or controlled data without a separate explicit ask.</li></ul></div>
+      <div class="np ref"><h4>Prompt-to-PR kit</h4><div data-clone="ref-github-body"></div></div>
+      <div class="np cav"><ul><li>Simulated: nothing on this page touches a real repo.</li><li>Never point an agent at real repos, cloud accounts or controlled data without approval.</li></ul></div>
       <div class="np src"><ul><li data-clone="src-8"></li><li data-clone="src-9"></li></ul></div>
     </div>
 
     <div class="stage-notes" data-for="10">
-      <h3 class="np-title">Stage 10 · 53–57 · Conductors</h3>
+      <h3 class="np-title">Stage 10 · 53–57 · Agents &amp; approvals</h3>
       <div class="np say">
-        <h4>53:00–55:00 · Tiers + approval rail</h4><p>Both conductors sit above a harness; humans gate sends, spend, merges and irreversible steps.</p>
-        <h4>55:00–57:00 · Toggle compare</h4><div data-clone="ref-conductor-body"></div>
+        <h4>53:00–55:00 · Tiers + approval rail</h4><p>Assistants that act for you sit on top of the same layers: they hand work to a coding agent, which calls a model on some backend. None of that changes the data rules from stages 2 and 3. The orange rail is the point: sends, spend, merges and irreversible steps always wait for a human.</p>
+        <h4>55:00–57:00 · Four questions</h4><p>Read the four questions. Ask them of any agent tool before you trust it with real work. More autonomy means you need clearer gates, not fewer.</p>
       </div>
-      <div class="np ref"><h4>Model, harness, interface, backend</h4><div data-clone="ref-stack-table"></div></div>
-      <div class="np cav"><ul><li>Configured, approved route; not a built-in connector every installation has.</li><li>No live meeting integration is assumed.</li><li>dots availability: Pro and Business Premium; Enterprise beta; not all regions. Recheck.</li></ul></div>
-      <div class="np src"><ul><li data-clone="src-7"></li><li data-clone="src-6"></li></ul></div>
+      <div class="np ref"><h4>Layers</h4><div data-clone="ref-stack-table"></div><h4>Agents and approvals</h4><div data-clone="ref-conductor-body"></div></div>
+      <div class="np cav"><ul><li>Agent assistants are new and change fast; use only what your organization has approved.</li></ul></div>
+      <div class="np src"><ul><li data-clone="src-9"></li></ul></div>
     </div>
 
     <div class="stage-notes" data-for="11">
       <h3 class="np-title">Stage 11 · 57–60 · Recap &amp; closing</h3>
       <div class="np say">
-        <h4>57:00–58:00 · Recap</h4><p>One line per stage; the ribbon builds left to right.</p>
-        <h4>58:00–60:00 · Takeaway exercise + Q&amp;A</h4><div data-clone="ref-closing-body"></div>
+        <h4>57:00–58:00 · Recap</h4><p>Read the recap chips in one breath, one line per stage.</p>
+        <h4>58:00–60:00 · Take-home + Q&amp;A</h4><p>Read the take-home line aloud: “You own the why, the what and the check; let AI do the how, and never skip the review.” Then the three things to do on Monday. If there’s time, fill in the card with one real example from the room. Then open for questions.</p><div data-clone="ref-closing-body"></div>
       </div>
-      <div class="np ref"><h4>80/20 responsibility split</h4><div data-clone="ref-split-table"></div><div data-clone="ref-split-p"></div><h4>Co-teaching roles</h4><div data-clone="ref-roles"></div><h4>Preflight checklist</h4><div data-clone="ref-preflight"></div><p>Status as of 8 Nov 2026: none done yet.</p></div>
-      <div class="np cav"><ul><li>Typed answers stay local; not saved or sent.</li><li>80/20 is a workflow target, not a measured number.</li></ul></div>
-      <div class="np src"><p>All 11 sources and the recheck list: Reference → Sources.</p></div>
+      <div class="np ref"><h4>80/20 split</h4><div data-clone="ref-split-table"></div><div data-clone="ref-split-p"></div><h4>Roles</h4><div data-clone="ref-roles"></div><h4>Before class</h4><div data-clone="ref-preflight"></div></div>
+      <div class="np cav"><ul><li>80/20 is a goal, not a measurement.</li></ul></div>
+      <div class="np src"><p>All sources are in Reference → Sources.</p></div>
     </div>
   </div>
 </aside>
@@ -1097,6 +1213,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="keys">
       <span><kbd>→</kbd> <kbd>Space</kbd> <kbd>PgDn</kbd></span><span>Next beat (reveals the rest of a stage before moving on)</span>
       <span><kbd>←</kbd> <kbd>PgUp</kbd></span><span>Back one beat</span>
+      <span>Stages 7 and 9</span><span><kbd>→</kbd> <kbd>Space</kbd> or Next plays the next replay line, then moves on · <kbd>Shift</kbd>+<kbd>→</kbd> skips the rest of the replay beat</span>
       <span><kbd>Home</kbd> <kbd>End</kbd></span><span>First / last stage</span>
       <span><kbd>1</kbd>–<kbd>9</kbd>, <kbd>0</kbd></span><span>Jump to stage 1–9; 0 = stage 10</span>
       <span><kbd>T</kbd> <kbd>N</kbd> <kbd>R</kbd> <kbd>P</kbd></span><span>Timeline · notes · reference · print</span>
@@ -1111,15 +1228,15 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
   <div class="ov-head"><h2 id="ref-title">Full reference — AI Master Class, 60-minute teaching plan</h2><button type="button" class="btn" id="ref-print">Print <kbd>P</kbd></button><button type="button" class="btn" data-close>Close <kbd>Esc</kbd></button></div>
   <div class="ov-body refdoc">
     <ul class="ref-toc" aria-label="Reference sections">
-      <li><a href="#ref-about">About</a></li><li><a href="#ref-timeline">Timeline</a></li><li><a href="#ref-opening">Opening</a></li><li><a href="#ref-notes">Notes</a></li><li><a href="#ref-stack">Stack</a></li><li><a href="#ref-routing">Inference</a></li><li><a href="#ref-tools">Tools</a></li><li><a href="#ref-context">Context</a></li><li><a href="#ref-adr">ADR</a></li><li><a href="#ref-storage">Storage</a></li><li><a href="#ref-demo">Demo</a></li><li><a href="#ref-crosswalk">Crosswalk</a></li><li><a href="#ref-github">GitHub</a></li><li><a href="#ref-conductor">Conductors</a></li><li><a href="#ref-split">80/20</a></li><li><a href="#ref-closing">Closing</a></li><li><a href="#ref-sources">Sources</a></li><li><a href="#ref-coverage">Coverage map</a></li>
+      <li><a href="#ref-about">About</a></li><li><a href="#ref-timeline">Timeline</a></li><li><a href="#ref-opening">Opening</a></li><li><a href="#ref-notes">Notes</a></li><li><a href="#ref-stack">Stack</a></li><li><a href="#ref-routing">Inference</a></li><li><a href="#ref-tools">Tools</a></li><li><a href="#ref-context">Context</a></li><li><a href="#ref-adr">ADR</a></li><li><a href="#ref-storage">Storage</a></li><li><a href="#ref-demo">Demo</a></li><li><a href="#ref-crosswalk">Crosswalk</a></li><li><a href="#ref-github">GitHub</a></li><li><a href="#ref-conductor">Agents</a></li><li><a href="#ref-split">80/20</a></li><li><a href="#ref-closing">Closing</a></li><li><a href="#ref-sources">Sources</a></li><li><a href="#ref-coverage">Coverage map</a></li>
     </ul>
 
     <section class="ref-sec" id="ref-about">
       <h3>AI Master Class — 60-minute teaching plan</h3>
       <p class="sub">Instructor: Christian · Orientation for engineers · Not a certification course</p>
-      <p class="sub">Exact 60-minute agenda · Light theme only · Interactive facilitator copy</p>
+      <p class="sub">Exact 60-minute agenda · works offline from one file</p>
       <p>A one-hour orientation for engineers: start with why, separate model from harness from backend, see where inference really runs, then take one synthetic engineering problem from concept to checked calculation to a reviewed pull request.</p>
-      <div class="callout"><strong>Canonical Page (source of truth):</strong> <a href="https://cursor.com/canvas/store-ab44450f-a68f-4545-95e8-ddd7eb27b78e/57a74526-c65c-43d3-8253-03b82a7fdf1b">Cursor Page — AI Master Class</a>. This HTML is a public-artifact-ready portable copy; the Cursor Page remains canonical.</div>
+      
     </section>
 
     <section class="ref-sec" id="ref-timeline">
@@ -1134,11 +1251,11 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <p class="sub">Framing · Sinek · Why/What vs How · 80/20 target</p>
       <p><strong>Opening framing (read aloud first):</strong></p>
       <blockquote id="ref-opener">Today you’ll learn how to turn an engineering goal into a checked result with AI: define what matters, choose the tools and data boundaries, give it context, and delegate the work while keeping human review and accountability.</blockquote>
-      <p><strong>Verified Sinek excerpt</strong> (single source-linked quote; TED talk listed in Sources). Character count of quoted sentence: 53.</p>
-      <p class="ref-pointer">The quoted sentence is shown once only, on Stage 1 (beat 2), attributed to Simon Sinek, How great leaders inspire action, TEDxPuget Sound, 2009.</p>
-      <p id="ref-paraphrase"><em>Speaker script, original paraphrase, not Sinek's wording:</em> Sinek's point is that most companies explain themselves from the outside in. Here is what we make, here is how it is better, please buy it. His Apple illustration reverses the order. Apple leads with a belief, challenging the status quo and thinking differently, then explains how it acts on that belief with well-designed, easy-to-use products, and only then mentions what it sells: computers. Same products, different order, and the belief is what people respond to.</p>
+      <p>The only direct quote in the deck is Simon Sinek’s, shown once on Stage 1 (talk listed in Sources).</p>
+      
+      <p id="ref-paraphrase"><em>In my words:</em> Sinek's point is that most companies explain themselves from the outside in. Here is what we make, here is how it is better, please buy it. His Apple illustration reverses the order. Apple leads with a belief, challenging the status quo and thinking differently, then explains how it acts on that belief with well-designed, easy-to-use products, and only then mentions what it sells: computers. Same products, different order, and the belief is what people respond to.</p>
       <p id="ref-flip">The flip: for most of engineering history the how consumed us. Syntax, boilerplate, wiring, test scaffolding. With agentic AI, much of the how can be delegated. Our job moves inward: why are we building this, what exactly should exist, and how will we know it is right. The AI proposes the how. We keep the acceptance criteria and the accountability.</p>
-      <p id="ref-8020">Christian's working target is roughly 80% AI effort and 20% human effort, with the human 20% spent on strategy, risk, outcome review and exceptions. It is a goal for our workflow, not a measured or universal number. This class was prepared that way: the instructor set the why and the topics; AI drafted; the instructor reviewed and decides what ships.</p>
+      <p id="ref-8020">My working target is roughly 80% AI effort and 20% human effort, with our 20% spent on strategy, risk, outcome review and exceptions. It is a goal, not a measurement. This class was built that way: I set the why and the topics, AI drafted, and I reviewed and decided what ships.</p>
     </section>
 
     <section class="ref-sec" id="ref-notes">
@@ -1163,7 +1280,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
         <li id="ref-seg-15-23-1">A harness is the loop around the model: tools, permissions, file access, memory files, hooks, stop conditions.</li>
         <li id="ref-seg-15-23-2">New ways to talk to it: plain-language goals, CLAUDE.md, slash commands, skills, plan mode, voice.</li>
         <li id="ref-seg-15-23-3">Same harness, different doors: terminal, VS Code extension, Claude Code Desktop. Use the comparison table; compare harness, context and permissions, not just model names.</li>
-        <li id="ref-seg-15-23-4">On VS Code: the owner's sense that it is losing ground is a hypothesis. Stack Overflow's 2026 survey still shows 70.9% regular use, the top IDE. What is changing is where the agent lives, not the editor's reach.</li>
+        <li id="ref-seg-15-23-4">VS Code is still the most used editor: 70.9% regular use in Stack Overflow’s 2026 survey. What is changing is where the agent lives, not the editor’s reach.</li>
       </ol>
       <h4>23–32 Context, planning, storage</h4>
       <ol id="ref-seg-23-32">
@@ -1183,7 +1300,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
           <tr><td>Harness</td><td>Claude Code, Codex, Copilot agent</td><td>Tools, permissions, loop, memory</td></tr>
           <tr><td>Interface</td><td>Terminal, VS Code, Desktop, voice</td><td>How you see and steer it</td></tr>
           <tr><td>Backend</td><td>Anthropic, OpenAI, Bedrock, local</td><td>Where inference and data go</td></tr>
-          <tr><td>Orchestrator</td><td>Grok Bot, OpenAI dots</td><td>Who delegates work and asks you</td></tr>
+          <tr><td>Orchestrator</td><td>Assistants that delegate work</td><td>Who delegates work and asks you</td></tr>
         </tbody>
       </table>
     </section>
@@ -1194,7 +1311,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <table id="ref-routing-table">
         <thead><tr><th>Route</th><th>Model runs at</th><th>Key point</th></tr></thead>
         <tbody>
-          <tr><td>ChatGPT Plus $20 / Pro $100–500</td><td>OpenAI cloud</td><td>Training opt-out available; still processed by OpenAI</td></tr>
+          <tr><td>ChatGPT Plus / Pro ($20 / $200 a month)</td><td>OpenAI cloud</td><td>Training opt-out available; still processed by OpenAI</td></tr>
           <tr><td>ChatGPT Business / Enterprise</td><td>OpenAI cloud</td><td>Not used for training by default; admin controls</td></tr>
           <tr><td>Claude Code, Anthropic API</td><td>Anthropic cloud</td><td>Commercial terms: not trained on; 30-day standard retention</td></tr>
           <tr><td>Claude Code via Bedrock</td><td>AWS region you set</td><td>Cloud-hosted weights in AWS; some Anthropic checks remain</td></tr>
@@ -1202,13 +1319,13 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
           <tr><td>Local open-weights model</td><td>Your hardware</td><td>Only fully offline route; usually less capable</td></tr>
         </tbody>
       </table>
-      <p id="ref-routing-price">Prices as of 8 Nov 2026 from OpenAI's help center; recheck before class. Plan tier changes limits and features, never where the model executes.</p>
+      <p id="ref-routing-price">Plan prices are examples ($20 Plus, $200 Pro a month) and change often; check current pricing before class. Plan tier changes limits and features, never where the model executes.</p>
       <div class="callout warn" id="ref-routing-warn"><strong>Teaching warning:</strong> An app or subscription is not local inference. Unless you run open-weights models on your own hardware, inference happens in someone's cloud.</div>
     </section>
 
     <section class="ref-sec" id="ref-tools">
       <h3>Tool comparison (facilitator reference)</h3>
-      <p class="sub">7 tools</p>
+      <p class="sub">6 tools</p>
       <div id="ref-tools-body">
       <table>
         <thead><tr><th>Tool</th><th>What it is</th><th>Watch for</th></tr></thead>
@@ -1218,7 +1335,6 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
           <tr><td>ChatGPT Desktop</td><td>Chat interface; hosts Codex and dots</td><td>A desktop app is not a local model</td></tr>
           <tr><td>VS Code</td><td>Editor hosting Claude Code, Codex, Copilot extensions</td><td>70.9% regular use in 2026 survey</td></tr>
           <tr><td>GitHub Copilot + GitHub</td><td>Copilot agent, PR review, cloud agent; can delegate to Claude or Codex agents (preview)</td><td>Model menu varies by surface and plan</td></tr>
-          <tr><td>Grok Bot + Claude Code</td><td>Voice-first conductor delegating to Claude Code</td><td>Requires a configured, approved route</td></tr>
           <tr><td>OpenAI dots</td><td>Always-on ChatGPT agent with its own cloud computer</td><td>Pro and Business Premium; not all regions</td></tr>
         </tbody>
       </table>
@@ -1290,13 +1406,13 @@ Panel = 120 Wh / (3.5 h × 0.7) = 49 W → choose 60 W
 Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></pre>
       <p>Sanity check: 60 W × 3.5 h × 0.7 = 147 Wh/day, above the 120 Wh load. 60 Ah × 12 V × 0.5 = 360 Wh, three days of load.</p>
       <div class="callout info"><strong>Human exception decision:</strong> The panel covers an average day but needs about 13 days to refill after a 3-day outage. Is that acceptable? The AI computed it; an engineer decides, perhaps a larger panel. Limitations: synthetic averages, no temperature derating, no seasonal sun data. A real design needs qualified engineering validation and the applicable codes.</div>
-      <p>Fallback if tools are slow: show the prepared calculation above and the expected question list.</p>
+      <p>On screen this is a scripted replay, so it needs no internet or login. If a live, approved agent is available, you can also run the prompts for real.</p>
       <div class="callout warn"><strong>Warning:</strong> Synthetic-only example. Do not execute against real repos, AWS accounts, messages, or controlled data without a separate explicit ask.</div>
       </div>
     </section>
 
     <section class="ref-sec" id="ref-crosswalk">
-      <h3>Crosswalk boundaries (40–44)</h3>
+      <h3>Data boundaries (40–44)</h3>
       <p class="sub">Coded labels are not declassification</p>
       <div id="ref-crosswalk-body">
       <table>
@@ -1313,7 +1429,7 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
     </section>
 
     <section class="ref-sec" id="ref-github">
-      <h3>GitHub close-the-loop (44–53)</h3>
+      <h3>Prompt to pull request (44–53)</h3>
       <p class="sub">Worktrees · AI PR · human gate</p>
       <div id="ref-github-body">
       <p><strong>Instructor prompt 3, run in a git worktree:</strong></p>
@@ -1325,25 +1441,24 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
         <li><strong>Human reviews</strong> — Strategy, outcome, exceptions; not every line</li>
         <li><strong>Merge only when authorized</strong> — Required checks and branch protection pass; never bypass approvals</li>
       </ol>
-      <p>Demo uses a throwaway sandbox repo. Fallback: a prepared PR screenshot.</p>
+      <p>On screen this is a scripted replay; nothing touches a real repo. To run it live, use a throwaway sandbox repo only.</p>
       </div>
     </section>
 
     <section class="ref-sec" id="ref-conductor">
-      <h3>Conductors: Grok Bot and OpenAI dots (53–57)</h3>
-      <p class="sub">Orchestrators above a harness</p>
+      <h3>Agents and approvals (53–57)</h3>
+      <p class="sub">Assistants above a harness</p>
       <div id="ref-conductor-body">
       <table>
-        <thead><tr><th></th><th>Grok Bot (our setup)</th><th>OpenAI dots</th></tr></thead>
+        <thead><tr><th>Layer</th><th>What it does</th><th>Where the human gate sits</th></tr></thead>
         <tbody>
-          <tr><td>Talk to it</td><td>Voice and chat</td><td>ChatGPT chat or call; Slack, Teams</td></tr>
-          <tr><td>Does work via</td><td>Delegates to Claude Code over a configured route</td><td>Own cloud computer, browser, plugins; starts Codex tasks</td></tr>
-          <tr><td>Always on</td><td>Runs when asked or on routines</td><td>Proactive background research, read-only</td></tr>
-          <tr><td>Approvals</td><td>Human approval for sends, spend, merges, irreversible steps</td><td>Built-in and custom approval rules</td></tr>
-          <tr><td>Availability</td><td>Our configured deployment</td><td>Pro and Business Premium; Enterprise beta; not all regions</td></tr>
+          <tr><td>You</td><td>Set the goal in plain language, by voice or chat</td><td>You own the why, the what and the acceptance criteria</td></tr>
+          <tr><td>Assistant (orchestrator)</td><td>Plans, delegates to other tools, asks when unsure</td><td>Approves sends, spend and irreversible steps</td></tr>
+          <tr><td>Coding agent (harness)</td><td>Reads, edits, runs tests, opens PRs</td><td>Permissions you set; merges need approval</td></tr>
+          <tr><td>Model + backend</td><td>Does the reasoning on some provider’s servers</td><td>Backend choice decides where data goes (stages 2–3)</td></tr>
         </tbody>
       </table>
-      <p>Teaching point: both are orchestrators above a harness. Neither changes the model-backend rules, and neither replaces human gates. Grok Bot reaching Claude Code is a route we configured and approved, not a built-in connector every installation has. Grok Bot can co-teach through prompts and Q&amp;A in chat; no live meeting integration is assumed.</p>
+      <p>Examples include always-on assistants such as OpenAI’s dots; availability varies by plan and region. Whatever the product, it sits above a harness: it doesn’t change the model and backend rules, and it doesn’t replace human gates.</p>
       </div>
     </section>
 
@@ -1362,19 +1477,17 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
       <p id="ref-split-p">Humans own why, what, acceptance criteria, and accountability. The 80% AI / 20% human split is a workflow target, not a universal measured fact.</p>
       <h4>Co-teaching roles</h4>
       <ul id="ref-roles">
-        <li><strong>Christian</strong> — Lead, read-aloud, demos, human decision points</li>
-        <li><strong>Grok Bot</strong> — Prepared prompts, Q&amp;A support in chat, fallback answers</li>
+        <li><strong>Christian</strong> — Lead, read-aloud, replays, human decision points</li>
         <li><strong>Volunteer engineer</strong> — Plays reviewer on the PR demo</li>
       </ul>
       <h4>Preflight checklist</h4>
       <div class="checklist" id="ref-preflight">
-        <label><input type="checkbox" disabled /> Sandbox repo with no real data, worktree tested</label>
-        <label><input type="checkbox" disabled /> Claude Code backend and model confirmed; /status shown</label>
-        <label><input type="checkbox" disabled /> Volatile facts rechecked (sources below)</label>
-        <label><input type="checkbox" disabled /> Fallback screenshots for demos 1–3 ready</label>
-        <label><input type="checkbox" disabled /> No infrastructure identifiers, accounts or CUI on screen</label>
+        <label><input type="checkbox" disabled /> Copy ai-master-class.html to a USB stick (use “Download for offline use”)</label>
+        <label><input type="checkbox" disabled /> Open it on the presenting laptop with Wi-Fi off; click through both replays</label>
+        <label><input type="checkbox" disabled /> Recheck plan prices and model availability (sources below)</label>
+        <label><input type="checkbox" disabled /> Line up a volunteer reviewer for Stage 9</label>
+        <label><input type="checkbox" disabled /> No infrastructure identifiers, accounts or controlled data on screen</label>
       </div>
-      <p>Status as of 8 Nov 2026: none done yet.</p>
     </section>
 
     <section class="ref-sec" id="ref-closing">
@@ -1403,20 +1516,20 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
         <li id="src-11"><a href="https://www.ted.com/talks/simon_sinek_how_great_leaders_inspire_action">Simon Sinek: How great leaders inspire action</a> — ted.com</li>
       </ul>
       <p>Recheck before class: GovCloud Claude model availability, Claude Code defaults and telemetry, ChatGPT plan prices, Copilot model lists, and dots availability. These change often.</p>
-      <h4>Draft caveats (retained; no new price/feature claims)</h4>
+      <h4>Caveats</h4>
       <ul>
         <li><strong>Synthetic-only</strong> demo and ADR; nothing about a real project is revealed.</li>
         <li><strong>Coded labels are not decontrol</strong> / not declassification.</li>
         <li><strong>GovCloud alone is not compliance</strong> (not automatic CUI, ITAR, or CMMC).</li>
         <li><strong>App / subscription is not local inference.</strong></li>
         <li>Do <strong>not</strong> execute against real repos, AWS, messages, or controlled data without a separate explicit ask.</li>
-        <li>Prices and volatile product facts are as recorded in the draft (e.g. as of 8 Nov 2026); recheck before class from Sources above. This export did not re-verify them.</li>
+        <li>Prices and product facts change often; recheck them from the sources above before class.</li>
       </ul>
     </section>
 
     <section class="ref-sec" id="ref-coverage">
       <h3>Topic coverage map</h3>
-      <p class="sub">From Page alternate view</p>
+      <p class="sub">Where each topic is covered</p>
       <table>
         <thead><tr><th>Topic group</th><th>Where</th></tr></thead>
         <tbody>
@@ -1436,29 +1549,31 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
           <tr><td>11 Frontier workflow and crosswalks</td><td>40–44</td></tr>
           <tr><td>8 GitHub</td><td>44–53</td></tr>
           <tr><td>9 Teamwork: worktrees, branches, AI PRs</td><td>44–53</td></tr>
-          <tr><td>10 Grok Bot as conductor, vs dots</td><td>53–57</td></tr>
+          <tr><td>10 Agents that act for you, and human gates</td><td>53–57</td></tr>
         </tbody>
       </table>
     </section>
 
-    <p class="footer-note">View / reading progress is for navigation only — not a certification. Forced light theme; no dark-mode toggle. Static HTML/CSS/JS only; no network, login, or AI-powered features in this page.</p>
+    <p class="footer-note">One self-contained file: no network, login or AI calls, so it runs offline from a USB stick.</p>
   </div>
 </div>
 <script>
 (function(){
   "use strict";
+  /* pristine copy of this page, taken before any script changes the DOM: used by "Download for offline use" */
+  var SNAP="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
   var STAGES=[
-    {win:"0–4",min:4,title:"Start With Why + AI flip",purpose:"80/20 target. Humans own why and what.",beats:[["0:00–1:30","Hero + approved opener"],["1:30–2:45","Golden circle + Sinek quote"],["2:45–4:00","The flip + 80/20 target"]]},
-    {win:"4–9",min:5,title:"Models & inference",purpose:"Local vs cloud. Agent tool ≠ model.",beats:[["4:00–5:30","Agent tool ≠ model"],["5:30–7:30","Five-layer stack"],["7:30–9:00","Poll + model routing"]]},
-    {win:"9–15",min:6,title:"Backends & GovCloud",purpose:"Backend choice sets where data goes.",beats:[["9:00–10:30","Myth card: vote, reveal"],["10:30–12:30","Four different questions"],["12:30–15:00","Route map: Bedrock, GovCloud"]]},
-    {win:"15–23",min:8,title:"Harness & tools",purpose:"Same agent, several doors.",beats:[["15:00–17:30","Harness loop"],["17:30–19:30","Doors + ways to talk"],["19:30–23:00","Seven tools: room picks 2–3"]]},
-    {win:"23–27",min:4,title:"Context",purpose:"Output follows context.",beats:[["23:00–25:00","Seven context bands"],["25:00–27:00","Skip-most vote"]]},
-    {win:"27–32",min:5,title:"Planning & ADR",purpose:"Decide before building.",beats:[["27:00–28:30","Planning stages"],["28:30–30:30","ADR-001"],["30:30–32:00","Storage tree"]]},
-    {win:"32–40",min:8,title:"Live engineering demo",purpose:"General question, then checked math.",beats:[["32:00–34:30","Prompt 1 + expected questions"],["34:30–36:30","Prompt 2 + predict"],["36:30–40:00","Reveal 13.3 days, sliders, human call"]]},
-    {win:"40–44",min:4,title:"Crosswalk boundaries",purpose:"Coded names ≠ declassification.",beats:[["40:00–42:00","Coded labels outside"],["42:00–44:00","Key inside the boundary"]]},
-    {win:"44–53",min:9,title:"GitHub to PR",purpose:"AI does the loop; humans gate.",beats:[["44:00–46:30","Prompt 3 + worktree"],["46:30–50:00","AI loop: steps 1–3"],["50:00–53:00","Human review + authorized merge"]]},
-    {win:"53–57",min:4,title:"Conductors",purpose:"Grok Bot vs OpenAI dots.",beats:[["53:00–55:00","Tiers + approval rail"],["55:00–57:00","Toggle compare"]]},
-    {win:"57–60",min:3,title:"Recap & closing",purpose:"Closing prompt, Q&A.",beats:[["57:00–58:00","Recap ribbon"],["58:00–60:00","Takeaway exercise + Q&A"]]}
+    {win:"0–4",min:4,title:"Start with why",purpose:"You own why and what; AI proposes the how.",beats:[["0:00–1:30","Opening line"],["1:30–2:45","Golden circle + Sinek quote"],["2:45–4:00","The flip"]]},
+    {win:"4–9",min:5,title:"Models & inference",purpose:"The agent tool is not the model.",beats:[["4:00–5:30","Agent tool ≠ model"],["5:30–7:30","Five-layer stack"],["7:30–9:00","Poll + model routing"]]},
+    {win:"9–15",min:6,title:"Backends & GovCloud",purpose:"Your plan doesn’t change where data goes.",beats:[["9:00–10:30","Myth or fact: vote, reveal"],["10:30–12:30","Four different questions"],["12:30–15:00","Route map: Bedrock, GovCloud"]]},
+    {win:"15–23",min:8,title:"Harness & tools",purpose:"Same models; tools differ in what they see and do.",beats:[["15:00–17:30","Harness loop"],["17:30–19:30","Doors + ways to steer"],["19:30–23:00","Three example tools"]]},
+    {win:"23–27",min:4,title:"Context",purpose:"Output follows context.",beats:[["23:00–25:00","Seven things to give it"],["25:00–27:00","Which do you skip?"]]},
+    {win:"27–32",min:5,title:"Planning & ADR",purpose:"Decide before building.",beats:[["27:00–28:30","Planning stages"],["28:30–30:30","ADR-001"],["30:30–32:00","Storage choice"]]},
+    {win:"32–40",min:8,title:"Engineering demo (replay)",purpose:"Ask first, then check the math.",beats:[["32:00–34:30","Replay: questions first"],["34:30–36:30","Prompt 2 + predict"],["36:30–40:00","Reveal 13.3 days, sliders, human call"]]},
+    {win:"40–44",min:4,title:"Data boundaries",purpose:"Code names don’t make data safe to share.",beats:[["40:00–42:00","Coded labels outside"],["42:00–44:00","The key stays inside"]]},
+    {win:"44–53",min:9,title:"Prompt to PR (replay)",purpose:"AI does the loop; humans gate the merge.",beats:[["44:00–46:30","Replay: plan + worktree"],["46:30–50:00","Code, test, fix"],["50:00–53:00","PR + human review"]]},
+    {win:"53–57",min:4,title:"Agents & approvals",purpose:"Agents act; you keep the gates.",beats:[["53:00–55:00","Agent tiers + approval rail"],["55:00–57:00","Questions for any agent"]]},
+    {win:"57–60",min:3,title:"Recap & closing",purpose:"Take-home + Q&A.",beats:[["57:00–58:00","Recap"],["58:00–60:00","Take-home + Q&A"]]}
   ];
   var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
   var html=document.documentElement;
@@ -1498,19 +1613,10 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
   /* ===== stages 4–11 (built from the Reference tables, so the text is extracted, not retyped) ===== */
   function rows(sel){return $$(sel).map(function(tr){return $$("td",tr).map(function(td){return td.innerHTML})})}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
-  /* S4 tools */
-  var tools=rows("#ref-tools tbody tr"), grid4=$("#s4-grid"), det4=$("#s4-detail"), det4Def=det4.innerHTML;
-  tools.forEach(function(t,i){var b=document.createElement("button");b.type="button";b.className="tool";b.style.setProperty("--td",(i*70)+"ms");b.setAttribute("aria-pressed","false");b.innerHTML="<span>"+t[0]+"</span><span class='pk'>picked</span>";
-    b.addEventListener("click",function(){var on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",String(on));det4.innerHTML="<span class='lbl-s am'>"+(on?"Picked":"Unpicked")+"</span><span class='nm'>"+t[0]+"</span><br>"+t[1]+"<br><span class='w'>Watch for: "+t[2]+"</span>";$("#s4-picked").textContent=$$(".s4 .tool[aria-pressed=true]").length;});
-    grid4.appendChild(b); if(i===3){var s=document.createElement("div");s.className="stat";s.innerHTML="<b>70.9%</b><span>VS Code regular use · SO 2026 survey, as cited · “losing ground” = hypothesis</span>";grid4.appendChild(s);} });
-  function reset4(){$$(".s4 .tool").forEach(function(b){b.setAttribute("aria-pressed","false")});$("#s4-picked").textContent="0";det4.innerHTML=det4Def;}
-  $("#s4-reset").addEventListener("click",reset4);
   /* S5 context bands + local skip vote */
   var ctx=$$("#ref-context-body li"), win5=$("#s5-window"), cols=["#E6F4FA","#E8F7F5","#F4EFE6","#FFF1DC","#E6F4FA","#E8F7F5","#F4EFE6"];
   ctx.forEach(function(li,i){var parts=li.innerHTML.split(" — "),d=document.createElement("div");d.className="band";d.setAttribute("role","listitem");d.style.setProperty("--bc",cols[i]);d.style.setProperty("--bd",(i*110)+"ms");
-    d.innerHTML="<span class='i'>"+(i+1)+"</span><div class='tx'><b>"+parts[0].replace(/<\/?strong>/g,"")+"</b>"+(parts[1]||"")+"</div><button type='button' class='vote' data-vote='s5:"+i+"' aria-label='Add one skip vote'>Skip <output data-count='s5:"+i+"'>0</output></button>";win5.appendChild(d);});
-  $(".s5 .skip").addEventListener("click",function(){lead5()}); win5.addEventListener("click",function(){lead5()});
-  function lead5(){var best=-1,bv=0;ctx.forEach(function(_,i){var v=counts["s5:"+i]||0;if(v>bv){bv=v;best=i}});$$(".s5 .band").forEach(function(b,i){b.classList.toggle("top",i===best)});$("#s5-lead").textContent=best<0?"Tap a band once per raised hand.":"Most skipped: "+$$(".s5 .band b")[best].textContent+" ("+bv+")";}
+    d.innerHTML="<span class='i'>"+(i+1)+"</span><div class='tx'><b>"+parts[0].replace(/<\/?strong>/g,"")+"</b>"+(parts[1]||"")+"</div>";win5.appendChild(d);});
   /* S6 storage tree */
   var fm=rows("#ref-storage-body tbody tr"), br6=$("#s6-fmts"), leaf6=$("#s6-leaf"), leaf6Def=leaf6.innerHTML, adrPick={Markdown:"ADR-001: rationale",JSON:"ADR-001: numbers"};
   fm.forEach(function(f){var b=document.createElement("button");b.type="button";b.className="fmt";b.setAttribute("aria-pressed","false");b.innerHTML="<small>"+(adrPick[f[0]]||"&nbsp;")+"</small>"+f[0];
@@ -1551,22 +1657,84 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
   var key8=$("#s8-key"), msg8=$("#s8-msg");
   $("#s8-try").addEventListener("click",function(){key8.classList.remove("push");void key8.offsetWidth;if(!reduce)key8.classList.add("push");msg8.textContent="Blocked. The key snaps back: it stays in the approved environment. Coded names do not make controlled data shareable.";});
   $("#s8-clear").addEventListener("click",function(){msg8.textContent="";key8.classList.remove("push")});
-  /* S9 simulated PR loop + human gate */
-  var t9=[], s9=$("#s9"), ran9=false;
-  function st9(i,txt){var s=$("#s9-st"+i);s.classList.add("done");$(".st",s).textContent=txt;}
+  /* ===== offline replays (stages 7 and 9): scripted step-through, no network, no AI call ===== */
+  function txt(id){var e=document.getElementById(id);return e?e.textContent.replace(/\s+/g," ").trim():"";}
+  function mkReplay(key,steps,sync){
+    var R={key:key,steps:steps,n:0,log:$("#"+key+"-log"),typing:null};
+    function line(st){var d=document.createElement("div");d.className="ln "+st.k;if(st.html)d.innerHTML=st.html;else d.textContent=st.t;return d;}
+    function scroll(){R.log.scrollTop=R.log.scrollHeight;}
+    R.finish=function(){if(!R.typing)return false;clearInterval(R.typing.iv);R.typing.el.textContent=R.typing.t;R.typing=null;scroll();return true;};
+    R.render=function(n){R.finish();R.log.innerHTML="";for(var i=0;i<n;i++)R.log.appendChild(line(steps[i]));R.n=n;sync(R);scroll();};
+    R.step=function(){if(R.finish())return true;if(R.n>=steps.length)return false;var st=steps[R.n],el=line(st);R.log.appendChild(el);R.n++;
+      if(!reduce&&!st.html&&st.t){var t=st.t,pos=0,dur=Math.min(1100,Math.max(250,t.length*14)),per=Math.max(1,Math.ceil(t.length/(dur/16)));el.textContent="";
+        R.typing={el:el,t:t,iv:setInterval(function(){pos+=per;if(pos>=t.length)R.finish();else{el.textContent=t.slice(0,pos);scroll();}},16)};}
+      sync(R);scroll();return true;};
+    R.start=function(at){return steps.filter(function(s){return s.b<at}).length;};
+    R.end=function(at){return steps.filter(function(s){return s.b<=at}).length;};
+    R.pending=function(at){return !!R.typing||R.n<R.end(at);};
+    return R;
+  }
+  var S7STEPS=[
+    {b:1,k:"user",t:txt("ref-prompt-1")},
+    {b:1,k:"ai",t:"Before I estimate anything, I need a few answers from you:"},
+    {b:1,k:"ai",q:1,t:"1. Load profile: average and peak power, and how often does it transmit?"},
+    {b:1,k:"ai",q:2,t:"2. Sun hours: where is it, and what are the peak sun hours in the worst month?"},
+    {b:1,k:"ai",q:3,t:"3. Days of autonomy: how many cloudy days must it ride through?"},
+    {b:1,k:"ai",q:4,t:"4. Battery chemistry and usable depth of discharge?"},
+    {b:1,k:"ai",q:5,t:"5. Temperature range: cold cuts capacity and limits charging."},
+    {b:1,k:"ai",q:6,t:"6. System losses: charge controller, wiring, dirt and heat on the panel?"},
+    {b:1,k:"ai",t:"I’ll state every assumption so an engineer can check it against solar data, the battery datasheet and the applicable codes."},
+    {b:2,k:"user",t:txt("ref-prompt-2")},
+    {b:2,k:"note",t:"⏸ Pause: predict first. 3, 7, 13 or 30 days?"},
+    {b:3,k:"ai",t:"Daily energy = 5 W × 24 h = 120 Wh/day"},
+    {b:3,k:"ai",t:"Battery = 120 Wh × 3 days ÷ 0.5 = 720 Wh → 720 Wh ÷ 12 V = 60 Ah"},
+    {b:3,k:"ai",t:"Panel = 120 Wh ÷ (3.5 h × 0.7) = 49 W → choose 60 W"},
+    {b:3,k:"ai",t:"Surplus = 60 W × 3.5 h × 0.7 − 120 Wh = 27 Wh/day"},
+    {b:3,k:"ai key",t:"Refill after a 3-day outage = 360 Wh ÷ 27 Wh/day ≈ 13.3 days"},
+    {b:3,k:"ai",t:"Check: 147 Wh/day made > 120 Wh/day used ✓ · 60 Ah × 12 V × 0.5 = 360 Wh = 3 days of load ✓"}
+  ];
+  var R7=mkReplay("s7",S7STEPS,function(R){var hit={};for(var i=0;i<R.n;i++)if(S7STEPS[i].q)hit[S7STEPS[i].q]=1;$$("#s7-eq span").forEach(function(s){s.classList.toggle("hit",!!hit[s.getAttribute("data-q")])});$("#s7").classList.toggle("rpdone",R.n>=S7STEPS.length);});
+  var S9STEPS=[
+    {b:1,k:"user",t:txt("ref-prompt-3")},
+    {b:1,k:"ai",t:"Plan: 1) new branch in its own worktree  2) inputs.json from ADR-001  3) power_budget.py  4) tests for 120 Wh/day, 60 Ah and 13.3 days  5) run the tests  6) open a PR. I won’t merge. Proceed?"},
+    {b:1,k:"user",t:"Yes, go ahead."},
+    {b:1,k:"cmd",t:"git worktree add ../station-budget -b feat/power-budget"},
+    {b:1,k:"out",done:1,t:"Preparing worktree (new branch 'feat/power-budget')"},
+    {b:2,k:"tool",t:"✎ Write inputs.json   {\"load_w\": 5, \"autonomy_days\": 3, \"battery_v\": 12, \"dod\": 0.5, \"sun_h\": 3.5, \"eff\": 0.7, \"panel_w\": 60}"},
+    {b:2,k:"tool",t:"✎ Write power_budget.py   daily_wh = load_w * 24 · battery_ah = daily_wh * days / dod / battery_v · refill_days = usable_wh / surplus"},
+    {b:2,k:"tool",t:"✎ Write test_power_budget.py   3 tests: daily energy 120 Wh, battery 60 Ah, refill 13.3 days"},
+    {b:2,k:"cmd",t:"pytest -q"},
+    {b:2,k:"bad",t:"..F   FAILED test_refill_days: assert 6.55 == approx(13.3)   1 failed, 2 passed"},
+    {b:2,k:"ai",t:"Units bug: I used surplus = panel_w − load_w, which is watts. 360 Wh ÷ 55 W = 6.5 hours, not days. Surplus must be energy per day."},
+    {b:2,k:"tool",t:"✎ Edit power_budget.py   surplus_wh_day = panel_w * sun_h * eff - daily_wh   # 27 Wh/day"},
+    {b:2,k:"cmd",t:"pytest -q"},
+    {b:2,k:"good",done:2,t:"...   3 passed"},
+    {b:3,k:"user",t:"Before you stop: tests run, PR opened, description complete?"},
+    {b:3,k:"cmd",t:"git add -A && git commit -m \"Add station power budget with tests\" && git push -u origin feat/power-budget"},
+    {b:3,k:"cmd",t:"gh pr create --title \"Station power budget\" --body-file pr.md"},
+    {b:3,k:"pr",done:3,html:"<b>PR #1 · Station power budget</b><br><span>Summary:</span> inputs.json + power_budget.py; refill after a 3-day outage = 13.3 days.<br><span>Tests:</span> 3 passed (units bug found and fixed).<br><span>Design:</span> ADR-001: JSON inputs, Markdown rationale.<br><span>Status:</span> <b class='nm'>Not merged</b>, waiting for human review."}
+  ];
+  var s9=$("#s9"), ran9=false;
+  var ST9=["","✓ worktree ready","✓ 3 tests pass","✓ PR opened · not merged"];
   function gate9(){var all=$$(".s9-ck").every(function(c){return c.checked});$("#s9-merge").disabled=!(ran9&&all)||s9.getAttribute("data-merged")==="1";}
-  $("#s9-run").addEventListener("click",function(){t9.forEach(clearTimeout);t9=[];var L=[[1,"✓ worktree feat/power-budget (simulated)"],[2,"✓ tests run · PR opened (simulated)"],[3,"✓ re-check: tests, PR, description"]];
-    L.forEach(function(x,k){t9.push(setTimeout(function(){st9(x[0],x[1]);if(k===2){ran9=true;$("#s9-st5s").textContent="required checks pass (simulated) · awaiting human";$("#s9-msg").textContent="AI loop done. Now the human reviews.";gate9();}},reduce?0:(k+1)*450))});});
+  function sync9(R){var d=0;for(var i=0;i<R.n;i++)if(S9STEPS[i].done)d=Math.max(d,S9STEPS[i].done);
+    [1,2,3].forEach(function(k){var s=$("#s9-st"+k);s.classList.toggle("done",d>=k);$(".st",s).textContent=d>=k?ST9[k]:"waiting";});
+    var was=ran9; ran9=d>=3;
+    $$(".s9-ck").forEach(function(c){c.disabled=!ran9;if(!ran9)c.checked=false;});
+    $("#s9-st4s").textContent=ran9?"your turn":"after the PR";
+    if(!ran9){s9.removeAttribute("data-merged");$("#s9-st5").classList.remove("done");$("#s9-st5s").textContent="locked";$("#s9-msg").textContent="Nothing here touches a real repo.";}
+    else if(!was&&s9.getAttribute("data-merged")!=="1"){$("#s9-st5s").textContent="checks pass (simulated) · awaiting human";$("#s9-msg").textContent="AI loop done. Now a human reviews.";}
+    gate9();}
+  var R9=mkReplay("s9",S9STEPS,sync9);
+  var REPLAYS={6:R7,8:R9};
   $$(".s9-ck").forEach(function(c){c.addEventListener("change",gate9)});
-  $("#s9-merge").addEventListener("click",function(){if(!ran9||!$$(".s9-ck").every(function(c){return c.checked}))return;s9.setAttribute("data-merged","1");$("#s9-st5").classList.add("done");$("#s9-st5s").textContent="✓ merged by an authorized human (simulated)";$("#s9-msg").textContent="Authorized merge. No bypass control exists on this page.";gate9();});
-  function reset9(){t9.forEach(clearTimeout);t9=[];ran9=false;s9.removeAttribute("data-merged");[1,2,3,5].forEach(function(i){$("#s9-st"+i).classList.remove("done")});[1,2,3].forEach(function(i){$(".st",$("#s9-st"+i)).textContent="waiting"});$("#s9-st5s").textContent="locked";$$(".s9-ck").forEach(function(c){c.checked=false});$("#s9-msg").textContent="Nothing here touches a real repo.";gate9();}
+  $("#s9-merge").addEventListener("click",function(){if(!ran9||!$$(".s9-ck").every(function(c){return c.checked}))return;s9.setAttribute("data-merged","1");$("#s9-st5").classList.add("done");$("#s9-st5s").textContent="✓ merged after human approval (simulated)";$("#s9-msg").textContent="Approved by a human. Nothing touched a real repo.";gate9();});
+  function reset9(){s9.removeAttribute("data-merged");$("#s9-st5").classList.remove("done");$$(".s9-ck").forEach(function(c){c.checked=false});ran9=false;sync9(R9);}
   $("#s9-reset").addEventListener("click",reset9);
-  /* S10 conductor toggle */
-  var cr=rows("#ref-conductor-body tbody tr");
-  function cond(k){$$(".s10 [data-cond]").forEach(function(b){b.setAttribute("aria-pressed",String(+b.getAttribute("data-cond")===k))});
-    $("#s10-rows").innerHTML=cr.map(function(r){return "<div class='row'><small>"+r[0]+"</small>"+r[k]+"</div>"}).join("");
-    $("#s10-orch").textContent=k===1?"Grok Bot (our setup)":"OpenAI dots"; $("#s10-harn").textContent=k===1?"Claude Code, over a configured, approved route":"Own cloud computer, browser, plugins; starts Codex tasks";}
-  $$(".s10 [data-cond]").forEach(function(b){b.addEventListener("click",function(){cond(+b.getAttribute("data-cond"))})}); cond(1);
+  $$("[data-rp-all]").forEach(function(b){b.addEventListener("click",function(){var R=b.getAttribute("data-rp-all")==="s7"?R7:R9;R.render(R.end(cur.b+1));})});
+  /* download a clean, self-contained copy (works on GitHub Pages and from file://) */
+  function downloadDeck(){try{var blob=new Blob([SNAP],{type:"text/html;charset=utf-8"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="ai-master-class.html";a.style.display="none";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},4000);}catch(e){alert("Download didn’t start. Use your browser’s Save Page As instead.");}}
+  $$("[data-download]").forEach(function(b){b.addEventListener("click",downloadDeck)});
   /* S11 recap + local-only takeaway */
   STAGES.slice(0,10).forEach(function(s,i){$("#s11-recap").insertAdjacentHTML("beforeend","<span style='--rd:"+(i*80)+"ms'><i>"+(i+1)+"</i>"+esc(s.purpose)+"</span>")});
   function count11(){var n=$$(".s11-c").filter(function(c){return c.value.trim()}).length;$("#s11-count").textContent=n+" of 3 acceptance criteria written";}
@@ -1590,7 +1758,7 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
   function selectRoute(i){
     $$(".s3 .route").forEach(function(r,j){r.setAttribute("aria-pressed",String(j===i))});
     $$(".s3 .lane").forEach(function(l,j){l.classList.toggle("sel",j===i)});
-    if(i<0){detail.innerHTML="<span class='dl'>Model runs at</span><p class='hint'>Click a route — or ask the room which one they use today.</p>";packet.setAttribute("opacity","0");return;}
+    if(i<0){detail.innerHTML="<span class='dl'>Model runs at</span><p class='hint'>Six common routes. Each one answers: where does the model run?</p>";packet.setAttribute("opacity","0");return;}
     var rd=$$(".s3 .rd")[i]; detail.innerHTML="<span class='dl'>Model runs at</span>"+rd.innerHTML.replace('<div class="dk">','<span class="dl">Key point</span><div class="dk">');
     var d=$("#lane-"+i).getAttribute("d");
     if(reduce||!anim.beginElement){packet.setAttribute("opacity","0");return;}
@@ -1603,7 +1771,7 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
   function stageState(i,at,fresh){
     if(i===1){ if(fresh||at<3) resetReveal("s2-ans"); }
     if(i===2){ if(fresh||at<1) setFlip(false); if(at>=2) setFlip(true); if(fresh||at<3) selectRoute(-1); }
-    if(fresh){ if(i===3) reset4(); if(i===5) reset6(); if(i===7) $("#s8-clear").click(); if(i===8) reset9(); if(i===9) cond(1); }
+    if(fresh){ if(i===5) reset6(); if(i===7) $("#s8-clear").click(); if(i===8) reset9(); }
   }
 
   /* ---- navigation ---- */
@@ -1613,7 +1781,8 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
   var wipe=$("#wipe");
   function go(s,b,opts){
     opts=opts||{}; s=Math.max(0,Math.min(N-1,s)); b=Math.max(0,Math.min(beatsOf(s)-1,b));
-    var prevS=cur.s, changed=(s!==prevS)||opts.init, el=stages[s];
+    var prevS=cur.s, prevB=cur.b, changed=(s!==prevS)||opts.init, el=stages[s];
+    var back=(s<prevS)||(s===prevS&&b<prevB);
     var focusWasInStage=document.activeElement&&stages[prevS].contains(document.activeElement);
     timers.forEach(clearTimeout); timers=[];
     if(changed){
@@ -1630,11 +1799,13 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
     }
     cur={s:s,b:b};
     var at=b+1; void el.offsetWidth; applyBeat(el,at); stageState(s,at,changed);
+    var RP=REPLAYS[s]; if(RP&&(changed||b!==prevB)){ if(opts.init||back) RP.render(RP.end(at)); else { RP.render(RP.start(at)); RP.step(); } }
     updateChrome();
     if(changed&&(opts.focus||focusWasInStage)){ var h=$(".stage-h",el); if(h) h.focus({preventScroll:true}); }
     try{history.replaceState(null,"","#/"+(s+1)+"/"+at)}catch(e){}
   }
-  function next(){ if(cur.b<beatsOf(cur.s)-1) go(cur.s,cur.b+1); else if(cur.s<N-1) go(cur.s+1,0); }
+  function next(skip){ var RP=REPLAYS[cur.s]; if(skip!==true&&RP&&RP.pending(cur.b+1)){ RP.step(); return; }
+    if(cur.b<beatsOf(cur.s)-1) go(cur.s,cur.b+1); else if(cur.s<N-1) go(cur.s+1,0); }
   function prev(){ if(cur.b>0) go(cur.s,cur.b-1); else if(cur.s>0) go(cur.s-1,beatsOf(cur.s-1)-1); }
 
   function updateChrome(){
@@ -1672,11 +1843,11 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
   function doPrint(){window.print()}
   $("#b-print").addEventListener("click",doPrint); $("#ref-print").addEventListener("click",doPrint);
   /* print: every stage at its last beat; restore afterwards */
-  window.addEventListener("beforeprint",function(){stages.forEach(function(el,i){applyBeat(el,beatsOf(i))}); setFlip(true); selectRoute(3); $("#s6-fmts .fmt:nth-child(2)").click(); $("#s8-try").click();});
+  window.addEventListener("beforeprint",function(){stages.forEach(function(el,i){applyBeat(el,beatsOf(i))}); R7.render(S7STEPS.length); R9.render(S9STEPS.length); setFlip(true); selectRoute(3); $("#s6-fmts .fmt:nth-child(2)").click(); $("#s8-try").click();});
   window.addEventListener("afterprint",function(){var c=cur; stages.forEach(function(el,i){if(i!==c.s) applyBeat(el,0)}); go(c.s,c.b,{init:true});});
 
-  $("#prev").addEventListener("click",prev); $("#next").addEventListener("click",next);
-  $("#edge-l").addEventListener("click",prev); $("#edge-r").addEventListener("click",next);
+  $("#prev").addEventListener("click",function(){prev()}); $("#next").addEventListener("click",function(){next()});
+  $("#edge-l").addEventListener("click",function(){prev()}); $("#edge-r").addEventListener("click",function(){next()});
 
   /* ---- keyboard: scoped away from form fields, sliders, contenteditable, tabs, focused buttons ---- */
   function typingTarget(el){ if(!el||el===document.body) return false; if(el.isContentEditable) return true; var t=el.tagName; if(t==="INPUT"||t==="TEXTAREA"||t==="SELECT") return true; if(el.getAttribute&&/^(slider|spinbutton|textbox|combobox|listbox)$/.test(el.getAttribute("role")||"")) return true; return !!(el.closest&&el.closest("[contenteditable]:not([contenteditable='false'])")); }
@@ -1691,7 +1862,7 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
     if(notes.contains(t)&&/^(ArrowUp|ArrowDown|PageUp|PageDown|Home|End| )$/.test(k)) return;
     var h=true;
     switch(k){
-      case "ArrowRight": case "PageDown": case " ": next(); break;
+      case "ArrowRight": case "PageDown": case " ": next(e.shiftKey===true); break;
       case "ArrowLeft": case "PageUp": prev(); break;
       case "Home": go(0,0); break;
       case "End": go(N-1,0); break;
@@ -1725,7 +1896,7 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
   if(/[?&]notes/.test(location.search)) toggleNotes(true);
   if(/[?&]ref/.test(location.search)) openDialog("ref",$("#b-ref"));
   if(/[?&]tl/.test(location.search)) openDialog("tl-dialog",$("#b-tl"));
-  window.__deck={go:go,next:next,prev:prev,cur:function(){return {s:cur.s+1,b:cur.b+1}},counts:counts};
+  window.__deck={go:go,next:next,prev:prev,cur:function(){return {s:cur.s+1,b:cur.b+1}},counts:counts,replays:{s7:R7,s9:R9},snapshotLength:SNAP.length};
 })();
 </script>
 </body>
