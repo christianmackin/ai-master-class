@@ -109,7 +109,9 @@ body.notes-open #viewport{right:440px}
 html{--pw:clamp(420px,48vw,1200px)}
 html #notes{width:var(--pw)}
 html body.notes-open #viewport{right:var(--pw)}
-@media screen{.np.say>*{display:none!important}.np.say>.sal.now{display:block!important}}
+@media screen{.np.say>*{display:none!important}.np.say>.sal.now{display:block!important}#notes .notes-head,#notes [role="tablist"],#notes .np-title,#notes .sal h5,#notes .np.ref,#notes .np.cav,#notes .np.src{display:none!important}#notes-panel{padding-top:14px}}
+.sal .an .lb{color:#5B3E9A}
+html.presenter{--pw:clamp(480px,60vw,1500px)}
 @media print{.sal p{font-size:14px}.sal .lb{font-size:11px}}
 .s2 .stack .layer.L-model{grid-template-columns:auto 1fr;gap:22px;padding:10px 20px}
 .s2 div.routing{top:764px}
@@ -129,6 +131,16 @@ html.presenter .unlock{display:none}
 html:not(.unlocked):not(.presenter) #b-notes,html:not(.unlocked):not(.presenter) .nk{display:none}
 html:not(.unlocked):not(.presenter) #notes{display:none!important}
 @media print{html:not(.unlocked):not(.presenter) #notes,html:not(.unlocked):not(.presenter) #notes[hidden]{display:none!important}.unlock{display:none!important}}
+
+.s1 .sinek{width:600px;background:#fff;border:2px solid var(--line);border-radius:18px;padding:14px 20px}
+.s1 .sk-h{margin:0 0 8px;font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.s1 ol.sk{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.s1 ol.sk li{display:grid;grid-template-columns:70px 128px 1fr;align-items:baseline;gap:8px;font-size:18px;line-height:1.3}
+.s1 ol.sk b{font-weight:900;letter-spacing:.06em;color:var(--amber-ink)}
+.s1 ol.sk li:nth-child(2) b{color:var(--teal)}
+.s1 ol.sk i{font-style:normal;font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.s1 .sk-flip{margin:10px 0 0;padding-top:8px;border-top:1.5px dashed var(--line);font-size:19px;font-weight:700}
+.s1[data-at="2"] svg.gc{width:430px;height:430px}
 
 .pv-link a{color:var(--muted)}
 html.presenter #notes,html.presenter #notes[hidden]{display:flex!important}
@@ -740,6 +752,35 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
   .ref-sec{break-inside:auto}
   a{color:var(--ink)}
 }
+
+/* presenter layout: fit the beat on laptop screens (1366x768, 125%/150% scaling) */
+html.presenter{--pw:clamp(480px,56vw,1500px)}
+html.presenter #notes-panel{overflow-y:auto;scrollbar-gutter:stable;padding-bottom:24px}
+html.presenter .sal{padding:clamp(8px,1.6vh,14px) clamp(12px,1.4vw,18px)}
+html.presenter .sal .blk{margin:0 0 clamp(6px,1.5vh,14px)}
+html.presenter .sal .lb{font-size:clamp(13px,1.9vh,17px)}
+html.presenter .sal p{font-size:clamp(20px,min(2.1vw,3.8vh),30px);line-height:1.3;overflow-wrap:anywhere}
+html.presenter .sal .mc{background:#F3F7FA;border-radius:10px;padding:6px 10px}
+html.presenter .sal .mc p{font-size:clamp(16px,min(1.55vw,2.8vh),22px);line-height:1.35}
+html.presenter .sal .paste{margin-top:clamp(8px,1.8vh,16px);padding-top:clamp(6px,1.2vh,10px);border-top:2px dashed var(--line)}
+html.presenter .pastebox{display:block;width:100%;box-sizing:border-box;min-height:5em;max-height:40vh;overflow-y:auto;font-size:clamp(16px,2.6vh,22px);line-height:1.4;white-space:pre-wrap}
+.pastebox{min-height:120px;border:2px dashed #94A3B8;border-radius:10px;padding:10px 12px;font-size:26px;line-height:1.38;background:#FBFCFE;color:#0B1220;outline:none}
+.pastebox:empty::before{content:"(empty)";color:#94A3B8}
+.pastebox:focus{border-color:var(--teal)}
+.s2 .phone-cap{position:absolute;left:80px;top:590px;width:1440px;margin:0;font-size:26px;font-weight:600;color:#4a5562;letter-spacing:.01em}.s2:not([data-at="1"]) .phone-cap{display:none}html.presenter .sal[data-step="2.1"] p{font-size:clamp(17px,min(1.75vw,3.0vh),28px);line-height:1.25}html.presenter .sal[data-step="2.1"] .blk{margin-bottom:clamp(4px,1.1vh,12px)}
+
+/* page 9 v13: GitHub terms panel */
+.s9 .s9rp{top:492px;height:376px}
+.s9 .terms{left:80px;top:172px;width:860px;height:308px;padding:12px 18px;transition:opacity .45s var(--ease),transform .45s var(--ease)}
+.s9 .why9{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.s9 .why9 .lbl-s{margin:0 4px 0 0}
+.s9 .why9 .w{background:var(--teal-soft);color:#075a78;border-radius:999px;padding:4px 12px;font-size:17px;font-weight:800}
+.s9 .gl9{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:6px 18px}
+.s9 .gl9 div{border-left:4px solid var(--teal);padding:2px 0 2px 10px}
+.s9 .gl9 div:last-child{grid-column:1/3}
+.s9 .gl9 dt{font-size:19px;font-weight:900;color:var(--ink)}
+html.presenter .sal[data-step="9.1"] p{font-size:clamp(17px,min(1.7vw,2.75vh),28px);line-height:1.25}
+.s9 .gl9 dd{margin:0;font-size:16.5px;line-height:1.28;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -787,9 +828,14 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
           <text class="sub" x="270" y="174" fill="#0D7EA8">AI proposes</text>
           <text class="sub" x="270" y="90" fill="#9A5300">we define</text>
         </svg>
-        <div class="quote-block ghost-out">
-          <blockquote class="quote" style="background:none;border:0;padding:0">“People don't buy what you do; they buy why you do it.”<cite>— Simon Sinek, How great leaders inspire action, TEDxPuget Sound, 2009</cite></blockquote>
-          <p class="apple" style="text-align:center;margin-top:8px">Apple’s order: <b>belief</b> → how it acts on it → <b>what</b> it sells.</p>
+        <div class="quote-block ghost-out sinek">
+          <p class="sk-h">After Simon Sinek’s Apple example (Start With Why, 2009)</p>
+          <ol class="sk">
+            <li><b>WHY</b><i>the belief</i><span>Start from a belief: challenge how things are, think differently.</span></li>
+            <li><b>HOW</b><i>the process</i><span>Act on it: make things beautifully designed and simple to use.</span></li>
+            <li><b>WHAT</b><i>the result</i><span>“We just happen to make great computers. You want to buy one?”</span></li>
+          </ol>
+          <p class="sk-flip">In this class: humans own the <b>why</b> and the <b>what</b>; AI takes the <b>how</b>.</p>
         </div>
       </div>
       <div class="hands" data-b="3" style="--d:900ms"><span class="audience"><span class="tag">Hands up</span> Who spent last week mostly on the how?</span></div>
@@ -803,6 +849,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
         <div class="cc"><small>Agentic tooling</small>Claude Code</div>
         <div class="verbs"><span class="verb">reads files</span><span class="verb">runs commands</span><span class="verb">edits code</span><span class="verb call">calls a model →</span></div>
       </div>
+      <p class="phone-cap" data-b="1" style="--d:450ms" aria-label="Analogy">App = phone · Harness = network · Model = the person you call</p>
       <div class="stack" data-b="2" role="list" aria-label="Layer stack, bottom to top">
         <div class="layer L-backend" role="listitem" style="--ld:0ms"><div><div class="ln">Backend</div><div class="ex">Anthropic, OpenAI, Bedrock, local</div></div><div class="dec">Where inference and data go</div></div>
         <div class="layer L-model" role="listitem" style="--ld:180ms"><div><div class="ln">Model</div><div class="ex mx"><b>Anthropic:</b> Claude Fable, Opus, Sonnet, Haiku<br><b>OpenAI:</b> GPT-6 Astra, GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Luna</div></div><div class="dec">Reasoning quality, speed, cost</div></div>
@@ -812,14 +859,14 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       </div>
       <div class="poll" data-b="3">
         <span class="audience" style="font-size:16px;padding:6px 14px"><span class="tag">Poll</span> hands up</span>
-        <p class="q">A desktop app means a local model?</p>
+        <p class="q">Does a desktop app like Claude Code Desktop mean a local model?</p>
         <div class="tally">
           <button type="button" class="vote" data-vote="s2:yes" aria-label="Add one Yes vote">Yes <output data-count="s2:yes" aria-live="polite">0</output></button>
           <button type="button" class="vote" data-vote="s2:no" aria-label="Add one No vote">No <output data-count="s2:no" aria-live="polite">0</output></button>
           <button type="button" class="mini go" data-reveal="s2-ans" aria-expanded="false" aria-controls="s2-ans">Reveal</button>
           <button type="button" class="mini" data-reset="s2">Reset</button>
         </div>
-        <div class="ans" id="s2-ans" hidden><b>No.</b> A desktop app is an interface. Unless you run open-weights models on your own hardware, inference happens in someone’s cloud.</div>
+        <div class="ans" id="s2-ans" hidden><b>No.</b> An app is an interface. It’s just an interface. The model runs in someone’s cloud.</div>
       </div>
       <div class="routing" data-b="3" style="--d:200ms">
         <div class="rt"><b>Route by task</b>Routine → faster model · hard reasoning → stronger model</div>
@@ -854,13 +901,13 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       </div>
       <div class="ladder" data-b="2" aria-label="Four different questions">
         <h3>Four different questions.</h3>
-        <div class="q4" style="--qd:0ms"><span class="i">1</span>Training opt-out</div>
+        <div class="q4" style="--qd:0ms"><span class="i">1</span>Is my data used for training?</div>
         <div class="neq" style="--qd:250ms" aria-label="is not">≠</div>
-        <div class="q4" style="--qd:350ms"><span class="i">2</span>No provider processing</div>
+        <div class="q4" style="--qd:350ms"><span class="i">2</span>Is my data processed by the provider?</div>
         <div class="neq" style="--qd:600ms" aria-label="is not">≠</div>
-        <div class="q4" style="--qd:700ms"><span class="i">3</span>Data residency</div>
+        <div class="q4" style="--qd:700ms"><span class="i">3</span>Where does my data physically reside?</div>
         <div class="neq" style="--qd:950ms" aria-label="is not">≠</div>
-        <div class="q4" style="--qd:1050ms"><span class="i">4</span>Local / offline inference</div>
+        <div class="q4" style="--qd:1050ms"><span class="i">4</span>Does inference run on my machine?</div>
       </div>
       <div class="ribbon" data-b="3">
         <span class="chip x">$200 vs $20: still processed by the provider</span>
@@ -1007,23 +1054,27 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <p class="stamp" data-b="2" style="--d:300ms">Controlled payload stays inside, whatever the labels. Anonymization never authorizes moving it out.</p>
     </section>
 
-    <!-- ================= STAGE 9 · 44–53 · offline terminal replay + human gate ================= -->
+    <!-- ================= STAGE 9 · 44–53 · GitHub: working together + human gate ================= -->
     <section class="stage sx s9" id="s9" data-n="9" aria-roledescription="slide" aria-labelledby="s9-h" hidden>
-      <div class="kicker"><span class="num">09</span> Prompt to pull request · replay <span class="win">44–53 min</span><span class="pg" aria-label="Page 9 of 11">Page 9 of 11<span class="pgsub"></span></span></div>
-      <h2 class="stage-h" id="s9-h" tabindex="-1" style="font-size:54px">AI does the loop. <span class="a">Humans gate.</span> <span class="sim" style="vertical-align:middle">Recorded run · synthetic example</span></h2>
-      <div class="box rp term s9rp" data-b="1">
-        <div class="rp-head"><span class="lbl-s">Replay · coding agent in a terminal</span><span class="rp-hint"><kbd>Next</kbd> <kbd>→</kbd> <kbd>Space</kbd> plays the next line</span><button type="button" class="mini" data-rp-all="s9">Show all</button></div>
+      <div class="kicker"><span class="num">09</span> GitHub: working together <span class="win">44–53 min</span><span class="pg" aria-label="Page 9 of 11">Page 9 of 11<span class="pgsub"></span></span></div>
+      <h2 class="stage-h" id="s9-h" tabindex="-1" style="font-size:54px">One repo, many hands. <span class="a">Humans gate.</span> <span class="sim" style="vertical-align:middle">Simulated · synthetic example</span></h2>
+      <div class="box terms" data-b="1" aria-label="Why GitHub and the words">
+        <div class="why9"><span class="lbl-s">Why GitHub</span><span class="w">One source of truth</span><span class="w">Full history</span><span class="w">Review before it lands</span><span class="w">Many people at once</span></div>
+        <dl class="gl9"><div><dt>Repository</dt><dd>The shared project folder, with its full history.</dd></div><div><dt>Branch</dt><dd>Your own copy of the work, so you don’t disturb anyone.</dd></div><div><dt>Worktree</dt><dd>A separate folder for each branch, so a person or an agent can work on two jobs side by side.</dd></div><div><dt>Pull request (PR)</dt><dd>“Here’s my change, please review it before it joins the main version.”</dd></div><div><dt>Merge</dt><dd>Accepting the change into main.</dd></div></dl>
+      </div>
+      <div class="box rp term s9rp" data-b="1" style="--d:200ms">
+        <div class="rp-head"><span class="lbl-s">Replay · a team task, one agent, two teammates</span><span class="rp-hint"><kbd>Next</kbd> <kbd>→</kbd> <kbd>Space</kbd> plays the next line</span><button type="button" class="mini" data-rp-all="s9">Show all</button></div>
         <div class="rp-log" id="s9-log" aria-live="polite"></div>
       </div>
-      <div class="git" data-b="1" style="--d:200ms"><svg viewBox="0 0 670 250" role="img" aria-label="Branch diagram: feat/power-budget branches off main into a worktree, opens a pull request, merges back only when approved">
+      <div class="git" data-b="1" style="--d:200ms"><svg viewBox="0 0 670 250" role="img" aria-label="Branch diagram: feat/checklist-dates branches off main into its own worktree, opens a pull request, merges back only when approved">
         <path class="ln main" d="M30 190 H640"/><path class="ln feat" d="M110 190 C160 190 160 80 210 80 H470"/><path class="ln merge" d="M470 80 C520 80 520 190 570 190"/>
         <circle cx="110" cy="190" r="11" fill="#9AA6B8"/><circle cx="260" cy="80" r="11" fill="#0D7EA8"/><circle cx="350" cy="80" r="11" fill="#0D7EA8"/><circle cx="470" cy="80" r="14" fill="#fff" stroke="#0D7EA8" stroke-width="5"/><circle cx="570" cy="190" r="13" fill="#E8890C"/>
-        <text x="30" y="225">main</text><text x="210" y="50">feat/power-budget · worktree</text><text x="440" y="118">PR</text><text x="640" y="225" text-anchor="end">merge only when approved</text></svg></div>
+        <text x="30" y="225">main</text><text x="200" y="50">feat/checklist-dates · own worktree</text><text x="440" y="118">PR</text><text x="640" y="225" text-anchor="end">merge only when approved</text></svg></div>
       <div class="pipe" data-b="1" style="--d:300ms">
-        <div class="step" id="s9-st1"><span class="n">1</span><b class="t">Worktree per task</b><span class="st">waiting</span><p>Keeps parallel agents isolated.</p></div>
+        <div class="step" id="s9-st1"><span class="n">1</span><b class="t">Worktree per task</b><span class="st">waiting</span><p>One workbench per job, so two jobs never share tools mid-task.</p></div>
         <div class="step" id="s9-st2"><span class="n">2</span><b class="t">AI implements</b><span class="st">waiting</span><p>Code, tests, fix, commit.</p></div>
-        <div class="step" id="s9-st3"><span class="n">3</span><b class="t">Remind to finish</b><span class="st">waiting</span><p>Agents stop early: ask for tests, PR and a re-check.</p></div>
-        <div class="step h rv ia" id="s9-st4"><span class="n">4</span><b class="t">Human reviews</b><span class="st" id="s9-st4s">after the PR</span><p>Strategy, outcome, exceptions; not every line.</p>
+        <div class="step" id="s9-st3"><span class="n">3</span><b class="t">Remind to finish</b><span class="st">waiting</span><p>Agents stop early, so ask for tests, a PR and a re-check.</p></div>
+        <div class="step h rv ia" id="s9-st4"><span class="n">4</span><b class="t">Human reviews</b><span class="st" id="s9-st4s">after the PR</span><p>Strategy, outcome, exceptions, not every line.</p>
           <div class="cks"><label><input type="checkbox" class="s9-ck" disabled> Strategy fits the why</label><label><input type="checkbox" class="s9-ck" disabled> Outcome meets criteria</label><label><input type="checkbox" class="s9-ck" disabled> Exception call made</label></div></div>
         <div class="step h" id="s9-st5"><span class="n">5</span><b class="t">Merge only when approved</b><span class="st" id="s9-st5s">locked</span><p>Required checks pass; never bypass approvals.</p></div>
       </div>
@@ -1112,17 +1163,17 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <h3 class="np-title">Page 1 of 11 · 0–4 · Start with why</h3>
       <div class="np say">
         <div class="sal" data-step="1.1"><h5>Step 1.1 · Opening line</h5><div class="blk"><span class="lb">Say</span><p>AI now does much of the how. Today is about the why, the what, and the check.</p></div><div class="blk"><span class="lb">Ask</span><p>Hands up — who spent last week mostly on the how?</p></div><div class="blk"><span class="lb">Land</span><p>You own the why and the what. AI&#x27;s purpose is the how.</p></div><div class="blk"><span class="lb">Follow-up</span><p>So what are you gonna do with the hour you free up this week by letting AI take the how?</p><p class="cl"><span class="lb2">Close · after answers</span>by letting AI take the how.</p></div></div>
-        <div class="sal" data-step="1.2"><h5>Step 1.2 · Golden circle + Sinek quote</h5><div class="blk"><span class="lb">Say</span><p>Sinek’s golden circle: great leaders start with why, then how, then what.</p></div><div class="blk"><span class="lb">Ask</span><p>What’s the why behind the last thing you built?</p></div><div class="blk"><span class="lb">Land</span><p>The why is ours; it never gets delegated.</p></div><div class="blk"><span class="lb">Follow-up</span><p>If you couldn’t answer, write it down before your next prompt.</p></div></div>
+        <div class="sal" data-step="1.2"><h5>Step 1.2 · Golden circle + Apple example</h5><div class="blk"><span class="lb">Say</span><p>Sinek’s golden circle runs why → how → what. Tell the full Apple example aloud in your own words (why: belief → how: process → what: result).</p></div><div class="blk mc"><span class="lb">Memory cue</span><p>WHY — belief: status quo · think differently → HOW — process: beautifully designed · simple · user-friendly → WHAT — result: great computers → the ask.</p></div><div class="blk"><span class="lb">Ask</span><p>What’s the why behind the last thing you built?</p></div><div class="blk"><span class="lb">Land</span><p>In this class: humans own the why and the what; AI takes the how.</p></div><div class="blk"><span class="lb">Follow-up</span><p>If you couldn’t answer, write it down before your next prompt.</p></div><div class="blk paste"><span class="lb">Your Apple passage (paste your own text here)</span><div class="pastebox" id="pv-paste" contenteditable="true" spellcheck="false" aria-label="Your Apple passage, paste your own text here"></div></div></div>
         <div class="sal" data-step="1.3"><h5>Step 1.3 · The flip</h5><div class="blk"><span class="lb">Say</span><p>My working target: about 80% of the effort is AI, 20% is ours.</p></div><div class="blk"><span class="lb">Ask</span><p>What should your 20% be spent on?</p></div><div class="blk"><span class="lb">Land</span><p>Our 20%: strategy, risk, outcome review and exceptions.</p></div><div class="blk"><span class="lb">Follow-up</span><p>It’s a goal, not a measurement. The rest of the hour shows how.</p></div></div>
         <h4>0:00–1:30 · Opening line (read aloud)</h4><div data-clone="ref-opener"></div>
-        <h4>1:30–2:45 · Golden circle + quote</h4><p>Let the rings draw, then let the quote land on its own. Then tell the Apple story:</p><div data-clone="ref-paraphrase"></div>
+        <h4>1:30–2:45 · Golden circle + Apple example</h4><p>Let the rings draw, then walk the sidebar why → how → what. Tell the Apple story in your own words:</p><div data-clone="ref-paraphrase"></div>
         <h4>2:45–4:00 · The flip</h4><div data-clone="ref-flip"></div><div data-clone="ref-8020"></div>
         <h4>Ask the room</h4><p>Hands up: who spent last week mostly on the how? Look around. That’s the time we’re going to win back.</p>
       </div>
       <div class="np ref"><h4>80/20 split</h4><div data-clone="ref-split-table"></div><div data-clone="ref-split-p"></div></div>
       <div class="np cav"><ul>
         <li>80/20 is a goal, not a measurement.</li>
-        <li>The quote is Sinek’s; the Apple story is in my own words.</li>
+        <li>Only the WHAT line is Sinek’s wording (60 characters); the rest of the Apple example is my paraphrase.</li>
       </ul></div>
       <div class="np src"><ul><li data-clone="src-11"></li></ul></div>
     </div>
@@ -1130,9 +1181,9 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="2">
       <h3 class="np-title">Page 2 of 11 · 4–9 · Models &amp; inference</h3>
       <div class="np say">
-        <div class="sal" data-step="2.1"><h5>Step 2.1 · Agent tool ≠ model</h5><div class="blk"><span class="lb">Say</span><p>Claude Code reads files, runs commands and edits code, then calls a model.</p></div><div class="blk"><span class="lb">Ask</span><p>Is Claude Code a model?</p></div><div class="blk"><span class="lb">Land</span><p>No. The agent tool is not the model.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Let’s see where it sits in the stack.</p></div></div>
+        <div class="sal" data-step="2.1"><h5>Step 2.1 · Agent tool ≠ model</h5><div class="blk"><span class="lb">Say</span><p>Five layers sit between you and the answer. Let’s untangle them with a phone call.</p></div><div class="blk"><span class="lb">Ask</span><p>When you say “I use Claude” — do you mean the app, or the brain behind it?</p></div><div class="blk"><span class="lb">Land</span><p>The app is the phone. The harness is the network. The model is your mom. So when you say “I use Claude,” you mean the model — the brain — not the app you typed into.</p></div><div class="blk"><span class="lb">Follow-up</span><p>So which layer actually decides where your data goes? — The backend. That’s next.</p></div><div class="blk an"><span class="lb">Analogy</span><p>The phone is the device in your hand. The phone company is the network that carries your voice. The person you call is the one actually talking. When you say “I called my mom,” you don’t mean “I called the network” — you mean the person.</p></div></div>
         <div class="sal" data-step="2.2"><h5>Step 2.2 · Five-layer stack</h5><div class="blk"><span class="lb">Say</span><p>Five layers, bottom up: backend, model, harness, interface, orchestrator.</p></div><div class="blk"><span class="lb">Ask</span><p>Which layer decides where your data goes?</p></div><div class="blk"><span class="lb">Land</span><p>The backend. The model decides quality, speed and cost.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Names change fast: Fable, Opus, Sonnet, Haiku are Claude; Astra, Sol, Terra, Luna are GPT-6.</p></div></div>
-        <div class="sal" data-step="2.3"><h5>Step 2.3 · Poll + model routing</h5><div class="blk"><span class="lb">Say</span><p>Quick poll, hands up.</p></div><div class="blk"><span class="lb">Ask</span><p>Does a desktop app mean a local model?</p></div><div class="blk"><span class="lb">Land</span><p>No. An app is an interface; the model runs in someone’s cloud.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Route routine work to faster models, hard reasoning to stronger ones.</p></div></div>
+        <div class="sal" data-step="2.3"><h5>Step 2.3 · Poll + model routing</h5><div class="blk"><span class="lb">Say</span><p>Quick poll — hands up. Does a desktop app like Claude Code Desktop mean a local model?</p></div><div class="blk"><span class="lb">Land</span><p>No. An app is an interface. It’s just an interface. The model runs in someone’s cloud.</p></div></div>
         <h4>4:00–5:30 · Agent tool ≠ model</h4><div data-clone="ref-seg-4-9-1"></div>
         <h4>5:30–7:30 · The stack</h4><p>Walk the five layers from the bottom. The backend decides where your data goes. The model decides quality, speed and cost. The harness is the tool loop. The interface is how you see and steer it. On top sit assistants that hand work to the others.</p>
         <h4>7:30–9:00 · Poll, then routing</h4><p>Poll: “Does a desktop app mean a local model?” Count hands for Yes and No, tap the counts in, then Reveal.</p><div data-clone="ref-seg-4-9-3"></div><div data-clone="ref-seg-4-9-2"></div>
@@ -1146,7 +1197,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <h3 class="np-title">Page 3 of 11 · 9–15 · Backends &amp; GovCloud</h3>
       <div class="np say">
         <div class="sal" data-step="3.1"><h5>Step 3.1 · Myth or fact</h5><div class="blk"><span class="lb">Say</span><p>Here’s a common belief about paid plans.</p></div><div class="blk"><span class="lb">Ask</span><p>Does $200 instead of $20 keep your prompts off OpenAI’s servers?</p></div><div class="blk"><span class="lb">Land</span><p>Myth. Both plans are processed by OpenAI.</p></div><div class="blk"><span class="lb">Follow-up</span><p>A plan buys limits and features, not a different place for your data.</p></div></div>
-        <div class="sal" data-step="3.2"><h5>Step 3.2 · Four different questions</h5><div class="blk"><span class="lb">Say</span><p>Four questions people mix up.</p></div><div class="blk"><span class="lb">Ask</span><p>Is opting out of training the same as data staying local?</p></div><div class="blk"><span class="lb">Land</span><p>No: opt-out, provider processing, residency and local inference are four different things.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Ask which one you actually need before you pick a tool.</p></div></div>
+        <div class="sal" data-step="3.2"><h5>Step 3.2 · Four different questions</h5><div class="blk"><span class="lb">Say</span><p>Four questions people get mixed up on.</p></div><div class="blk"><span class="lb">Ask</span><p>Is opting out of training the same as data staying local?</p></div><div class="blk"><span class="lb">Land</span><p>No. Opting out only stops training. Your prompts still get processed on their servers. Residency and local inference are separate questions.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Ask which one you actually need before you pick a tool.</p></div></div>
         <div class="sal" data-step="3.3"><h5>Step 3.3 · Route map: Bedrock, GovCloud</h5><div class="blk"><span class="lb">Say</span><p>Six routes, one question each: where does the model run?</p></div><div class="blk"><span class="lb">Ask</span><p>Which route keeps everything on your own hardware?</p></div><div class="blk"><span class="lb">Land</span><p>Only a local open-weights model is fully offline.</p></div><div class="blk"><span class="lb">Follow-up</span><p>GovCloud alone is not CUI, ITAR or CMMC compliance.</p></div></div>
         <h4>9:00–10:30 · Myth or fact (vote, then Reveal)</h4><p>Ask: does paying $200 instead of $20 a month for ChatGPT keep your prompts off OpenAI’s servers? Count Myth and Fact, then Reveal.</p><div data-clone="ref-seg-9-15-1"></div>
         <h4>10:30–12:30 · Four different questions</h4><div data-clone="ref-seg-9-15-2"></div>
@@ -1163,7 +1214,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="4">
       <h3 class="np-title">Page 4 of 11 · 15–23 · Harness &amp; tools</h3>
       <div class="np say">
-        <div class="sal" data-step="4.1"><h5>Step 4.1 · Harness loop</h5><div class="blk"><span class="lb">Say</span><p>A harness is the loop around the model: tools, permissions, memory, stop rules.</p></div><div class="blk"><span class="lb">Ask</span><p>What would you never let it run without asking?</p></div><div class="blk"><span class="lb">Land</span><p>The harness decides what the agent can do.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Next: the doors you use to reach it.</p></div></div>
+        <div class="sal" data-step="4.1"><h5>Step 4.1 · Harness loop</h5><div class="blk"><span class="lb">Say</span><p>A harness is the loop around the model: tools, permissions, memory, stop rules.</p></div><div class="blk"><span class="lb">Ask</span><p>What would you never let it run without asking?</p></div><div class="blk"><span class="lb">Land</span><p>The harness decides what the agent can do.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Next: the doors you use to reach it.</p></div><div class="blk an"><span class="lb">Analogy</span><p>The model is the engine; the harness is the car around it: steering, brakes, dashboard.</p></div></div>
         <div class="sal" data-step="4.2"><h5>Step 4.2 · Doors + ways to steer</h5><div class="blk"><span class="lb">Say</span><p>Same agent, several doors: terminal, VS Code, desktop.</p></div><div class="blk"><span class="lb">Ask</span><p>How do you steer it today: chat only, or CLAUDE.md and plan mode too?</p></div><div class="blk"><span class="lb">Land</span><p>Pick the door that fits the task; the rules come with it.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Write your project conventions down once, in CLAUDE.md.</p></div></div>
         <div class="sal" data-step="4.3"><h5>Step 4.3 · Three example tools</h5><div class="blk"><span class="lb">Say</span><p>Three tools: terminal agent, IDE assistant, desktop chat app.</p></div><div class="blk"><span class="lb">Ask</span><p>Which one do you use, and what can it see?</p></div><div class="blk"><span class="lb">Land</span><p>Same models; tools differ in what they see and do.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Compare workflows, not leaderboards.</p></div></div>
         <h4>15:00–17:30 · Harness loop</h4><div data-clone="ref-seg-15-23-1"></div>
@@ -1178,7 +1229,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="5">
       <h3 class="np-title">Page 5 of 11 · 23–27 · Context</h3>
       <div class="np say">
-        <div class="sal" data-step="5.1"><h5>Step 5.1 · Seven things to give it</h5><div class="blk"><span class="lb">Say</span><p>The agent only knows what you give it. Here are seven things.</p></div><div class="blk"><span class="lb">Ask</span><p>Which of these did your last prompt include?</p></div><div class="blk"><span class="lb">Land</span><p>Output follows context.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Every item you skip is a guess the agent makes for you.</p></div></div>
+        <div class="sal" data-step="5.1"><h5>Step 5.1 · Seven things to give it</h5><div class="blk"><span class="lb">Say</span><p>The agent only knows what you give it. Here are seven things.</p></div><div class="blk"><span class="lb">Ask</span><p>Which of these did your last prompt include?</p></div><div class="blk"><span class="lb">Land</span><p>Output follows context.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Every item you skip is a guess the agent makes for you.</p></div><div class="blk an"><span class="lb">Analogy</span><p>Like briefing a new contractor: whatever you don’t hand over, they guess.</p></div></div>
         <div class="sal" data-step="5.2"><h5>Step 5.2 · Which do you skip?</h5><div class="blk"><span class="lb">Say</span><p>Look at the list once more.</p></div><div class="blk"><span class="lb">Ask</span><p>Which one do you skip most?</p></div><div class="blk"><span class="lb">Land</span><p>Better in, better out.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Pick one to add on your next task.</p></div></div>
         <h4>23:00–25:00 · Seven things to give the agent</h4><p>Walk the seven items top to bottom. Every item you skip is a guess the agent makes for you.</p>
         <h4>25:00–27:00 · Which do you skip?</h4><p>Ask the room, no counting: which of these do you usually skip? Take two or three answers, then ask everyone to pick one to add on their next task.</p>
@@ -1192,7 +1243,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <h3 class="np-title">Page 6 of 11 · 27–32 · Planning &amp; ADR</h3>
       <div class="np say">
         <div class="sal" data-step="6.1"><h5>Step 6.1 · Planning stages</h5><div class="blk"><span class="lb">Say</span><p>Six stages: why, options, decision, plan, build, verify.</p></div><div class="blk"><span class="lb">Ask</span><p>Where do you usually jump straight to building?</p></div><div class="blk"><span class="lb">Land</span><p>The decision step is ours.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Let AI generate options and plans; you choose.</p></div></div>
-        <div class="sal" data-step="6.2"><h5>Step 6.2 · ADR-001</h5><div class="blk"><span class="lb">Say</span><p>An ADR is one page: what we decided, why, and what we rejected.</p></div><div class="blk"><span class="lb">Ask</span><p>Where do your decisions live today?</p></div><div class="blk"><span class="lb">Land</span><p>Write the decision down so the agent doesn’t re-argue it.</p></div><div class="blk"><span class="lb">Follow-up</span><p>ADR-001 is a made-up example; copy the shape, not the content.</p></div></div>
+        <div class="sal" data-step="6.2"><h5>Step 6.2 · ADR-001</h5><div class="blk"><span class="lb">Say</span><p>An ADR is one page: what we decided, why, and what we rejected.</p></div><div class="blk"><span class="lb">Ask</span><p>Where do your decisions live today?</p></div><div class="blk"><span class="lb">Land</span><p>Write the decision down so the agent doesn’t re-argue it.</p></div><div class="blk"><span class="lb">Follow-up</span><p>ADR-001 is a made-up example; copy the shape, not the content.</p></div><div class="blk an"><span class="lb">Analogy</span><p>Like a site log: it records why, so nobody re-argues it next month.</p></div></div>
         <div class="sal" data-step="6.3"><h5>Step 6.3 · Storage choice</h5><div class="blk"><span class="lb">Say</span><p>Markdown, JSON, SQLite: all files on disk.</p></div><div class="blk"><span class="lb">Ask</span><p>Where would you store numbers the agent must compute from?</p></div><div class="blk"><span class="lb">Land</span><p>Pick storage by data shape and who reads or writes it.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Here: JSON for numbers, Markdown for rationale.</p></div></div>
         <h4>27:00–28:30 · Planning stages</h4><div data-clone="ref-seg-23-32-2"></div><p>The decision step is ours. The AI is great at options and plans.</p>
         <h4>28:30–30:30 · ADR-001</h4><p>An ADR is a one-page decision record: what we decided, why, what we rejected, and what would make us revisit it. It also stops the agent from re-arguing settled decisions.</p>
@@ -1222,7 +1273,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <h3 class="np-title">Page 8 of 11 · 40–44 · Data boundaries</h3>
       <div class="np say">
         <div class="sal" data-step="8.1"><h5>Step 8.1 · Coded labels outside</h5><div class="blk"><span class="lb">Say</span><p>Outside, we discuss coded labels like =S1-G2.</p></div><div class="blk"><span class="lb">Ask</span><p>If I rename the battery =S1-G2, can I paste its controlled data into a public chat?</p></div><div class="blk"><span class="lb">Land</span><p>No. Code names don’t make data safe to share.</p></div><div class="blk"><span class="lb">Follow-up</span><p>The label can travel; the meaning stays inside.</p></div></div>
-        <div class="sal" data-step="8.2"><h5>Step 8.2 · The key stays inside</h5><div class="blk"><span class="lb">Say</span><p>The mapping key lives only in the approved environment.</p></div><div class="blk"><span class="lb">Ask</span><p>What happens if the key leaves?</p></div><div class="blk"><span class="lb">Land</span><p>The key stays inside; try to move it and it snaps back.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Anonymization never authorizes moving controlled data out.</p></div></div>
+        <div class="sal" data-step="8.2"><h5>Step 8.2 · The key stays inside</h5><div class="blk"><span class="lb">Say</span><p>The mapping key lives only in the approved environment.</p></div><div class="blk"><span class="lb">Ask</span><p>What happens if the key leaves?</p></div><div class="blk"><span class="lb">Land</span><p>The key stays inside; try to move it and it snaps back.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Anonymization never authorizes moving controlled data out.</p></div><div class="blk an"><span class="lb">Analogy</span><p>Publish the code words, never the codebook.</p></div></div>
         <h4>40:00–42:00 · Coded labels outside</h4><p>Coded labels like =S1-G1 let you discuss the shape of a problem outside a secure environment, for example with a public AI tool.</p>
         <h4>42:00–44:00 · The key stays inside</h4><p>Press “Try moving the key outside”: it snaps back. The key that maps codes to real items stays in the approved environment. And code names don’t make controlled data shareable: if the content itself is controlled, it stays inside, whatever the labels say.</p>
       </div>
@@ -1232,16 +1283,16 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     </div>
 
     <div class="stage-notes" data-for="9">
-      <h3 class="np-title">Page 9 of 11 · 44–53 · Prompt to pull request (replay)</h3>
+      <h3 class="np-title">Page 9 of 11 · 44–53 · GitHub: working together</h3>
       <div class="np say">
-        <div class="sal" data-step="9.1"><h5>Step 9.1 · Replay: plan + worktree</h5><div class="blk"><span class="lb">Say</span><p>One prompt: branch, tests, PR, and don’t merge.</p></div><div class="blk"><span class="lb">Ask</span><p>Why give each task its own worktree?</p></div><div class="blk"><span class="lb">Land</span><p>It plans first and works in isolation.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Watch what happens when a test fails.</p></div></div>
-        <div class="sal" data-step="9.2"><h5>Step 9.2 · Code, test, fix</h5><div class="blk"><span class="lb">Say</span><p>It writes the code and tests; one test fails.</p></div><div class="blk"><span class="lb">Ask</span><p>Would you have spotted the watts versus watt-hours bug?</p></div><div class="blk"><span class="lb">Land</span><p>The test caught it, and the agent fixed it.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Then remind it to finish: tests, PR, description.</p></div></div>
-        <div class="sal" data-step="9.3"><h5>Step 9.3 · PR + human review</h5><div class="blk"><span class="lb">Say</span><p>The PR is open, not merged.</p></div><div class="blk"><span class="lb">Ask</span><p>Who wants to be the reviewer?</p></div><div class="blk"><span class="lb">Land</span><p>AI does the loop; humans gate the merge.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Approve it only when the outcome meets the criteria.</p></div></div>
-        <h4>44:00–46:30 · Plan + worktree</h4><p>Another recorded run, this time a coding agent in a terminal. It plans first, waits for a yes, then works in its own git worktree so parallel tasks don’t collide.</p>
-        <h4>46:30–50:00 · Code, test, fix</h4><p>Play the coding steps. The first test run fails: the agent mixed watts and watt-hours and got 6.5 hours instead of 13.3 days. It finds the units bug, fixes it, and all three tests pass. That is why we always ask for tests.</p>
-        <h4>50:00–53:00 · PR + human review</h4><p>Notice the reminder: agents tend to stop early, so ask explicitly for tests, the PR and a re-check. The PR says “Not merged”. Ask a volunteer to call out the three review checks while you tick them. Only then does Approve merge unlock. There is no bypass button.</p>
+        <div class="sal" data-step="9.1"><h5>Step 9.1 · Why GitHub + the words</h5><div class="blk"><span class="lb">Say</span><p>We’ve taught you a lot about AI — the why, the what, and the how. Now a little about the organization of it, and the ability to collaborate with multiple people, and that happens with GitHub.</p></div><div class="blk"><span class="lb">Ask</span><p>If five people and two agents change the same project this week, how do you keep from overwriting each other?</p></div><div class="blk"><span class="lb">Land</span><p>One shared repository. Everyone works on their own branch. Changes come back through a pull request.</p></div><div class="blk"><span class="lb">Follow-up</span><p>A worktree is a separate folder per branch, so you or an agent can run two jobs side by side.</p></div><div class="blk an"><span class="lb">Analogy</span><p>One workbench per job, so two jobs never share tools mid-task.</p></div></div>
+        <div class="sal" data-step="9.2"><h5>Step 9.2 · The loop: branch, test, fix</h5><div class="blk"><span class="lb">Say</span><p>Here’s the loop. The agent works on its own branch while two teammates work on theirs.</p></div><div class="blk"><span class="lb">Ask</span><p>What catches the mistake before it reaches the shared version?</p></div><div class="blk"><span class="lb">Land</span><p>The test. It failed, the agent fixed it, and nobody else’s work was touched.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Agents stop early, so remind it to finish: tests, a PR and a re-check.</p></div></div>
+        <div class="sal" data-step="9.3"><h5>Step 9.3 · PR + human review + merge</h5><div class="blk"><span class="lb">Say</span><p>The pull request says: here’s my change, please review it before it joins main.</p></div><div class="blk"><span class="lb">Ask</span><p>Who wants to be the reviewer?</p></div><div class="blk"><span class="lb">Land</span><p>AI does the loop; a human approves the merge.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Merge only when the checks pass and a human has approved. Never bypass approvals.</p></div></div>
+        <h4>44:00–46:30 · Why GitHub + the words</h4><p>Open with the line about organization and collaboration. Why GitHub: one source of truth, full history, review before anything lands, and many people working at once. Walk the five words on the slide: repository, branch, worktree, pull request, merge. The replay starts: the agent plans, waits for a yes, then makes its own worktree while Dana and Sam work on their own branches.</p>
+        <h4>46:30–50:00 · The loop: branch, test, fix</h4><p>Play the coding steps on a neutral team task: working-day due dates for a shared onboarding checklist. The first test run fails because Friday + 1 landed on Saturday. The agent finds the weekend bug, fixes it, and all three tests pass. Nobody else’s branch was touched. That is why we always ask for tests and a branch per job.</p>
+        <h4>50:00–53:00 · PR + human review + merge</h4><p>Notice the reminder: agents tend to stop early, so ask explicitly for tests, the PR and a re-check. The PR says “Not merged”. Ask a volunteer to call out the three review checks while you tick them. Only then does Approve merge unlock. There is no bypass button.</p>
       </div>
-      <div class="np ref"><h4>Prompt-to-PR kit</h4><div data-clone="ref-github-body"></div></div>
+      <div class="np ref"><h4>GitHub kit</h4><div data-clone="ref-github-body"></div></div>
       <div class="np cav"><ul><li>Simulated: nothing on this page touches a real repo.</li><li>Never point an agent at real repos, cloud accounts or controlled data without approval.</li></ul></div>
       <div class="np src"><ul><li data-clone="src-8"></li><li data-clone="src-9"></li></ul></div>
     </div>
@@ -1323,7 +1374,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
       <p class="sub">Framing · Sinek · Why/What vs How · 80/20 target</p>
       <p><strong>Opening framing (read aloud first):</strong></p>
       <blockquote id="ref-opener">Today you’ll learn how to turn an engineering goal into a checked result with AI: define what matters, choose the tools and data boundaries, give it context, and delegate the work while keeping human review and accountability.</blockquote>
-      <p>The only direct quote in the deck is Simon Sinek’s, shown once on Stage 1 (talk listed in Sources).</p>
+      <p>The only direct Sinek wording in the deck is one 60-character line on Stage 1 (the WHAT line of the Apple example); everything else is paraphrase (talk listed in Sources).</p>
       
       <p id="ref-paraphrase"><em>In my words:</em> Sinek's point is that most companies explain themselves from the outside in. Here is what we make, here is how it is better, please buy it. His Apple illustration reverses the order. Apple leads with a belief, challenging the status quo and thinking differently, then explains how it acts on that belief with well-designed, easy-to-use products, and only then mentions what it sells: computers. Same products, different order, and the belief is what people respond to.</p>
       <p id="ref-flip">The flip: for most of engineering history the how consumed us. Syntax, boilerplate, wiring, test scaffolding. With agentic AI, much of the how can be delegated. Our job moves inward: why are we building this, what exactly should exist, and how will we know it is right. The AI proposes the how. We keep the acceptance criteria and the accountability.</p>
@@ -1516,19 +1567,30 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
     </section>
 
     <section class="ref-sec" id="ref-github">
-      <h3>Prompt to pull request (44–53)</h3>
-      <p class="sub">Worktrees · AI PR · human gate</p>
+      <h3>GitHub: working together (44–53)</h3>
+      <p class="sub">Repository · branch · worktree · pull request · merge · human gate</p>
       <div id="ref-github-body">
+      <p><strong>Why GitHub:</strong> one source of truth, full history, review before anything lands, and many people (and agents) working at once.</p>
+      <table>
+        <thead><tr><th>Word</th><th>In plain words</th></tr></thead>
+        <tbody>
+          <tr><td>Repository</td><td>The shared project folder, with its full history.</td></tr>
+          <tr><td>Branch</td><td>Your own copy of the work, so you don’t disturb anyone.</td></tr>
+          <tr><td>Worktree</td><td>A separate folder for each branch, so a person or an agent can work on two jobs side by side.</td></tr>
+          <tr><td>Pull request (PR)</td><td>“Here’s my change, please review it before it joins the main version.”</td></tr>
+          <tr><td>Merge</td><td>Accepting the change into main.</td></tr>
+        </tbody>
+      </table>
       <p><strong>Instructor prompt 3, run in a git worktree:</strong></p>
-      <blockquote id="ref-prompt-3">Create a branch, add inputs.json and a power-budget script with tests for the numbers we just checked, run the tests, open a pull request with a summary and the ADR link. Don't merge. When you think you're done, re-check: tests run, PR opened, description complete.</blockquote>
+      <blockquote id="ref-prompt-3">In a new branch and its own worktree, add a helper that gives each item on our team onboarding checklist a working-day due date, with tests. Run the tests and open a pull request with a summary. Don't merge. When you think you're done, re-check: tests run, PR opened, description complete.</blockquote>
       <ol>
-        <li><strong>Worktree per task</strong> — <code>git worktree add ../station-budget -b feat/power-budget</code> keeps parallel agents isolated</li>
-        <li><strong>AI implements</strong> — Code, tests, commit, PR description</li>
-        <li><strong>Remind to finish</strong> — Agents stop early; ask explicitly for tests, PR, and checks</li>
-        <li><strong>Human reviews</strong> — Strategy, outcome, exceptions; not every line</li>
-        <li><strong>Merge only when authorized</strong> — Required checks and branch protection pass; never bypass approvals</li>
+        <li><strong>Worktree per task</strong> — <code>git worktree add ../checklist-dates -b feat/checklist-dates</code>: one workbench per job, so two jobs never share tools mid-task</li>
+        <li><strong>AI implements</strong> — Code, tests, fix, commit</li>
+        <li><strong>Remind to finish</strong> — Agents stop early, so ask for tests, a PR and a re-check</li>
+        <li><strong>Human reviews</strong> — Strategy, outcome, exceptions, not every line</li>
+        <li><strong>Merge only when approved</strong> — Required checks pass; never bypass approvals</li>
       </ol>
-      <p>On screen this is a scripted replay; nothing touches a real repo. To run it live, use a throwaway sandbox repo only.</p>
+      <p>On screen this is a scripted replay with a synthetic team task; nothing touches a real repo. To run it live, use a throwaway sandbox repo only.</p>
       </div>
     </section>
 
@@ -1652,7 +1714,7 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
   /* pristine copy of this page, taken before any script changes the DOM: used by "Download for offline use" */
   var SNAP="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
   var STAGES=[
-    {win:"0–4",min:4,title:"Start with why",purpose:"You own why and what; AI proposes the how.",beats:[["0:00–1:30","Opening line"],["1:30–2:45","Golden circle + Sinek quote"],["2:45–4:00","The flip"]]},
+    {win:"0–4",min:4,title:"Start with why",purpose:"You own why and what; AI proposes the how.",beats:[["0:00–1:30","Opening line"],["1:30–2:45","Golden circle + Apple example"],["2:45–4:00","The flip"]]},
     {win:"4–9",min:5,title:"Models & inference",purpose:"The agent tool is not the model.",beats:[["4:00–5:30","Agent tool ≠ model"],["5:30–7:30","Five-layer stack"],["7:30–9:00","Poll + model routing"]]},
     {win:"9–15",min:6,title:"Backends & GovCloud",purpose:"Your plan doesn’t change where data goes.",beats:[["9:00–10:30","Myth or fact: vote, reveal"],["10:30–12:30","Four different questions"],["12:30–15:00","Route map: Bedrock, GovCloud"]]},
     {win:"15–23",min:8,title:"Harness & tools",purpose:"Same models; tools differ in what they see and do.",beats:[["15:00–17:30","Harness loop"],["17:30–19:30","Doors + ways to steer"],["19:30–23:00","Three example tools"]]},
@@ -1660,7 +1722,7 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
     {win:"27–32",min:5,title:"Planning & ADR",purpose:"Decide before building.",beats:[["27:00–28:30","Planning stages"],["28:30–30:30","ADR-001"],["30:30–32:00","Storage choice"]]},
     {win:"32–40",min:8,title:"Engineering demo (replay)",purpose:"Ask first, then check the math.",beats:[["32:00–34:30","Replay: questions first"],["34:30–36:30","Prompt 2 + predict"],["36:30–40:00","Reveal 13.3 days, sliders, human call"]]},
     {win:"40–44",min:4,title:"Data boundaries",purpose:"Code names don’t make data safe to share.",beats:[["40:00–42:00","Coded labels outside"],["42:00–44:00","The key stays inside"]]},
-    {win:"44–53",min:9,title:"Prompt to PR (replay)",purpose:"AI does the loop; humans gate the merge.",beats:[["44:00–46:30","Replay: plan + worktree"],["46:30–50:00","Code, test, fix"],["50:00–53:00","PR + human review"]]},
+    {win:"44–53",min:9,title:"GitHub: working together",purpose:"One shared repo, many hands; humans gate the merge.",beats:[["44:00–46:30","Why GitHub + the words"],["46:30–50:00","The loop: branch, test, fix"],["50:00–53:00","PR + human review + merge"]]},
     {win:"53–57",min:4,title:"Agents & approvals",purpose:"Agents act; you keep the gates.",beats:[["53:00–55:00","Agent tiers + approval rail"],["55:00–57:00","Questions for any agent"]]},
     {win:"57–60",min:3,title:"Recap & closing",purpose:"Take-home + Q&A.",beats:[["57:00–58:00","Recap"],["58:00–60:00","Take-home + Q&A"]]}
   ];
@@ -1785,23 +1847,23 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
   var R7=mkReplay("s7",S7STEPS,function(R){var hit={};for(var i=0;i<R.n;i++)if(S7STEPS[i].q)hit[S7STEPS[i].q]=1;$$("#s7-eq span").forEach(function(s){s.classList.toggle("hit",!!hit[s.getAttribute("data-q")])});$("#s7").classList.toggle("rpdone",R.n>=S7STEPS.length);});
   var S9STEPS=[
     {b:1,k:"user",t:txt("ref-prompt-3")},
-    {b:1,k:"ai",t:"Plan: 1) new branch in its own worktree  2) inputs.json from ADR-001  3) power_budget.py  4) tests for 120 Wh/day, 60 Ah and 13.3 days  5) run the tests  6) open a PR. I won’t merge. Proceed?"},
+    {b:1,k:"ai",t:"Plan: 1) new branch in its own worktree  2) due_dates.py  3) tests  4) run the tests  5) open a PR. I won’t merge. Proceed?"},
     {b:1,k:"user",t:"Yes, go ahead."},
-    {b:1,k:"cmd",t:"git worktree add ../station-budget -b feat/power-budget"},
-    {b:1,k:"out",done:1,t:"Preparing worktree (new branch 'feat/power-budget')"},
-    {b:2,k:"tool",t:"✎ Write inputs.json   {\"load_w\": 5, \"autonomy_days\": 3, \"battery_v\": 12, \"dod\": 0.5, \"sun_h\": 3.5, \"eff\": 0.7, \"panel_w\": 60}"},
-    {b:2,k:"tool",t:"✎ Write power_budget.py   daily_wh = load_w * 24 · battery_ah = daily_wh * days / dod / battery_v · refill_days = usable_wh / surplus"},
-    {b:2,k:"tool",t:"✎ Write test_power_budget.py   3 tests: daily energy 120 Wh, battery 60 Ah, refill 13.3 days"},
+    {b:1,k:"cmd",t:"git worktree add ../checklist-dates -b feat/checklist-dates"},
+    {b:1,k:"out",done:1,t:"Preparing worktree (new branch 'feat/checklist-dates')"},
+    {b:1,k:"out",t:"Meanwhile: Dana edits checklist.md on branch docs/welcome · Sam fixes a typo on branch fix/typo"},
+    {b:2,k:"tool",t:"✎ Write due_dates.py   due = start date + N working days"},
+    {b:2,k:"tool",t:"✎ Write test_due_dates.py   3 tests: Mon + 1 = Tue · Fri + 1 = Mon · + 0 = same day"},
     {b:2,k:"cmd",t:"pytest -q"},
-    {b:2,k:"bad",t:"..F   FAILED test_refill_days: assert 6.55 == approx(13.3)   1 failed, 2 passed"},
-    {b:2,k:"ai",t:"Units bug: I used surplus = panel_w − load_w, which is watts. 360 Wh ÷ 55 W = 6.5 hours, not days. Surplus must be energy per day."},
-    {b:2,k:"tool",t:"✎ Edit power_budget.py   surplus_wh_day = panel_w * sun_h * eff - daily_wh   # 27 Wh/day"},
+    {b:2,k:"bad",t:".F.   FAILED test_friday_plus_one: Saturday != Monday   1 failed, 2 passed"},
+    {b:2,k:"ai",t:"Bug: I added calendar days, so Friday + 1 landed on Saturday. Count working days and skip weekends."},
+    {b:2,k:"tool",t:"✎ Edit due_dates.py   step one day at a time; skip Saturday and Sunday"},
     {b:2,k:"cmd",t:"pytest -q"},
     {b:2,k:"good",done:2,t:"...   3 passed"},
     {b:3,k:"user",t:"Before you stop: tests run, PR opened, description complete?"},
-    {b:3,k:"cmd",t:"git add -A && git commit -m \"Add station power budget with tests\" && git push -u origin feat/power-budget"},
-    {b:3,k:"cmd",t:"gh pr create --title \"Station power budget\" --body-file pr.md"},
-    {b:3,k:"pr",done:3,html:"<b>PR #1 · Station power budget</b><br><span>Summary:</span> inputs.json + power_budget.py; refill after a 3-day outage = 13.3 days.<br><span>Tests:</span> 3 passed (units bug found and fixed).<br><span>Design:</span> ADR-001: JSON inputs, Markdown rationale.<br><span>Status:</span> <b class='nm'>Not merged</b>, waiting for human review."}
+    {b:3,k:"cmd",t:"git add -A && git commit -m \"Add working-day due dates with tests\" && git push -u origin feat/checklist-dates"},
+    {b:3,k:"cmd",t:"gh pr create --title \"Checklist due dates\" --body-file pr.md"},
+    {b:3,k:"pr",done:3,html:"<b>PR #12 · Checklist due dates</b><br><span>Summary:</span> due_dates.py gives each onboarding checklist item a working-day due date.<br><span>Tests:</span> 3 passed (weekend bug found and fixed).<br><span>Teammates:</span> Dana’s and Sam’s branches untouched.<br><span>Status:</span> <b class='nm'>Not merged</b>, waiting for human review."}
   ];
   var s9=$("#s9"), ran9=false;
   var ST9=["","✓ worktree ready","✓ 3 tests pass","✓ PR opened · not merged"];
@@ -2003,6 +2065,13 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
   if(/[?&]notes/.test(location.search)) toggleNotes(true);
   if(/[?&]ref/.test(location.search)) openDialog("ref",$("#b-ref"));
   if(/[?&]tl/.test(location.search)) openDialog("tl-dialog",$("#b-tl"));
+  
+  /* presenter: your own Apple passage, kept only in this browser (localStorage); never in the file or the download */
+  (function(){var b=document.getElementById("pv-paste"); if(!b) return; var K="amc-apple-passage";
+    try{var v=localStorage.getItem(K); if(v) b.textContent=v;}catch(e){}
+    b.addEventListener("paste",function(e){e.preventDefault(); var t=(e.clipboardData||window.clipboardData).getData("text/plain"); document.execCommand("insertText",false,t);});
+    b.addEventListener("input",function(){try{localStorage.setItem(K,b.textContent)}catch(e){}});
+  })();
   window.__deck={go:go,next:next,prev:prev,cur:function(){return {s:cur.s+1,b:cur.b+1}},counts:counts,replays:{s7:R7,s9:R9},snapshotLength:SNAP.length};
 })();
 </script>
