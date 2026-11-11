@@ -98,9 +98,19 @@ body.notes-open #viewport{right:440px}
 .bot-right{display:flex;gap:8px;margin-left:auto}
 
 /* ---------- notes drawer (presenter) ---------- */
-.sal{border:1.5px solid var(--line);border-left:4px solid var(--teal);border-radius:10px;padding:8px 12px;margin:0 0 12px;background:#fff}
-.sal p{margin:3px 0}
-.sal b{display:inline-block;min-width:64px;margin-right:6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+.sal{border:2px solid var(--line);border-left:6px solid var(--teal);border-radius:12px;padding:14px 18px;margin:0 0 14px;background:#fff;color:var(--ink)}
+.sal h5{margin:0 0 10px;font-size:16px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#334155}
+.sal .blk{margin:0 0 14px}
+.sal .blk:last-child{margin-bottom:0}
+.sal .lb{display:block;font-size:17px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#06506B;margin-bottom:2px}
+.sal p{margin:0;font-size:30px;line-height:1.38;font-weight:500;color:#0B1220}
+.sal p.cl{margin-top:10px;padding-top:8px;border-top:2px dashed var(--line)}
+.sal .lb2{display:block;font-size:15px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#8A4B00}
+html{--pw:clamp(420px,48vw,1200px)}
+html #notes{width:var(--pw)}
+html body.notes-open #viewport{right:var(--pw)}
+@media screen{.np.say>*{display:none!important}.np.say>.sal.now{display:block!important}}
+@media print{.sal p{font-size:14px}.sal .lb{font-size:11px}}
 .s2 .stack .layer.L-model{grid-template-columns:auto 1fr;gap:22px;padding:10px 20px}
 .s2 div.routing{top:764px}
 .s2 .stack .L-model .ex.mx{font-size:16px;line-height:1.35;white-space:nowrap}
@@ -121,11 +131,10 @@ html:not(.unlocked):not(.presenter) #notes{display:none!important}
 @media print{html:not(.unlocked):not(.presenter) #notes,html:not(.unlocked):not(.presenter) #notes[hidden]{display:none!important}.unlock{display:none!important}}
 
 .pv-link a{color:var(--muted)}
-html.presenter{--pw:clamp(380px,34vw,620px)}
-html.presenter #notes,html.presenter #notes[hidden]{display:flex!important;width:var(--pw)}
+html.presenter #notes,html.presenter #notes[hidden]{display:flex!important}
 html.presenter body #viewport{right:var(--pw)}
 html.presenter #b-notes{display:none}
-@media (max-width:720px){html.presenter #notes,html.presenter #notes[hidden]{position:static;width:auto}html.presenter body #viewport{right:0}}
+@media (max-width:720px){html #notes{width:100%}html body.notes-open #viewport{right:0}html.presenter #notes,html.presenter #notes[hidden]{position:static;width:auto}html.presenter body #viewport{right:0}}
 
 #notes{position:fixed;top:var(--topH);bottom:var(--botH);right:0;width:440px;background:var(--surface);border-left:1px solid var(--line);z-index:25;display:flex;flex-direction:column;box-shadow:-10px 0 30px rgba(20,27,38,.06)}
 #notes[hidden]{display:none}
@@ -1102,7 +1111,9 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="1">
       <h3 class="np-title">Page 1 of 11 · 0–4 · Start with why</h3>
       <div class="np say">
-        <div class="sal"><p><b>Say</b>AI now does much of the how. Today is about the why, the what and the check.</p><p><b>Ask</b>Hands up: who spent last week mostly on the how?</p><p><b>Land</b>You own why and what; AI proposes the how.</p></div>
+        <div class="sal" data-step="1.1"><h5>Step 1.1 · Opening line</h5><div class="blk"><span class="lb">Say</span><p>AI now does much of the how. Today is about the why, the what, and the check.</p></div><div class="blk"><span class="lb">Ask</span><p>Hands up — who spent last week mostly on the how?</p></div><div class="blk"><span class="lb">Land</span><p>You own the why and the what. AI&#x27;s purpose is the how.</p></div><div class="blk"><span class="lb">Follow-up</span><p>So what are you gonna do with the hour you free up this week by letting AI take the how?</p><p class="cl"><span class="lb2">Close · after answers</span>by letting AI take the how.</p></div></div>
+        <div class="sal" data-step="1.2"><h5>Step 1.2 · Golden circle + Sinek quote</h5><div class="blk"><span class="lb">Say</span><p>Sinek’s golden circle: great leaders start with why, then how, then what.</p></div><div class="blk"><span class="lb">Ask</span><p>What’s the why behind the last thing you built?</p></div><div class="blk"><span class="lb">Land</span><p>The why is ours; it never gets delegated.</p></div><div class="blk"><span class="lb">Follow-up</span><p>If you couldn’t answer, write it down before your next prompt.</p></div></div>
+        <div class="sal" data-step="1.3"><h5>Step 1.3 · The flip</h5><div class="blk"><span class="lb">Say</span><p>My working target: about 80% of the effort is AI, 20% is ours.</p></div><div class="blk"><span class="lb">Ask</span><p>What should your 20% be spent on?</p></div><div class="blk"><span class="lb">Land</span><p>Our 20%: strategy, risk, outcome review and exceptions.</p></div><div class="blk"><span class="lb">Follow-up</span><p>It’s a goal, not a measurement. The rest of the hour shows how.</p></div></div>
         <h4>0:00–1:30 · Opening line (read aloud)</h4><div data-clone="ref-opener"></div>
         <h4>1:30–2:45 · Golden circle + quote</h4><p>Let the rings draw, then let the quote land on its own. Then tell the Apple story:</p><div data-clone="ref-paraphrase"></div>
         <h4>2:45–4:00 · The flip</h4><div data-clone="ref-flip"></div><div data-clone="ref-8020"></div>
@@ -1119,7 +1130,9 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="2">
       <h3 class="np-title">Page 2 of 11 · 4–9 · Models &amp; inference</h3>
       <div class="np say">
-        <div class="sal"><p><b>Say</b>Claude Code is a tool that calls a model. It is not the model.</p><p><b>Ask</b>Does a desktop app mean a local model? (poll, then Reveal)</p><p><b>Land</b>The agent tool is not the model. The backend decides where your data goes.</p></div>
+        <div class="sal" data-step="2.1"><h5>Step 2.1 · Agent tool ≠ model</h5><div class="blk"><span class="lb">Say</span><p>Claude Code reads files, runs commands and edits code, then calls a model.</p></div><div class="blk"><span class="lb">Ask</span><p>Is Claude Code a model?</p></div><div class="blk"><span class="lb">Land</span><p>No. The agent tool is not the model.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Let’s see where it sits in the stack.</p></div></div>
+        <div class="sal" data-step="2.2"><h5>Step 2.2 · Five-layer stack</h5><div class="blk"><span class="lb">Say</span><p>Five layers, bottom up: backend, model, harness, interface, orchestrator.</p></div><div class="blk"><span class="lb">Ask</span><p>Which layer decides where your data goes?</p></div><div class="blk"><span class="lb">Land</span><p>The backend. The model decides quality, speed and cost.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Names change fast: Fable, Opus, Sonnet, Haiku are Claude; Astra, Sol, Terra, Luna are GPT-6.</p></div></div>
+        <div class="sal" data-step="2.3"><h5>Step 2.3 · Poll + model routing</h5><div class="blk"><span class="lb">Say</span><p>Quick poll, hands up.</p></div><div class="blk"><span class="lb">Ask</span><p>Does a desktop app mean a local model?</p></div><div class="blk"><span class="lb">Land</span><p>No. An app is an interface; the model runs in someone’s cloud.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Route routine work to faster models, hard reasoning to stronger ones.</p></div></div>
         <h4>4:00–5:30 · Agent tool ≠ model</h4><div data-clone="ref-seg-4-9-1"></div>
         <h4>5:30–7:30 · The stack</h4><p>Walk the five layers from the bottom. The backend decides where your data goes. The model decides quality, speed and cost. The harness is the tool loop. The interface is how you see and steer it. On top sit assistants that hand work to the others.</p>
         <h4>7:30–9:00 · Poll, then routing</h4><p>Poll: “Does a desktop app mean a local model?” Count hands for Yes and No, tap the counts in, then Reveal.</p><div data-clone="ref-seg-4-9-3"></div><div data-clone="ref-seg-4-9-2"></div>
@@ -1132,7 +1145,9 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="3">
       <h3 class="np-title">Page 3 of 11 · 9–15 · Backends &amp; GovCloud</h3>
       <div class="np say">
-        <div class="sal"><p><b>Say</b>A pricier plan buys limits and features, not a different place for your data.</p><p><b>Ask</b>Does $200 instead of $20 keep your prompts off OpenAI’s servers? (vote, then Reveal)</p><p><b>Land</b>Your plan doesn’t change where data goes. Only a local open-weights model is fully offline.</p></div>
+        <div class="sal" data-step="3.1"><h5>Step 3.1 · Myth or fact</h5><div class="blk"><span class="lb">Say</span><p>Here’s a common belief about paid plans.</p></div><div class="blk"><span class="lb">Ask</span><p>Does $200 instead of $20 keep your prompts off OpenAI’s servers?</p></div><div class="blk"><span class="lb">Land</span><p>Myth. Both plans are processed by OpenAI.</p></div><div class="blk"><span class="lb">Follow-up</span><p>A plan buys limits and features, not a different place for your data.</p></div></div>
+        <div class="sal" data-step="3.2"><h5>Step 3.2 · Four different questions</h5><div class="blk"><span class="lb">Say</span><p>Four questions people mix up.</p></div><div class="blk"><span class="lb">Ask</span><p>Is opting out of training the same as data staying local?</p></div><div class="blk"><span class="lb">Land</span><p>No: opt-out, provider processing, residency and local inference are four different things.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Ask which one you actually need before you pick a tool.</p></div></div>
+        <div class="sal" data-step="3.3"><h5>Step 3.3 · Route map: Bedrock, GovCloud</h5><div class="blk"><span class="lb">Say</span><p>Six routes, one question each: where does the model run?</p></div><div class="blk"><span class="lb">Ask</span><p>Which route keeps everything on your own hardware?</p></div><div class="blk"><span class="lb">Land</span><p>Only a local open-weights model is fully offline.</p></div><div class="blk"><span class="lb">Follow-up</span><p>GovCloud alone is not CUI, ITAR or CMMC compliance.</p></div></div>
         <h4>9:00–10:30 · Myth or fact (vote, then Reveal)</h4><p>Ask: does paying $200 instead of $20 a month for ChatGPT keep your prompts off OpenAI’s servers? Count Myth and Fact, then Reveal.</p><div data-clone="ref-seg-9-15-1"></div>
         <h4>10:30–12:30 · Four different questions</h4><div data-clone="ref-seg-9-15-2"></div>
         <h4>12:30–15:00 · Route map</h4><p>Click through the routes. The key lines: Bedrock runs Claude inside your AWS account and the region you choose. GovCloud is AWS’s US government partition, and model choice there can lag the commercial regions. Neither one is compliance by itself: authorization, approved models, settings and procedures still matter. Only a local open-weights model is fully offline.</p>
@@ -1148,7 +1163,9 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="4">
       <h3 class="np-title">Page 4 of 11 · 15–23 · Harness &amp; tools</h3>
       <div class="np say">
-        <div class="sal"><p><b>Say</b>A harness is the loop around the model: tools, permissions, memory, stop rules.</p><p><b>Ask</b>Which of these three do you use today, and what can it see?</p><p><b>Land</b>Same models; tools differ in what they see and do. Compare workflows, not leaderboards.</p></div>
+        <div class="sal" data-step="4.1"><h5>Step 4.1 · Harness loop</h5><div class="blk"><span class="lb">Say</span><p>A harness is the loop around the model: tools, permissions, memory, stop rules.</p></div><div class="blk"><span class="lb">Ask</span><p>What would you never let it run without asking?</p></div><div class="blk"><span class="lb">Land</span><p>The harness decides what the agent can do.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Next: the doors you use to reach it.</p></div></div>
+        <div class="sal" data-step="4.2"><h5>Step 4.2 · Doors + ways to steer</h5><div class="blk"><span class="lb">Say</span><p>Same agent, several doors: terminal, VS Code, desktop.</p></div><div class="blk"><span class="lb">Ask</span><p>How do you steer it today: chat only, or CLAUDE.md and plan mode too?</p></div><div class="blk"><span class="lb">Land</span><p>Pick the door that fits the task; the rules come with it.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Write your project conventions down once, in CLAUDE.md.</p></div></div>
+        <div class="sal" data-step="4.3"><h5>Step 4.3 · Three example tools</h5><div class="blk"><span class="lb">Say</span><p>Three tools: terminal agent, IDE assistant, desktop chat app.</p></div><div class="blk"><span class="lb">Ask</span><p>Which one do you use, and what can it see?</p></div><div class="blk"><span class="lb">Land</span><p>Same models; tools differ in what they see and do.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Compare workflows, not leaderboards.</p></div></div>
         <h4>15:00–17:30 · Harness loop</h4><div data-clone="ref-seg-15-23-1"></div>
         <h4>17:30–19:30 · Doors and ways to steer</h4><p>The same agent shows up in a terminal, inside VS Code, and as a desktop app: same loop, same rules. You steer it with plain-language goals, a CLAUDE.md file of project conventions, slash commands, skills, plan mode and voice.</p>
         <h4>19:30–23:00 · Three example tools</h4><p>Walk the three cards. A desktop chat app sees only what you paste. An IDE assistant sees your workspace. A terminal agent can see the whole repo and run commands. The models are largely the same everywhere; Copilot, for example, offers Claude and GPT models. What differs is what each tool can see and do, so compare workflows, not leaderboards.</p><div data-clone="ref-seg-15-23-4"></div>
@@ -1161,7 +1178,8 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="5">
       <h3 class="np-title">Page 5 of 11 · 23–27 · Context</h3>
       <div class="np say">
-        <div class="sal"><p><b>Say</b>The agent only knows what you give it.</p><p><b>Ask</b>Which of the seven do you skip most?</p><p><b>Land</b>Output follows context. Every gap is a guess the agent makes for you.</p></div>
+        <div class="sal" data-step="5.1"><h5>Step 5.1 · Seven things to give it</h5><div class="blk"><span class="lb">Say</span><p>The agent only knows what you give it. Here are seven things.</p></div><div class="blk"><span class="lb">Ask</span><p>Which of these did your last prompt include?</p></div><div class="blk"><span class="lb">Land</span><p>Output follows context.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Every item you skip is a guess the agent makes for you.</p></div></div>
+        <div class="sal" data-step="5.2"><h5>Step 5.2 · Which do you skip?</h5><div class="blk"><span class="lb">Say</span><p>Look at the list once more.</p></div><div class="blk"><span class="lb">Ask</span><p>Which one do you skip most?</p></div><div class="blk"><span class="lb">Land</span><p>Better in, better out.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Pick one to add on your next task.</p></div></div>
         <h4>23:00–25:00 · Seven things to give the agent</h4><p>Walk the seven items top to bottom. Every item you skip is a guess the agent makes for you.</p>
         <h4>25:00–27:00 · Which do you skip?</h4><p>Ask the room, no counting: which of these do you usually skip? Take two or three answers, then ask everyone to pick one to add on their next task.</p>
       </div>
@@ -1173,7 +1191,9 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="6">
       <h3 class="np-title">Page 6 of 11 · 27–32 · Planning &amp; ADR</h3>
       <div class="np say">
-        <div class="sal"><p><b>Say</b>Options and plans are cheap for AI. The decision is ours.</p><p><b>Ask</b>Where would you write down why we chose JSON over SQLite?</p><p><b>Land</b>Decide before building, and write the decision down.</p></div>
+        <div class="sal" data-step="6.1"><h5>Step 6.1 · Planning stages</h5><div class="blk"><span class="lb">Say</span><p>Six stages: why, options, decision, plan, build, verify.</p></div><div class="blk"><span class="lb">Ask</span><p>Where do you usually jump straight to building?</p></div><div class="blk"><span class="lb">Land</span><p>The decision step is ours.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Let AI generate options and plans; you choose.</p></div></div>
+        <div class="sal" data-step="6.2"><h5>Step 6.2 · ADR-001</h5><div class="blk"><span class="lb">Say</span><p>An ADR is one page: what we decided, why, and what we rejected.</p></div><div class="blk"><span class="lb">Ask</span><p>Where do your decisions live today?</p></div><div class="blk"><span class="lb">Land</span><p>Write the decision down so the agent doesn’t re-argue it.</p></div><div class="blk"><span class="lb">Follow-up</span><p>ADR-001 is a made-up example; copy the shape, not the content.</p></div></div>
+        <div class="sal" data-step="6.3"><h5>Step 6.3 · Storage choice</h5><div class="blk"><span class="lb">Say</span><p>Markdown, JSON, SQLite: all files on disk.</p></div><div class="blk"><span class="lb">Ask</span><p>Where would you store numbers the agent must compute from?</p></div><div class="blk"><span class="lb">Land</span><p>Pick storage by data shape and who reads or writes it.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Here: JSON for numbers, Markdown for rationale.</p></div></div>
         <h4>27:00–28:30 · Planning stages</h4><div data-clone="ref-seg-23-32-2"></div><p>The decision step is ours. The AI is great at options and plans.</p>
         <h4>28:30–30:30 · ADR-001</h4><p>An ADR is a one-page decision record: what we decided, why, what we rejected, and what would make us revisit it. It also stops the agent from re-arguing settled decisions.</p>
         <h4>30:30–32:00 · Storage choice</h4><p>Click JSON, Markdown and SQLite in turn. All three are files on disk. Pick by the shape of the data and who reads or writes it.</p>
@@ -1186,7 +1206,9 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="7">
       <h3 class="np-title">Page 7 of 11 · 32–40 · Engineering demo (replay)</h3>
       <div class="np say">
-        <div class="sal"><p><b>7.1 Say</b>Watch it ask questions before it calculates. That is what a good engineer does too.</p><p><b>7.2 Ask</b>3, 7, 13 or 30 days to refill after a 3-day outage? Hands up.</p><p><b>7.3 Land</b>13.3 days. The AI computed it; an engineer decides if that is acceptable.</p></div>
+        <div class="sal" data-step="7.1"><h5>Step 7.1 · Replay: questions first</h5><div class="blk"><span class="lb">Say</span><p>This is a recorded run. Watch what it asks before it calculates.</p></div><div class="blk"><span class="lb">Ask</span><p>What would you need to know before sizing this?</p></div><div class="blk"><span class="lb">Land</span><p>A good assistant asks questions first.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Now we give it real numbers.</p></div></div>
+        <div class="sal" data-step="7.2"><h5>Step 7.2 · Prompt 2 + predict</h5><div class="blk"><span class="lb">Say</span><p>Prompt 2 declares the numbers. Pause here.</p></div><div class="blk"><span class="lb">Ask</span><p>3, 7, 13 or 30 days to refill after a 3-day outage? Hands up.</p></div><div class="blk"><span class="lb">Land</span><p>Commit to a guess before you see the answer.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Let’s check the math.</p></div></div>
+        <div class="sal" data-step="7.3"><h5>Step 7.3 · Reveal, sliders, human call</h5><div class="blk"><span class="lb">Say</span><p>120 Wh a day, a 60 Ah battery, a 60 W panel: 13.3 days to refill.</p></div><div class="blk"><span class="lb">Ask</span><p>Is 13 days acceptable for this station?</p></div><div class="blk"><span class="lb">Land</span><p>The AI computed it; an engineer decides.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Move the panel slider and watch the answer change.</p></div></div>
         <h4>32:00–34:30 · Questions before numbers</h4><p>This is a recorded run, so it works with no internet or login. Press Next to play each line. The point: a good assistant asks questions before it calculates. The chips on the right light up as it asks.</p>
         <h4>34:30–36:30 · Prompt 2 + predict</h4><p>Prompt 2 gives it real numbers. At the pause line, ask the room: 3, 7, 13 or 30 days? Tap one count per raised hand.</p>
         <h4>36:30–40:00 · Reveal, sliders, human call</h4><p>Play the answer line by line: 120 Wh a day, a 720 Wh battery (60 Ah at 12 V), a 49 W panel so we choose 60 W, and 13.3 days to refill. Then move a slider live, say a bigger panel or more sun, and watch the number change. Close on the human call: is 13 days acceptable? The AI computed it; an engineer decides.</p>
@@ -1199,7 +1221,8 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="8">
       <h3 class="np-title">Page 8 of 11 · 40–44 · Data boundaries</h3>
       <div class="np say">
-        <div class="sal"><p><b>Say</b>Coded labels can travel. The key that decodes them cannot.</p><p><b>Ask</b>If I rename the battery =S1-G2, can I paste its controlled data into a public chat?</p><p><b>Land</b>Code names don’t make data safe to share. The key stays inside.</p></div>
+        <div class="sal" data-step="8.1"><h5>Step 8.1 · Coded labels outside</h5><div class="blk"><span class="lb">Say</span><p>Outside, we discuss coded labels like =S1-G2.</p></div><div class="blk"><span class="lb">Ask</span><p>If I rename the battery =S1-G2, can I paste its controlled data into a public chat?</p></div><div class="blk"><span class="lb">Land</span><p>No. Code names don’t make data safe to share.</p></div><div class="blk"><span class="lb">Follow-up</span><p>The label can travel; the meaning stays inside.</p></div></div>
+        <div class="sal" data-step="8.2"><h5>Step 8.2 · The key stays inside</h5><div class="blk"><span class="lb">Say</span><p>The mapping key lives only in the approved environment.</p></div><div class="blk"><span class="lb">Ask</span><p>What happens if the key leaves?</p></div><div class="blk"><span class="lb">Land</span><p>The key stays inside; try to move it and it snaps back.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Anonymization never authorizes moving controlled data out.</p></div></div>
         <h4>40:00–42:00 · Coded labels outside</h4><p>Coded labels like =S1-G1 let you discuss the shape of a problem outside a secure environment, for example with a public AI tool.</p>
         <h4>42:00–44:00 · The key stays inside</h4><p>Press “Try moving the key outside”: it snaps back. The key that maps codes to real items stays in the approved environment. And code names don’t make controlled data shareable: if the content itself is controlled, it stays inside, whatever the labels say.</p>
       </div>
@@ -1211,7 +1234,9 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="9">
       <h3 class="np-title">Page 9 of 11 · 44–53 · Prompt to pull request (replay)</h3>
       <div class="np say">
-        <div class="sal"><p><b>9.1 Say</b>One prompt: branch, tests, PR, and don’t merge. It plans first, in its own worktree.</p><p><b>9.2 Ask</b>Would you have spotted the watts vs watt-hours bug? The test did.</p><p><b>9.3 Land</b>AI does the loop; humans gate the merge.</p></div>
+        <div class="sal" data-step="9.1"><h5>Step 9.1 · Replay: plan + worktree</h5><div class="blk"><span class="lb">Say</span><p>One prompt: branch, tests, PR, and don’t merge.</p></div><div class="blk"><span class="lb">Ask</span><p>Why give each task its own worktree?</p></div><div class="blk"><span class="lb">Land</span><p>It plans first and works in isolation.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Watch what happens when a test fails.</p></div></div>
+        <div class="sal" data-step="9.2"><h5>Step 9.2 · Code, test, fix</h5><div class="blk"><span class="lb">Say</span><p>It writes the code and tests; one test fails.</p></div><div class="blk"><span class="lb">Ask</span><p>Would you have spotted the watts versus watt-hours bug?</p></div><div class="blk"><span class="lb">Land</span><p>The test caught it, and the agent fixed it.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Then remind it to finish: tests, PR, description.</p></div></div>
+        <div class="sal" data-step="9.3"><h5>Step 9.3 · PR + human review</h5><div class="blk"><span class="lb">Say</span><p>The PR is open, not merged.</p></div><div class="blk"><span class="lb">Ask</span><p>Who wants to be the reviewer?</p></div><div class="blk"><span class="lb">Land</span><p>AI does the loop; humans gate the merge.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Approve it only when the outcome meets the criteria.</p></div></div>
         <h4>44:00–46:30 · Plan + worktree</h4><p>Another recorded run, this time a coding agent in a terminal. It plans first, waits for a yes, then works in its own git worktree so parallel tasks don’t collide.</p>
         <h4>46:30–50:00 · Code, test, fix</h4><p>Play the coding steps. The first test run fails: the agent mixed watts and watt-hours and got 6.5 hours instead of 13.3 days. It finds the units bug, fixes it, and all three tests pass. That is why we always ask for tests.</p>
         <h4>50:00–53:00 · PR + human review</h4><p>Notice the reminder: agents tend to stop early, so ask explicitly for tests, the PR and a re-check. The PR says “Not merged”. Ask a volunteer to call out the three review checks while you tick them. Only then does Approve merge unlock. There is no bypass button.</p>
@@ -1224,7 +1249,8 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="10">
       <h3 class="np-title">Page 10 of 11 · 53–57 · Agents &amp; approvals</h3>
       <div class="np say">
-        <div class="sal"><p><b>Say</b>Assistants now act for you: they plan, delegate and use tools.</p><p><b>Ask</b>What can your agent touch without asking you first?</p><p><b>Land</b>Agents act; you keep the gates. More autonomy means clearer gates, not fewer.</p></div>
+        <div class="sal" data-step="10.1"><h5>Step 10.1 · Agent tiers + approval rail</h5><div class="blk"><span class="lb">Say</span><p>Assistants now act for you: they plan, delegate and use tools.</p></div><div class="blk"><span class="lb">Ask</span><p>Which actions should always need your approval?</p></div><div class="blk"><span class="lb">Land</span><p>Sends, spend, merges and irreversible steps stay gated.</p></div><div class="blk"><span class="lb">Follow-up</span><p>No agent replaces these gates.</p></div></div>
+        <div class="sal" data-step="10.2"><h5>Step 10.2 · Questions for any agent</h5><div class="blk"><span class="lb">Say</span><p>Four questions for any agent tool.</p></div><div class="blk"><span class="lb">Ask</span><p>What can your agent touch without asking you first?</p></div><div class="blk"><span class="lb">Land</span><p>More autonomy means clearer gates, not fewer.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Ask these four before you connect anything.</p></div></div>
         <h4>53:00–55:00 · Tiers + approval rail</h4><p>Assistants that act for you sit on top of the same layers: they hand work to a coding agent, which calls a model on some backend. None of that changes the data rules from stages 2 and 3. The orange rail is the point: sends, spend, merges and irreversible steps always wait for a human.</p>
         <h4>55:00–57:00 · Four questions</h4><p>Read the four questions. Ask them of any agent tool before you trust it with real work. More autonomy means you need clearer gates, not fewer.</p>
       </div>
@@ -1236,7 +1262,8 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="stage-notes" data-for="11">
       <h3 class="np-title">Page 11 of 11 · 57–60 · Recap &amp; closing</h3>
       <div class="np say">
-        <div class="sal"><p><b>Say</b>Ten lines, one per page. Read them, don’t re-teach them.</p><p><b>Ask</b>Which one task will you hand to an agent on Monday?</p><p><b>Land</b>You own the why, the what and the check; let AI do the how, and never skip the review.</p></div>
+        <div class="sal" data-step="11.1"><h5>Step 11.1 · Recap</h5><div class="blk"><span class="lb">Say</span><p>Ten lines, one per page. I’ll read them, not re-teach them.</p></div><div class="blk"><span class="lb">Ask</span><p>Which one surprised you?</p></div><div class="blk"><span class="lb">Land</span><p>Each line is one decision you keep.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Now make it concrete for Monday.</p></div></div>
+        <div class="sal" data-step="11.2"><h5>Step 11.2 · Take-home + Q&amp;A</h5><div class="blk"><span class="lb">Say</span><p>You own the why, the what and the check; let AI do the how, and never skip the review.</p></div><div class="blk"><span class="lb">Ask</span><p>Which one task will you hand to an agent on Monday?</p></div><div class="blk"><span class="lb">Land</span><p>Write its why, its what and three acceptance criteria.</p></div><div class="blk"><span class="lb">Follow-up</span><p>Questions?</p></div></div>
         <h4>57:00–58:00 · Recap</h4><p>Read the recap chips in one breath, one line per stage.</p>
         <h4>58:00–60:00 · Take-home + Q&amp;A</h4><p>Read the take-home line aloud: “You own the why, the what and the check; let AI do the how, and never skip the review.” Then the three things to do on Monday. If there’s time, fill in the card with one real example from the room. Then open for questions.</p><div data-clone="ref-closing-body"></div>
       </div>
@@ -1883,7 +1910,7 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
     $("#where").innerHTML="<b>"+(s+1)+" · "+st.title.replace(/&/g,"&amp;")+"</b> · "+st.win+" min · "+beat[1].replace(/&/g,"&amp;");
     $("#prev").disabled=(s===0&&cur.b===0); $("#next").disabled=(s===N-1&&cur.b===nb-1);
     $("#live").textContent="Page "+pgId+" of "+N+": "+st.title+". Step "+(cur.b+1)+" of "+nb+": "+beat[1]+".";
-    $$(".stage-notes").forEach(function(n){n.classList.toggle("cur",+n.getAttribute("data-for")===s+1)});
+    $$(".stage-notes").forEach(function(n){n.classList.toggle("cur",+n.getAttribute("data-for")===s+1)}); $$(".sal[data-step]").forEach(function(e){e.classList.toggle("now",e.getAttribute("data-step")===(s+1)+"."+(cur.b+1))});
     $("#notes-title").textContent="Notes · Page "+pgId+" of "+N+" · "+st.title+" ("+st.win+")";
     var cue=$("#notes-cue"); cue.innerHTML=""; st.beats.forEach(function(bt,j){var li=document.createElement("li"); if(j===cur.b) li.className="now"; li.innerHTML="<span></span>"; li.firstChild.textContent=(s+1)+"."+(j+1)+" · "+bt[0]; li.appendChild(document.createTextNode(bt[1])); cue.appendChild(li);});
   }
