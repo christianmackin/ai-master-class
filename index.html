@@ -53,6 +53,8 @@ body.notes-open #viewport{right:440px}
 .stage-h{margin:0;font-weight:800;letter-spacing:-.035em;line-height:1.02;outline:none}
 .kicker{display:flex;align-items:center;gap:14px;font-size:17px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
 .kicker .num{display:inline-grid;place-items:center;min-width:44px;height:30px;padding:0 8px;border-radius:8px;background:var(--ink);color:#fff;letter-spacing:.02em}
+.kicker .pg{font-family:var(--mono);font-size:15px;letter-spacing:.02em;text-transform:none;background:var(--teal-soft);color:#075a78;border:1.5px solid #9CCFE3;border-radius:999px;padding:3px 12px;font-weight:800;white-space:nowrap}
+.pgno{font-family:var(--mono);font-size:14px;font-weight:800;background:var(--ink);color:#fff;border-radius:999px;padding:5px 12px;white-space:nowrap}
 .kicker .win{margin-left:auto;color:var(--muted);letter-spacing:.04em;font-family:var(--mono);text-transform:none;font-weight:600}
 .audience{display:inline-flex;align-items:center;gap:12px;background:var(--amber-soft);border:2px solid var(--amber);color:var(--amber-ink);border-radius:999px;padding:10px 22px;font-size:22px;font-weight:700}
 .audience .tag{font-size:13px;letter-spacing:.12em;text-transform:uppercase;background:var(--amber);color:#fff;border-radius:999px;padding:3px 10px}
@@ -639,7 +641,7 @@ pre code{background:transparent;padding:0}
 .s11 .card11{top:340px}
 .s11 .take{top:340px;height:530px}
 @media (max-width:720px){.rp-log{max-height:none;overflow:visible}.s7 .s7calc,.s7 .s7q,.s7 .s7pred,.s9 .pipe,.s9 .gatebar,.s11 .take{margin:12px 0;height:auto}.s11 .take .qa-row{margin-top:12px}.rp-hint{display:none}}
-@media print{.rp-log{overflow:visible}.s7 .s7calc{opacity:1!important;visibility:visible!important;transform:none!important}}
+@media print{.kicker .pgsub,.pgno{display:none}.rp-log{overflow:visible}.s7 .s7calc{opacity:1!important;visibility:visible!important;transform:none!important}}
 
 /* ---------- small screens: stack, no scaling ---------- */
 @media (max-width:720px){
@@ -716,7 +718,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
 
     <!-- ================= STAGE 1 · 0–4 · hero + golden circle ================= -->
     <section class="stage s1" id="s1" data-n="1" aria-roledescription="slide" aria-labelledby="s1-h">
-      <div class="kicker"><span class="num">01</span> Start with why · the AI flip <span class="win">0–4 min</span></div>
+      <div class="kicker"><span class="num">01</span> Start with why · the AI flip <span class="win">0–4 min</span><span class="pg" aria-label="Page 1 of 11">Page 1 of 11<span class="pgsub"></span></span></div>
       <div class="left">
         <h2 class="stage-h hero-title" id="s1-h" tabindex="-1"><span class="w" style="--i:0">Turn</span> <span class="w" style="--i:1">an</span> <span class="w" style="--i:2">engineering</span> <span class="w" style="--i:3">goal</span> <span class="w" style="--i:4">into</span> <span class="w" style="--i:5">a</span> <em class="w" style="--i:6">checked</em> <em class="w" style="--i:7">result.</em></h2>
         <p class="meta" data-b="1" style="--d:500ms"><b>Christian</b> · Orientation for engineers · 60 minutes</p>
@@ -757,7 +759,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
 
     <!-- ================= STAGE 2 · 4–9 · layered stack ================= -->
     <section class="stage s2" id="s2" data-n="2" aria-roledescription="slide" aria-labelledby="s2-h" hidden>
-      <div class="kicker"><span class="num">02</span> Models &amp; inference <span class="win">4–9 min</span></div>
+      <div class="kicker"><span class="num">02</span> Models &amp; inference <span class="win">4–9 min</span><span class="pg" aria-label="Page 2 of 11">Page 2 of 11<span class="pgsub"></span></span></div>
       <div class="statement"><h2 class="stage-h" id="s2-h" tabindex="-1">The agent tool is <span class="not">not</span> the model.</h2></div>
       <div class="claude" data-b="1" style="--d:250ms">
         <div class="cc"><small>Agentic tooling</small>Claude Code</div>
@@ -789,7 +791,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
 
     <!-- ================= STAGE 3 · 9–15 · myth card + route map ================= -->
     <section class="stage s3" id="s3" data-n="3" aria-roledescription="slide" aria-labelledby="s3-h" hidden>
-      <div class="kicker"><span class="num">03</span> Backends &amp; GovCloud <span class="win">9–15 min</span></div>
+      <div class="kicker"><span class="num">03</span> Backends &amp; GovCloud <span class="win">9–15 min</span><span class="pg" aria-label="Page 3 of 11">Page 3 of 11<span class="pgsub"></span></span></div>
       <h2 class="stage-h" id="s3-h" tabindex="-1">Backend choice sets <span style="color:var(--teal)">where data goes.</span></h2>
       <div class="myth" data-b="1" id="s3-myth">
         <div class="card">
@@ -862,7 +864,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
 
     <!-- ================= STAGE 4 · 15–23 · harness hub + three example tools ================= -->
     <section class="stage sx s4" id="s4" data-n="4" aria-roledescription="slide" aria-labelledby="s4-h" hidden>
-      <div class="kicker"><span class="num">04</span> Harness &amp; tools <span class="win">15–23 min</span></div>
+      <div class="kicker"><span class="num">04</span> Harness &amp; tools <span class="win">15–23 min</span><span class="pg" aria-label="Page 4 of 11">Page 4 of 11<span class="pgsub"></span></span></div>
       <h2 class="stage-h" id="s4-h" tabindex="-1">Same agent, <span class="t">several doors.</span></h2>
       <div class="hub" data-b="1" role="img" aria-label="The harness loop around the model: tools, permissions, file access, memory files, hooks, stop conditions">
         <div class="orbit"></div><div class="spin"></div>
@@ -892,7 +894,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
 
     <!-- ================= STAGE 5 · 23–27 · context anatomy ================= -->
     <section class="stage sx s5" id="s5" data-n="5" aria-roledescription="slide" aria-labelledby="s5-h" hidden>
-      <div class="kicker"><span class="num">05</span> Context <span class="win">23–27 min</span></div>
+      <div class="kicker"><span class="num">05</span> Context <span class="win">23–27 min</span><span class="pg" aria-label="Page 5 of 11">Page 5 of 11<span class="pgsub"></span></span></div>
       <h2 class="stage-h" id="s5-h" tabindex="-1">Output <span class="t">follows context.</span></h2>
       <div class="window ia" data-b="1" id="s5-window" role="list" aria-label="Context menu: seven things to give the agent"><span class="wtitle">What you give the agent</span></div>
       <div class="arrow" data-b="1" style="--d:900ms" aria-hidden="true"></div>
@@ -903,7 +905,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
 
     <!-- ================= STAGE 6 · 27–32 · stage strip + ADR + storage tree ================= -->
     <section class="stage sx s6" id="s6" data-n="6" aria-roledescription="slide" aria-labelledby="s6-h" hidden>
-      <div class="kicker"><span class="num">06</span> Planning &amp; ADR <span class="win">27–32 min</span></div>
+      <div class="kicker"><span class="num">06</span> Planning &amp; ADR <span class="win">27–32 min</span><span class="pg" aria-label="Page 6 of 11">Page 6 of 11<span class="pgsub"></span></span></div>
       <h2 class="stage-h" id="s6-h" tabindex="-1" style="font-size:56px">Decide <span class="a">before</span> building.</h2>
       <div class="strip" data-b="1" aria-label="Planning stages">
         <div class="ps" style="--sd:0ms"><small>1</small>Why &amp; constraints</div><span class="chev">›</span>
@@ -924,7 +926,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
 
     <!-- ================= STAGE 7 · 32–40 · offline replay + predict + calculator ================= -->
     <section class="stage sx s7" id="s7" data-n="7" aria-roledescription="slide" aria-labelledby="s7-h" hidden>
-      <div class="kicker"><span class="num">07</span> Engineering demo · replay <span class="win">32–40 min</span></div>
+      <div class="kicker"><span class="num">07</span> Engineering demo · replay <span class="win">32–40 min</span><span class="pg" aria-label="Page 7 of 11">Page 7 of 11<span class="pgsub"></span></span></div>
       <h2 class="stage-h" id="s7-h" tabindex="-1" style="font-size:46px;margin-top:10px">Off-grid weather station: <span class="t">how long to refill?</span> <span class="sim" style="vertical-align:middle">Recorded run · synthetic example · not a certified design</span></h2>
       <div class="box rp s7rp" data-b="1">
         <div class="rp-head"><span class="lbl-s">Replay · AI chat</span><span class="rp-hint"><kbd>Next</kbd> <kbd>→</kbd> <kbd>Space</kbd> plays the next line</span><button type="button" class="mini" data-rp-all="s7">Show all</button></div>
@@ -954,7 +956,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
 
     <!-- ================= STAGE 8 · 40–44 · boundary wall split ================= -->
     <section class="stage sx s8" id="s8" data-n="8" aria-roledescription="slide" aria-labelledby="s8-h" hidden>
-      <div class="kicker"><span class="num">08</span> Data boundaries <span class="win">40–44 min</span></div>
+      <div class="kicker"><span class="num">08</span> Data boundaries <span class="win">40–44 min</span><span class="pg" aria-label="Page 8 of 11">Page 8 of 11<span class="pgsub"></span></span></div>
       <h2 class="stage-h" id="s8-h" tabindex="-1" style="font-size:54px">Code names don’t make data <span class="a">safe to share.</span></h2>
       <div class="zone outz" data-b="1"><h3>Outside</h3><p class="sub">Discuss generalized, coded problems here.</p>
         <div class="codes" id="s8-codes"></div>
@@ -969,7 +971,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
 
     <!-- ================= STAGE 9 · 44–53 · offline terminal replay + human gate ================= -->
     <section class="stage sx s9" id="s9" data-n="9" aria-roledescription="slide" aria-labelledby="s9-h" hidden>
-      <div class="kicker"><span class="num">09</span> Prompt to pull request · replay <span class="win">44–53 min</span></div>
+      <div class="kicker"><span class="num">09</span> Prompt to pull request · replay <span class="win">44–53 min</span><span class="pg" aria-label="Page 9 of 11">Page 9 of 11<span class="pgsub"></span></span></div>
       <h2 class="stage-h" id="s9-h" tabindex="-1" style="font-size:54px">AI does the loop. <span class="a">Humans gate.</span> <span class="sim" style="vertical-align:middle">Recorded run · synthetic example</span></h2>
       <div class="box rp term s9rp" data-b="1">
         <div class="rp-head"><span class="lbl-s">Replay · coding agent in a terminal</span><span class="rp-hint"><kbd>Next</kbd> <kbd>→</kbd> <kbd>Space</kbd> plays the next line</span><button type="button" class="mini" data-rp-all="s9">Show all</button></div>
@@ -996,7 +998,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
 
     <!-- ================= STAGE 10 · 53–57 · agents that act + human gates ================= -->
     <section class="stage sx s10" id="s10" data-n="10" aria-roledescription="slide" aria-labelledby="s10-h" hidden>
-      <div class="kicker"><span class="num">10</span> Agents &amp; approvals <span class="win">53–57 min</span></div>
+      <div class="kicker"><span class="num">10</span> Agents &amp; approvals <span class="win">53–57 min</span><span class="pg" aria-label="Page 10 of 11">Page 10 of 11<span class="pgsub"></span></span></div>
       <h2 class="stage-h" id="s10-h" tabindex="-1" style="font-size:50px">Agents that act for you — <span class="a">and the gates you keep.</span></h2>
       <div class="tiers" data-b="1">
         <div class="tier" style="--td:0ms"><small>You</small><b>Set the goal</b>Voice or chat, in plain language</div>
@@ -1012,7 +1014,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
 
     <!-- ================= STAGE 11 · 57–60 · action card + take-home ================= -->
     <section class="stage sx s11" id="s11" data-n="11" aria-roledescription="slide" aria-labelledby="s11-h" hidden>
-      <div class="kicker"><span class="num">11</span> Recap &amp; closing <span class="win">57–60 min</span></div>
+      <div class="kicker"><span class="num">11</span> Recap &amp; closing <span class="win">57–60 min</span><span class="pg" aria-label="Page 11 of 11">Page 11 of 11<span class="pgsub"></span></span></div>
       <h2 class="stage-h" id="s11-h" tabindex="-1" style="font-size:72px">Your <span class="t">move.</span></h2>
       <div class="recap" data-b="1" id="s11-recap" aria-label="Recap of the hour"></div>
       <div class="box card11 ia" data-b="2"><h3>Pick one task you did by hand this week.</h3>
@@ -1042,6 +1044,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
 <nav class="botbar" aria-label="Presentation controls">
   <button type="button" class="btn" id="prev" aria-label="Previous beat (Left arrow)">‹ Back</button>
   <div class="dots" id="dots" role="img" aria-label=""></div>
+  <span class="pgno" id="pgno" aria-hidden="true">1.1 / 11</span>
   <button type="button" class="btn primary" id="next" aria-label="Next beat (Right arrow or Space)">Next ›</button>
   <div class="where" id="where"></div>
   <div class="bot-right">
@@ -1067,7 +1070,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
   <div id="notes-panel" role="tabpanel" aria-labelledby="tab-say" tabindex="0">
 
     <div class="stage-notes" data-for="1">
-      <h3 class="np-title">Stage 1 · 0–4 · Start with why</h3>
+      <h3 class="np-title">Page 1 of 11 · 0–4 · Start with why</h3>
       <div class="np say">
         <h4>0:00–1:30 · Opening line (read aloud)</h4><div data-clone="ref-opener"></div>
         <h4>1:30–2:45 · Golden circle + quote</h4><p>Let the rings draw, then let the quote land on its own. Then tell the Apple story:</p><div data-clone="ref-paraphrase"></div>
@@ -1083,7 +1086,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     </div>
 
     <div class="stage-notes" data-for="2">
-      <h3 class="np-title">Stage 2 · 4–9 · Models &amp; inference</h3>
+      <h3 class="np-title">Page 2 of 11 · 4–9 · Models &amp; inference</h3>
       <div class="np say">
         <h4>4:00–5:30 · Agent tool ≠ model</h4><div data-clone="ref-seg-4-9-1"></div>
         <h4>5:30–7:30 · The stack</h4><p>Walk the five layers from the bottom. The backend decides where your data goes. The model decides quality, speed and cost. The harness is the tool loop. The interface is how you see and steer it. On top sit assistants that hand work to the others.</p>
@@ -1095,7 +1098,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     </div>
 
     <div class="stage-notes" data-for="3">
-      <h3 class="np-title">Stage 3 · 9–15 · Backends &amp; GovCloud</h3>
+      <h3 class="np-title">Page 3 of 11 · 9–15 · Backends &amp; GovCloud</h3>
       <div class="np say">
         <h4>9:00–10:30 · Myth or fact (vote, then Reveal)</h4><p>Ask: does paying $200 instead of $20 a month for ChatGPT keep your prompts off OpenAI’s servers? Count Myth and Fact, then Reveal.</p><div data-clone="ref-seg-9-15-1"></div>
         <h4>10:30–12:30 · Four different questions</h4><div data-clone="ref-seg-9-15-2"></div>
@@ -1110,7 +1113,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     </div>
 
     <div class="stage-notes" data-for="4">
-      <h3 class="np-title">Stage 4 · 15–23 · Harness &amp; tools</h3>
+      <h3 class="np-title">Page 4 of 11 · 15–23 · Harness &amp; tools</h3>
       <div class="np say">
         <h4>15:00–17:30 · Harness loop</h4><div data-clone="ref-seg-15-23-1"></div>
         <h4>17:30–19:30 · Doors and ways to steer</h4><p>The same agent shows up in a terminal, inside VS Code, and as a desktop app: same loop, same rules. You steer it with plain-language goals, a CLAUDE.md file of project conventions, slash commands, skills, plan mode and voice.</p>
@@ -1122,7 +1125,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     </div>
 
     <div class="stage-notes" data-for="5">
-      <h3 class="np-title">Stage 5 · 23–27 · Context</h3>
+      <h3 class="np-title">Page 5 of 11 · 23–27 · Context</h3>
       <div class="np say">
         <h4>23:00–25:00 · Seven things to give the agent</h4><p>Walk the seven items top to bottom. Every item you skip is a guess the agent makes for you.</p>
         <h4>25:00–27:00 · Which do you skip?</h4><p>Ask the room, no counting: which of these do you usually skip? Take two or three answers, then ask everyone to pick one to add on their next task.</p>
@@ -1133,7 +1136,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     </div>
 
     <div class="stage-notes" data-for="6">
-      <h3 class="np-title">Stage 6 · 27–32 · Planning &amp; ADR</h3>
+      <h3 class="np-title">Page 6 of 11 · 27–32 · Planning &amp; ADR</h3>
       <div class="np say">
         <h4>27:00–28:30 · Planning stages</h4><div data-clone="ref-seg-23-32-2"></div><p>The decision step is ours. The AI is great at options and plans.</p>
         <h4>28:30–30:30 · ADR-001</h4><p>An ADR is a one-page decision record: what we decided, why, what we rejected, and what would make us revisit it. It also stops the agent from re-arguing settled decisions.</p>
@@ -1145,7 +1148,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     </div>
 
     <div class="stage-notes" data-for="7">
-      <h3 class="np-title">Stage 7 · 32–40 · Engineering demo (replay)</h3>
+      <h3 class="np-title">Page 7 of 11 · 32–40 · Engineering demo (replay)</h3>
       <div class="np say">
         <h4>32:00–34:30 · Questions before numbers</h4><p>This is a recorded run, so it works with no internet or login. Press Next to play each line. The point: a good assistant asks questions before it calculates. The chips on the right light up as it asks.</p>
         <h4>34:30–36:30 · Prompt 2 + predict</h4><p>Prompt 2 gives it real numbers. At the pause line, ask the room: 3, 7, 13 or 30 days? Tap one count per raised hand.</p>
@@ -1157,7 +1160,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     </div>
 
     <div class="stage-notes" data-for="8">
-      <h3 class="np-title">Stage 8 · 40–44 · Data boundaries</h3>
+      <h3 class="np-title">Page 8 of 11 · 40–44 · Data boundaries</h3>
       <div class="np say">
         <h4>40:00–42:00 · Coded labels outside</h4><p>Coded labels like =S1-G1 let you discuss the shape of a problem outside a secure environment, for example with a public AI tool.</p>
         <h4>42:00–44:00 · The key stays inside</h4><p>Press “Try moving the key outside”: it snaps back. The key that maps codes to real items stays in the approved environment. And code names don’t make controlled data shareable: if the content itself is controlled, it stays inside, whatever the labels say.</p>
@@ -1168,7 +1171,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     </div>
 
     <div class="stage-notes" data-for="9">
-      <h3 class="np-title">Stage 9 · 44–53 · Prompt to pull request (replay)</h3>
+      <h3 class="np-title">Page 9 of 11 · 44–53 · Prompt to pull request (replay)</h3>
       <div class="np say">
         <h4>44:00–46:30 · Plan + worktree</h4><p>Another recorded run, this time a coding agent in a terminal. It plans first, waits for a yes, then works in its own git worktree so parallel tasks don’t collide.</p>
         <h4>46:30–50:00 · Code, test, fix</h4><p>Play the coding steps. The first test run fails: the agent mixed watts and watt-hours and got 6.5 hours instead of 13.3 days. It finds the units bug, fixes it, and all three tests pass. That is why we always ask for tests.</p>
@@ -1180,7 +1183,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     </div>
 
     <div class="stage-notes" data-for="10">
-      <h3 class="np-title">Stage 10 · 53–57 · Agents &amp; approvals</h3>
+      <h3 class="np-title">Page 10 of 11 · 53–57 · Agents &amp; approvals</h3>
       <div class="np say">
         <h4>53:00–55:00 · Tiers + approval rail</h4><p>Assistants that act for you sit on top of the same layers: they hand work to a coding agent, which calls a model on some backend. None of that changes the data rules from stages 2 and 3. The orange rail is the point: sends, spend, merges and irreversible steps always wait for a human.</p>
         <h4>55:00–57:00 · Four questions</h4><p>Read the four questions. Ask them of any agent tool before you trust it with real work. More autonomy means you need clearer gates, not fewer.</p>
@@ -1191,7 +1194,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     </div>
 
     <div class="stage-notes" data-for="11">
-      <h3 class="np-title">Stage 11 · 57–60 · Recap &amp; closing</h3>
+      <h3 class="np-title">Page 11 of 11 · 57–60 · Recap &amp; closing</h3>
       <div class="np say">
         <h4>57:00–58:00 · Recap</h4><p>Read the recap chips in one breath, one line per stage.</p>
         <h4>58:00–60:00 · Take-home + Q&amp;A</h4><p>Read the take-home line aloud: “You own the why, the what and the check; let AI do the how, and never skip the review.” Then the three things to do on Monday. If there’s time, fill in the card with one real example from the room. Then open for questions.</p><div data-clone="ref-closing-body"></div>
@@ -1213,6 +1216,7 @@ html.static *,html.static *::before,html.static *::after{animation:none!importan
     <div class="keys">
       <span><kbd>→</kbd> <kbd>Space</kbd> <kbd>PgDn</kbd></span><span>Next beat (reveals the rest of a stage before moving on)</span>
       <span><kbd>←</kbd> <kbd>PgUp</kbd></span><span>Back one beat</span>
+      <span>Page numbers</span><span><b>7.2</b> = page 7, step 2 (11 pages). Press <kbd>7</kbd> to jump to page 7, then <kbd>→</kbd> for its steps</span>
       <span>Stages 7 and 9</span><span><kbd>→</kbd> <kbd>Space</kbd> or Next plays the next replay line, then moves on · <kbd>Shift</kbd>+<kbd>→</kbd> skips the rest of the replay beat</span>
       <span><kbd>Home</kbd> <kbd>End</kbd></span><span>First / last stage</span>
       <span><kbd>1</kbd>–<kbd>9</kbd>, <kbd>0</kbd></span><span>Jump to stage 1–9; 0 = stage 10</span>
@@ -1600,11 +1604,11 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
   STAGES.forEach(function(s,i){
     var li=document.createElement("li"); li.style.flex=s.min+" 1 0";
     var b=document.createElement("button"); b.type="button"; b.setAttribute("aria-label","Stage "+(i+1)+": "+s.title+", minutes "+s.win.replace("–"," to "));
-    b.innerHTML="<span class='fill'></span><span class='lbl'>"+(i+1)+" · "+s.title.replace(/&/g,"&amp;")+"</span>";
+    b.innerHTML="<span class='fill'></span><span class='lbl'>p"+(i+1)+" · "+s.title.replace(/&/g,"&amp;")+"</span>";
     b.addEventListener("click",function(){go(i,0,{focus:true})}); li.appendChild(b); tl.appendChild(li);
     var c=document.createElement("button"); c.type="button"; c.className="tl-card";
     c.innerHTML="<div class='m'>"+s.win+"<small>"+s.min+" min</small></div><div><strong></strong><span></span></div>";
-    c.querySelector("strong").textContent=(i+1)+" · "+s.title; c.querySelector("span").textContent=s.purpose;
+    c.querySelector("strong").textContent="Page "+(i+1)+" · "+s.title; c.querySelector("span").textContent=s.purpose+" · Steps "+s.beats.map(function(b,j){return (i+1)+"."+(j+1)}).join(", ");
     c.addEventListener("click",function(){closeDialog(); go(i,0,{focus:true})}); grid.appendChild(c);
   });
   $("#tl-total").innerHTML="<strong>Total minutes: "+total+"</strong> (must equal 60).";
@@ -1814,13 +1818,16 @@ Recharge = 360 Wh / (60 × 3.5 × 0.7 − 120 = 27 Wh/day) = 13.3 days</code></p
     var dots=$("#dots"); dots.innerHTML=""; for(var k=0;k<nb;k++){var i=document.createElement("i"); if(k<=cur.b)i.className="on"; if(k===cur.b)i.className+=" cur"; dots.appendChild(i);}
     dots.setAttribute("aria-label","Beat "+(cur.b+1)+" of "+nb);
     var beat=st.beats[cur.b];
-    $("#clock").innerHTML="<b>"+beat[0]+"</b> · stage "+(s+1)+"/"+N;
+    var pgId=(s+1)+"."+(cur.b+1);
+    $("#clock").innerHTML="<b>"+beat[0]+"</b> · page "+pgId+" / "+N;
+    $("#pgno").textContent="Page "+pgId+" / "+N;
+    $$(".kicker .pgsub").forEach(function(x,j){x.textContent=j===s?" · "+pgId:"";});
     $("#where").innerHTML="<b>"+(s+1)+" · "+st.title.replace(/&/g,"&amp;")+"</b> · "+st.win+" min · "+beat[1].replace(/&/g,"&amp;");
     $("#prev").disabled=(s===0&&cur.b===0); $("#next").disabled=(s===N-1&&cur.b===nb-1);
-    $("#live").textContent="Stage "+(s+1)+" of "+N+", "+st.title+". Beat "+(cur.b+1)+" of "+nb+": "+beat[1]+".";
+    $("#live").textContent="Page "+pgId+" of "+N+": "+st.title+". Step "+(cur.b+1)+" of "+nb+": "+beat[1]+".";
     $$(".stage-notes").forEach(function(n){n.classList.toggle("cur",+n.getAttribute("data-for")===s+1)});
-    $("#notes-title").textContent="Notes · "+(s+1)+" · "+st.title+" ("+st.win+")";
-    var cue=$("#notes-cue"); cue.innerHTML=""; st.beats.forEach(function(bt,j){var li=document.createElement("li"); if(j===cur.b) li.className="now"; li.innerHTML="<span></span>"; li.firstChild.textContent=bt[0]; li.appendChild(document.createTextNode(bt[1])); cue.appendChild(li);});
+    $("#notes-title").textContent="Notes · Page "+pgId+" of "+N+" · "+st.title+" ("+st.win+")";
+    var cue=$("#notes-cue"); cue.innerHTML=""; st.beats.forEach(function(bt,j){var li=document.createElement("li"); if(j===cur.b) li.className="now"; li.innerHTML="<span></span>"; li.firstChild.textContent=(s+1)+"."+(j+1)+" · "+bt[0]; li.appendChild(document.createTextNode(bt[1])); cue.appendChild(li);});
   }
 
   /* ---- notes drawer + tabs ---- */
